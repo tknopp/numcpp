@@ -23,6 +23,9 @@ where multidimensional array data is usually required is for instance in 3D magn
 sampled 3D MRI data, one basically has to perform a 3D Fourier transform. With NumCpp, this can be done like::
 
   Array<cdouble,3> rawData(Nx,Ny,Nz);
+
+  // fill rawData ...
+
   auto imageData = fft(rawData);
 
 Unlike in Numpy, the dimension has to be known at compile time in NumCpp. This is essential to ensure high performance and simplifies
