@@ -59,8 +59,10 @@ std::complex<double> and std::complex<float>. In a similar way to complex scalar
 
   auto z = dot(A,x) + y*4.0f;
 
-Clean Implementation
+Expression Templates
 =======================
+
+NumCpp uses so called Expression Templates to ensure that array expressions can be compiled into the maximum efficient code.
 
 High Performance
 =======================
