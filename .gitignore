@@ -1,0 +1,15 @@
+
+.DS_Store
+
+CMakeLists.txt.user
+doc/doxygen
+doc/sphinx/.build
+*CMakeFiles/*
+*/CMakeFiles/*
+*/*/CMakeFiles/*
+*cmake_install*
+*/cmake_install*
+*/*/cmake_install*
+*Makefile
+*/Makefile
+*/*/Makefile
