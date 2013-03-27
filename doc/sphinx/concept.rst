@@ -8,8 +8,8 @@ Concept
    :depth: 1
    :local:
 
-Simple Interface
-=============
+Simple Interface / Clean Implementation
+========================================
 
 The aim of the NumCpp project is to develop a C++ library having a simple interface similar to the Numpy/Matlab API.
 

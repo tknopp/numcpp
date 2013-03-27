@@ -52,6 +52,7 @@ Content
    concept
    performance
    tutorial
+   commandTable
    api
 
 
