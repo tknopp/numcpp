@@ -25,7 +25,7 @@ import sys, os
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = [ 'breathe' ]
+#extensions = [ 'breathe' ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['.templates']
@@ -182,6 +182,6 @@ latex_documents = [
 #latex_use_modindex = True
 
 
-breathe_projects = { "numcpp": "/Users/knopp/Dev/numcpp/doc/doxygen/xml/" }
+#breathe_projects = { "numcpp": "/Users/knopp/Dev/numcpp/doc/doxygen/xml/" }
 
-breathe_default_project = "numcpp"
+#breathe_default_project = "numcpp"
