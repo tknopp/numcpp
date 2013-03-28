@@ -184,6 +184,63 @@ Array<T,sizeof...(A)> reshape(const AbstractArray<T,D,R>& x, A...args)
   return y;
 }
 
+template<class T, class R1, class U, class R2>
+std::pair< Matrix<T>, Matrix<U> >
+meshgrid(const AbstractVector<T,R1>& x, const AbstractVector<U,R2>& y)
+{
+  auto N = shape(x,0);
+  auto M = shape(y,0);
+  Matrix<T> xx(M,N), yy(M,N);
+
+  for(size_t n=0; n<N; n++)
+  {
+    yy(all,n) = y;
+  }
+
+  for(size_t m=0; m<M; m++)
+  {
+    xx(m,all) = x;
+  }
+
+  return std::make_pair(xx, yy);
+}
+
+
+Matrix<double> phantom(size_t N)
+{
+    // phantom(N)
+    //  generates the (modified) Shepp-Logan phantom of P. Toft
+    //  as an NxN matrix.
+    //
+    // Reference: Peter Toft: "The Radon Transform - Theory and Implementation", Ph.D. thesis.
+    //   Department of Mathematical Modelling, Technical University of Denmark, June 1996. 326 pages.
+
+    // Author: Markus Fenn, 2005
+
+    Matrix<double> I = zeros(N,N);
+
+    auto z = meshgrid( linspace(-1,1,N) , (-1)*linspace(-1,1,N) );
+    auto x = z.first;
+    auto y = z.second;
+
+    //auto s = 0.8;
+    auto s = 0.4;
+
+    I += 1.0 * ( pow(x/0.69,2.0)+pow(y/0.92,2.0) < 1);
+    I += - s * ( pow(x/0.6624,2)+pow((y+0.0184)/0.874,2) < 1 );
+    I += - 0.2 * ( pow( (cos(-18.0/360*2*pi)*(x-0.22)+sin(-18.0/360*2*pi)*y)/0.11,2) +
+        pow( (sin(-18.0/360*2*pi)*(x-0.22)-cos(-18.0/360*2*pi)*y)/0.31,2) < 1 );
+    I += - 0.2 * ( pow( (cos( 18.0/360*2*pi)*(x +0.22)+sin( 18.0/360*2*pi)*y)/0.16,2) +
+        pow( (sin( 18.0/360*2*pi)*(x +0.22)-cos( 18.0/360*2*pi)*y)/0.41, 2) <1 );
+    I += 0.1 * ( pow(x/0.21,2)+pow((y-0.35)/0.25,2) <1);
+    I += 0.1 * ( pow(x/0.046,2)+pow((y-0.1)/0.046,2) <1 );
+    I += 0.1 * ( pow(x/0.046,2)+pow((y+0.1)/0.046,2) <1 );
+    I += 0.1 * ( pow((x+0.08)/0.046,2)+pow((y+0.605)/0.023,2) <1 );
+    I += 0.1 * ( pow(x/0.023,2)+pow((y+0.606)/0.023,2) <1 );
+    I += 0.1 * ( pow((x-0.06)/0.023,2)+pow((y+0.605)/0.046,2) <1 );
+
+    return I;
+}
 
 }
 

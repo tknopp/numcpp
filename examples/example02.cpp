@@ -35,6 +35,15 @@ int main()
 
   toimage_pdf(kk, "test.pdf", min(kk), max(kk));
 
+  auto zz = meshgrid(range(1,4), range(10,15));
+
+  print(zz.first);
+  print(zz.second);
+
+  auto p = phantom(128);
+
+  toimage_pdf(p, "p.pdf", min(p), max(p));
+
   return 0;
 }
 

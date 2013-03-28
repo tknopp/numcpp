@@ -9,27 +9,6 @@
 namespace numcpp
 {
 
-
-VECTORIZE(std::abs, abs)
-VECTORIZE(std::exp, exp)
-VECTORIZE(std::sin, sin)
-VECTORIZE(std::cos, cos)
-VECTORIZE(std::tan, tan)
-VECTORIZE(std::asin, asin)
-VECTORIZE(std::acos, acos)
-VECTORIZE(std::atan, atan)
-VECTORIZE(std::log, log)
-VECTORIZE(std::sinh, sinh)
-VECTORIZE(std::cosh, cosh)
-VECTORIZE(std::tanh, tanh)
-VECTORIZE(std::sqrt, sqrt)
-VECTORIZE(std::conj, conj)
-VECTORIZE(std::real, real)
-VECTORIZE(std::imag, imag)
-VECTORIZE(sign, sign)
-VECTORIZE_ONE_ARG(std::pow,pow,int)
-VECTORIZE_ONE_ARG(std::pow,pow,double)
-
 template<class T, int D, class R>
 Array<T,D> copy(const AbstractArray<T,D,R>& x)
 {

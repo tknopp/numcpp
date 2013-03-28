@@ -14,10 +14,6 @@ void toimage_pdf(Matrix<T> x, std::string filename, double winMin, double winMax
 {
   auto y = colorize(x, winMin, winMax, {{1.0,0.0,0.0,0.0},{0,1.0,0,0}});
 
-  std::cout << "colored image\n";
-
-  print(y);
-
   cairo_surface_t *surface;
   cairo_t *cr;
 
