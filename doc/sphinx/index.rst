@@ -55,6 +55,23 @@ Content
    commandTable
    api
 
+License
+==================
+
+The core functionallity of NumCpp is licensed under the `LGPL <http://www.gnu.org/copyleft/lesser.html>`_.
+However, some functionality requires to link against software that is licensed under the GPL 
+`GPL <http://www.gnu.org/licenses/gpl.html>`_. For instance the fft function internally uses the FFTW library,
+which is licensed under the GPL. If you plan to use NumCpp in a closed source software, please `contact us <mailto:tobias.knopp@gmail.com>`_
+to obtain a version of NumCpp where all GPL modules are replaced by GPL-free modules.
+
+Contact
+==================
+
+For questions and discussions you can use the `google group numcpp
+<https://groups.google.com/forum/?hl=de&fromgroups#!forum/numcpp>`_.
+
+If you are missing functionality in NumCpp you can either contribute to the project,
+or request features on a consulting basis (please `contact us <mailto:tobias.knopp@gmail.com>`_)
 
 Indices and tables
 ==================
