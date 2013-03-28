@@ -6,9 +6,9 @@
 
 Introduction
 ==================================
-
-NumCpp is a numerical C++ library, which allows to write numerical algorithms in a similar way as in Numpy or Matlab. It uses features of the new C++11 standard simplifying both the implementation of NumCpp and the external API. Here is a simple example of its usage::
-
+NumCpp is a numerical C++ library, which allows to write numerical algorithms in a similar way as in Numpy or Matlab. 
+It uses features of the new C++11 standard simplifying both the implementation of NumCpp and the external API. 
+Here is a simple example of its usage::
   #include <numcpp>
   using namspace numcpp;
 
@@ -20,23 +20,9 @@ NumCpp is a numerical C++ library, which allows to write numerical algorithms in
 
     print(z);
   }
-
-.. leading to the output::
-
-  Array<std::complex<double>,2> {
-    shape = 4 4 
-    strides = 4 1 
-    data = (16,0) (0,0) (0,0) (0,0) 
-           (0,0) (0,0) (0,0) (0,0) 
-           (0,0) (0,0) (0,0) (0,0) 
-           (0,0) (0,0) (0,0) (0,0) 
-  }
-
 Features
 =========
-
 The features of NumCpp are
-
 * Simple API similar to Numpy/Matlab
 * Truely multidimensional array object
 * Clean implementation
@@ -45,7 +31,6 @@ The features of NumCpp are
 
 Content
 ==================
-
 .. toctree::
    :maxdepth: 1
 
@@ -57,7 +42,6 @@ Content
 
 License
 ==================
-
 The core functionallity of NumCpp is licensed under the `LGPL <http://www.gnu.org/copyleft/lesser.html>`_.
 However, some functionality requires to link against software that is licensed under the GPL 
 `GPL <http://www.gnu.org/licenses/gpl.html>`_. For instance the fft function internally uses the FFTW library,
@@ -66,7 +50,6 @@ to obtain a version of NumCpp where all GPL modules are replaced by GPL-free mod
 
 Contact
 ==================
-
 For questions and discussions you can use the `google group numcpp
 <https://groups.google.com/forum/?hl=de&fromgroups#!forum/numcpp>`_.
 
