@@ -46,7 +46,7 @@ void tofile(Array<T, D> x, std::string filename, std::string sep="")
   if(sep.empty())
   {
     std::ofstream file(filename, std::ios::out|std::ios::binary|std::ios::trunc);
-    file.write(x.data(), x.size()*sizeof(T));
+    file.write((char*) x.data(), x.size()*sizeof(T));
     file.close();
   } else
   {

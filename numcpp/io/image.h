@@ -9,10 +9,10 @@
 namespace numcpp
 {
 
-template<class T>
-void toimage_pdf(Matrix<T> x, std::string filename, double winMin, double winMax)
+template<class T, class R>
+void export_pdf(const AbstractMatrix<T,R>& x, std::string filename, double winMin, double winMax, const colormap& cm = colormaps::gray)
 {
-  auto y = colorize(x, winMin, winMax, {{1.0,0.0,0.0,0.0},{0,1.0,0,0}});
+  auto y = colorize(eval(x), winMin, winMax, cm);
 
   cairo_surface_t *surface;
   cairo_t *cr;
@@ -23,7 +23,7 @@ void toimage_pdf(Matrix<T> x, std::string filename, double winMin, double winMax
   cairo_surface_t *image;
 
   image = cairo_image_surface_create_for_data((unsigned char*) y.data(),
-                                              CAIRO_FORMAT_RGB24, y.shape(0), y.shape(1), y.shape(0) * sizeof(int32_t));
+                                              CAIRO_FORMAT_ARGB32, y.shape(0), y.shape(1), y.shape(0) * sizeof(int32_t));
 
   //cairo_scale (cr, 256.0/w, 256.0/h);
 
@@ -38,6 +38,25 @@ void toimage_pdf(Matrix<T> x, std::string filename, double winMin, double winMax
   cairo_destroy(cr);
 
 }
+
+
+template<class T, class R>
+void export_pdf(const AbstractMatrix<T,R>& x, std::string filename, const colormap& cm = colormaps::gray)
+{
+  export_pdf(x, filename, min(x), max(x), cm);
+}
+
+/*template<class T, class R>
+void export_pdf(const AbstractMatrix<T,R>& x, std::string filename, double winMin, double winMax, const colormap& cm = colormaps::gray)
+{
+  export_pdf<T>(x, filename, winMin, winMax, cm);
+}
+
+template<class T, class R>
+void export_pdf(const AbstractMatrix<T,R>& x, std::string filename, const colormap& cm = colormaps::gray)
+{
+  export_pdf<T>(x, filename, min(x), max(x), cm);
+}*/
 
 }
 

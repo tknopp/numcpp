@@ -12,9 +12,19 @@ namespace numcpp
 template<class T, int D, class R>
 Array<T,D> copy(const AbstractArray<T,D,R>& x)
 {
-  Array<T,D> y(x.shape());
-  y = x;
-  return y;
+  return Array<T,D>(x);
+}
+
+template<class T, int D, class R>
+Array<T,D> eval(const AbstractArray<T,D,R>& x)
+{
+  return Array<T,D>(x);
+}
+
+template<class T, int D>
+Array<T,D> eval(const Array<T,D>& x)
+{
+  return x;
 }
 
 template<class T, int D>
@@ -234,8 +244,8 @@ Matrix<T> rot180(const AbstractMatrix<T,R>& A)
     return B;
 }
 
-template<class T, class R>
-AbstractVector<T,R>& reverse_(AbstractVector<T,R>& x)
+template<class T>
+Vector<T> reverse_(Vector<T>& x)
 {
     size_t N = x.shape(0);
     size_t j = N-1;
@@ -252,12 +262,77 @@ AbstractVector<T,R>& reverse_(AbstractVector<T,R>& x)
 template<class T, class R>
 Vector<T> reverse(const AbstractVector<T,R>& x)
 {
-  Vector<T> y = copy(x);
-  reverse_(y);
-  return y;
+  return reverse_(copy(x));
 }
 
+template<class T>
+Vector<T> flipdim_(Vector<T>& x, size_t)
+{
+  return reverse_(x);
+}
 
+template<class T, int D>
+Array<T,D> flipdim_(Array<T,D>& x, size_t axis)
+{
+  T tmp;
+  std::array<size_t,D-1> shape;
+
+  copyShapeToSubArray<D>(x.shape(), shape, axis);
+
+  std::array<size_t,D> index1, index2;
+  Iterator<D-1> it(shape);
+
+  for(size_t k=0; k<prod(shape); k++, it++)
+  {
+    copyShapeFromSubArray<D>(*it, index1, axis);
+    std::copy(index1.begin(), index1.end(), index2.begin());
+
+    size_t N = x.shape(axis);
+    size_t j = N-1;
+
+    for(size_t n=0; n<floor(N/2.0); n++,j--)
+    {
+      index1[axis] = j;
+      index2[axis] = n;
+      tmp = x[index1];
+      x[index1] = x[index2];
+      x[index2] = tmp;
+    }
+  }
+
+  return x;
+}
+
+template<class T, int D, class R>
+Array<T,D> flipdim(const AbstractArray<T,D,R>& x, size_t axis)
+{
+  auto y = copy(x);
+  return flipdim_(y, axis);
+}
+
+template<class T, int D>
+Array<T,D> flipud_(Array<T,D>& x)
+{
+  return flipdim_(x, 0);
+}
+
+template<class T, int D>
+Array<T,D> fliplr_(Array<T,D>& x)
+{
+  return flipdim_(x, 1);
+}
+
+template<class T, int D, class R>
+Array<T,D> flipud(AbstractArray<T,D,R>& x)
+{
+  return flipdim(x, 0);
+}
+
+template<class T, int D, class R>
+Array<T,D> fliplr(AbstractArray<T,D,R>& x)
+{
+  return flipdim(x, 1);
+}
 
 
 }

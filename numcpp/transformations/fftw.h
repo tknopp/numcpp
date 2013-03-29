@@ -15,7 +15,9 @@ template<class T, int D, class R>
 
   std::array<int,D> shape;
 
-  std::copy(std::begin(x.shape()), std::end(x.shape()), std::begin(shape));
+  for(int d=0; d<D; d++)
+    shape[d] = x.shape(d);
+  //std::copy(std::begin(x.shape()), std::end(x.shape()), std::begin(shape));
 
   Array< std::complex< typename complexBaseType<T>::type >, D > y( x.shape() );
 

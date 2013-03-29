@@ -7,6 +7,6 @@ int main()
   auto y = fft(x);
   auto z = reshape(y,4,4);
 
-  //print(z);
+  print(z);
 }
 

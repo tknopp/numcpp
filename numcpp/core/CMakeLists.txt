@@ -8,4 +8,5 @@ add_custom_target(NumCppCore SOURCES
                   operators.h
                   slice.h
                   diagonalmatrix.h
-                  basearray.h)
+                  basearray.h
+                  constants.h)

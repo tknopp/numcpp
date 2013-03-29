@@ -9,6 +9,7 @@ Introduction
 NumCpp is a numerical C++ library, which allows to write numerical algorithms in a similar way as in Numpy or Matlab. 
 It uses features of the new C++11 standard simplifying both the implementation of NumCpp and the external API. 
 Here is a simple example of its usage::
+
   #include <numcpp>
   using namspace numcpp;
 
@@ -20,9 +21,12 @@ Here is a simple example of its usage::
 
     print(z);
   }
+More complex examples can be found in the :doc:`tutorial`.
+
 Features
 =========
 The features of NumCpp are
+
 * Simple API similar to Numpy/Matlab
 * Truely multidimensional array object
 * Clean implementation

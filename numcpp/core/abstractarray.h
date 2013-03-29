@@ -69,6 +69,12 @@ public:
     return getSelf()(args...);
   }
 
+  operator Array<T,D>()
+  {
+    Array<T,D> x(shape());
+    return x;
+  }
+
 protected:
   Derived & getSelf() { return *static_cast<Derived *>(this); }
   Derived const & getSelf() const { return *static_cast<Derived const *>(this); }

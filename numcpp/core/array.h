@@ -7,6 +7,7 @@
 #include "slice.h"
 #include "iterator.h"
 #include "abstractarray.h"
+#include "constants.h"
 
 #include <initializer_list>
 #include <iostream>
