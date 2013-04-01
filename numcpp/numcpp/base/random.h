@@ -6,10 +6,23 @@
 #include <algorithm>
 #include <chrono>
 
+/*!
+@file
+
+@addtogroup random
+@brief Random array functions
+@ingroup base
+@{
+*/
+
 namespace numcpp
 {
 
+/*!
+Create a D dimensional random array of normally distributed values.
 
+D is the number of parameters that specify the shape of the array.
+*/
 template<class T, class...A>
 Array<T,sizeof...(A)> randn(A...args)
 {
@@ -26,8 +39,12 @@ Array<T,sizeof...(A)> randn(A...args)
   return x;
 }
 
+/*!
+Shuffle the array \a x inplace.
+@see numcpp::shuffle
+*/
 template<class T, int D>
-Array<T,D>& shuffle_ (Array<T,D>& x)
+Array<T,D>& shuffle_(Array<T,D>& x)
 {
   // obtain a time-based seed:
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -38,6 +55,10 @@ Array<T,D>& shuffle_ (Array<T,D>& x)
   return x;
 }
 
+/*!
+Shuffle the array \a x inplace.
+@see numcpp::shuffle_
+*/
 template<class T, int D, class R>
 Array<T,D> shuffle(const AbstractArray<T,D,R>& x)
 {
@@ -46,6 +67,9 @@ Array<T,D> shuffle(const AbstractArray<T,D,R>& x)
 }
 
 
+/*! @} */
+
 }
+
 
 #endif

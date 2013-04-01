@@ -1,6 +1,7 @@
 add_custom_target(NumCppBase SOURCES
                   initializers.h
                   arrayFunctions.h
+                  sums.h
                   rearrangeArray.h
                   special.h
                   signal.h
@@ -13,6 +14,8 @@ add_custom_target(NumCppBase SOURCES
                   exponential.h
                   rounding.h
                   products.h
-                  norms.h)
+                  norms.h
+                  linalg.h
+                  minMax.h)
 
 

@@ -1,6 +1,16 @@
 #ifndef NUMCPP_REARRANGE_ARRAY_H
 #define NUMCPP_REARRANGE_ARRAY_H
 
+/*!
+@file
+
+@addtogroup rearrange
+@brief Rearrange array functions
+@ingroup base
+@{
+*/
+
+
 namespace numcpp
 {
 
@@ -16,6 +26,34 @@ Array<T,D> transpose(const AbstractArray<T,D,R>& x)
 {
   auto y = copy(x);
   return transpose_(y);
+}
+
+
+template<class T, int D, size_t DNew>
+Array<T,DNew> reshape(const Array<T,D>& x, const std::array<size_t,DNew>& shape)
+{
+  Array<T,DNew> y(x.getMem());
+  std::copy(std::begin(shape), std::end(shape), begin(y.shape_));
+  y.initContiguousStrides(0);
+
+  return y;
+}
+
+template<class T, int D, class...A>
+Array<T,sizeof...(A)> reshape(const Array<T,D>& x, A...args)
+{
+  std::array<size_t,sizeof...(A)> shape = {((size_t) args)...};
+  return reshape(x, shape);
+}
+
+template<class T, int D, class R, class...A>
+Array<T,sizeof...(A)> reshape(const AbstractArray<T,D,R>& x, A...args)
+{
+  Array<T,sizeof...(A)> y(args...);
+  for(size_t i=0; i<y.size(); i++)
+    y[i] = x[i];
+
+  return y;
 }
 
 
@@ -151,6 +189,7 @@ Array<T,D> fliplr(AbstractArray<T,D,R>& x)
   return flipdim(x, 1);
 }
 
+/*! @} */
 
 }
 

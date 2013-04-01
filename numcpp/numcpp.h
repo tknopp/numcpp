@@ -10,13 +10,16 @@
 #include "numcpp/graphics.h"
 
 
+/*!
+@defgroup base
+@brief Base Module
+*/
 
 /*!
-@defgroup ArrayFunctions
-@brief Array Functions
-
-Documentation of functions operating on arrays
+@defgroup core
+@brief Core Module
 */
+
 
 /*!
 @mainpage

@@ -6,6 +6,15 @@
 namespace numcpp
 {
 
+/*!
+@file
+
+@addtogroup products
+@brief Matrix and vector products
+@ingroup base
+@{
+*/
+
 // dot functions
 
 template<class T, class U, class R, class V>
@@ -55,6 +64,8 @@ template<class T, class U, class R, class V>
       y[m] += conj(A(m,n)) * x[n];
   return y;
 }
+
+/*! @} */
 
 }
 

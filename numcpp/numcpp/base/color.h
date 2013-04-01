@@ -10,6 +10,15 @@
 namespace numcpp
 {
 
+/*!
+@file
+
+@addtogroup color
+@brief Coloring functions for floating point arrays
+@ingroup base
+@{
+*/
+
 struct color_rgba
 {
   color_rgba() = default;
@@ -115,7 +124,9 @@ uint32_t colorize(const T& x, const T& winMin, const T& winMax, const colormap& 
 
 }
 
+/*! @} */
+
 }
 
 
-#endif // NUMCPP_COLOR_H
+#endif

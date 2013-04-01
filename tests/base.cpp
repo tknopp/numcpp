@@ -18,6 +18,15 @@ TEST_CASE( "numcpp/base/sum", "Sum test" )
     REQUIRE( all( sum(x,1) == array({3, 7}) ) );
     REQUIRE( all( sum(x,0) == array({4, 6}) ) );
   }
+
+  {
+    auto x = array({1,2,3,4});
+    auto y = array({1,3,6,10});
+
+    REQUIRE( all( cumsum(x) == y ) );
+  }
+
+
 }
 
 TEST_CASE( "numcpp/base/rounding", "Rounding tests" )

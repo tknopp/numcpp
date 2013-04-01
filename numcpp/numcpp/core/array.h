@@ -25,6 +25,13 @@
 namespace numcpp
 {
 
+/*!
+@file
+
+@addtogroup core
+@{
+*/
+
 /**
  * Multidimensional Strided Array
  *
@@ -350,7 +357,12 @@ public:
     return reinterpret_cast<T*>(mem.data());
   }
 
-public:
+  const MemoryBlock& getMem() const
+  {
+    return mem;
+  }
+
+private:
 
   template<class Int>
   size_t flatIndex(const std::array<Int,D>& index) const
@@ -395,11 +407,6 @@ public:
     isContiguous_ = true;
   }
 
-  const MemoryBlock& getMem() const
-  {
-    return mem;
-  }
-
 private:
   std::array<size_t,D> shape_;
   std::array<size_t,D> strides_;
@@ -417,12 +424,8 @@ using Vector = Array<T, 1 >;
 template <class T>
 using Matrix = Array<T, 2 >;
 
+/*! @} */
 
-
-VECTORIZE(std::abs, abs)
-VECTORIZE(std::sqrt, sqrt)
-VECTORIZE_ONE_ARG(std::pow,pow,int)
-VECTORIZE_ONE_ARG(std::pow,pow,double)
 
 }
 

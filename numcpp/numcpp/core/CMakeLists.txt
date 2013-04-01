@@ -11,4 +11,5 @@ add_custom_target(NumCppCore SOURCES
                   relational.h
                   slice.h
                   basearray.h
-                  constants.h)
+                  constants.h
+                  coreFunc.h)

@@ -7,6 +7,13 @@
 namespace numcpp
 {
 
+/*!
+@file
+
+@addtogroup core
+@{
+*/
+
 template<class T, int D>
 class Array;
 
@@ -92,18 +99,8 @@ using AbstractVector = AbstractArray<T, 1, Derived >;
 template <class T, class Derived>
 using AbstractMatrix = AbstractArray<T, 2, Derived >;
 
-template <class T, int D, class Derived>
-int ndims(const AbstractArray<T,D,Derived>& x)
-{
-  return D;
-}
 
-template <class T, int D, class Derived>
-size_t shape(const AbstractArray<T,D,Derived>& x, int d)
-{
-  return x.shape(d);
-}
-
+/*! @} */
 
 }
 

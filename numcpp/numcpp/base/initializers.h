@@ -1,7 +1,17 @@
-#ifndef ZEROS_H
-#define ZEROS_H
+#ifndef NUMCPP_INITIALIZERS_H
+#define NUMCPP_INITIALIZERS_H
 
 #include "../core.h"
+
+/*!
+@file
+
+@addtogroup initializers
+@brief Initializier array functions
+@ingroup base
+@{
+*/
+
 
 namespace numcpp
 {
@@ -107,7 +117,7 @@ ConstantArray<int,D> zeros(std::array<Int,D> shape)
 }
 
 template<class...A>
-auto zeros(A...args)  -> ConstantArray<int,sizeof...(A)>
+ConstantArray<int,sizeof...(A)> zeros(A...args)
 {
   return ConstantArray<int,sizeof...(A)> (0, {((size_t)args)...});
 }
@@ -121,7 +131,7 @@ ConstantArray<int,D> ones(std::array<Int,D> shape)
 }
 
 template<class...A>
-auto ones(A...args) -> ConstantArray<int,sizeof...(A)>
+ConstantArray<int,sizeof...(A)> ones(A...args)
 {
   return ConstantArray<int,sizeof...(A)> (1, {((size_t)args)...});
 }
@@ -138,32 +148,6 @@ inline LinearVector<int> range(size_t start, size_t end, size_t step=1)
   return LinearVector<int>(start, end, step);
 }
 
-template<class T, int D, size_t DNew>
-Array<T,DNew> reshape(const Array<T,D>& x, const std::array<size_t,DNew>& shape)
-{
-  Array<T,DNew> y(x.getMem());
-  std::copy(std::begin(shape), std::end(shape), begin(y.shape_));
-  y.initContiguousStrides(0);
-
-  return y;
-}
-
-template<class T, int D, class...A>
-Array<T,sizeof...(A)> reshape(const Array<T,D>& x, A...args)
-{
-  std::array<size_t,sizeof...(A)> shape = {((size_t) args)...};
-  return reshape(x, shape);
-}
-
-template<class T, int D, class R, class...A>
-Array<T,sizeof...(A)> reshape(const AbstractArray<T,D,R>& x, A...args)
-{
-  Array<T,sizeof...(A)> y(args...);
-  for(size_t i=0; i<y.size(); i++)
-    y[i] = x[i];
-
-  return y;
-}
 
 template<class T, class R1, class U, class R2>
 std::pair< Matrix<T>, Matrix<U> >
@@ -223,6 +207,11 @@ inline Matrix<double> phantom(size_t N)
     return I;
 }
 
+/*!
+Create a vector of type T that ...
+
+bbb
+*/
 template<class T=double>
 Vector<T> array(std::vector<T> x)
 {
@@ -235,7 +224,7 @@ Vector<T> array(std::vector<T> x)
 }
 
 template<class T=double, class...A>
-auto array(std::vector<T> x, A...shape) -> Array<T, sizeof...(shape)>
+Array<T, sizeof...(A)> array(std::vector<T> x, A...shape)
 {
   Array<T, sizeof...(shape)> y(((size_t)shape)...);
 
@@ -245,6 +234,8 @@ auto array(std::vector<T> x, A...shape) -> Array<T, sizeof...(shape)>
   return y;
 }
 
+/*! @} */
+
 }
 
-#endif // ZEROS_H
+#endif

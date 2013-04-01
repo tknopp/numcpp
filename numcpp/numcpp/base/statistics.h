@@ -7,6 +7,15 @@
 namespace numcpp
 {
 
+/*!
+@file
+
+@addtogroup statistics
+@brief Statistical array functions
+@ingroup base
+@{
+*/
+
 template<class T, int D, class R>
 double mean(const AbstractArray<T,D,R>& x)
 {
@@ -28,7 +37,7 @@ double stdDev(const AbstractArray<T,D,R>& x)
   return sqrt( mean( pow( abs( x - mean(x) ), 2) ) );
 }
 
-
+/*! @} */
 
 }
 

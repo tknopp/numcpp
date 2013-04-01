@@ -6,6 +6,15 @@
 namespace numcpp
 {
 
+/*!
+@file
+
+@addtogroup norms
+@brief Norm functions
+@ingroup base
+@{
+*/
+
 template<class T, int D, class R>
 double norm(const AbstractArray<T,D,R>& x, double p=2.0)
 {
@@ -17,6 +26,8 @@ double norm(const AbstractArray<T,D,R>& x, double p=2.0)
   return std::pow( sum( pow(abs(x),p) ), 1./p );
 }
 
+
+/*! @} */
 
 }
 
