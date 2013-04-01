@@ -7,9 +7,12 @@ doc/sphinx/.build
 *CMakeFiles/*
 */CMakeFiles/*
 */*/CMakeFiles/*
+*/*/*/CMakeFiles/*
 *cmake_install*
 */cmake_install*
 */*/cmake_install*
+*/*/*/cmake_install*
 *Makefile
 */Makefile
 */*/Makefile
+*/*/*/Makefile

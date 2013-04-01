@@ -15,8 +15,8 @@ int main()
   export_pdf( y, "shepp_logan_phantom_fft.pdf");
 
   // export x and y into the same hdf5 file
-  hdf5write( x, "shepp_logan_phantom.h5", "/shepp_logan" );
-  hdf5write( y, "shepp_logan_phantom.h5", "/shepp_logan_fft" );
+  h5write( x, "shepp_logan_phantom.h5", "/shepp_logan" );
+  h5write( y, "shepp_logan_phantom.h5", "/shepp_logan_fft" );
 
   // export x into a simple binary file
   tofile( x, "shepp_logan_phantom.dat");

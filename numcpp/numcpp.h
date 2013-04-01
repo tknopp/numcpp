@@ -1,12 +1,13 @@
 #ifndef NUMCPP_H
 #define NUMCPP_H
 
-#include "core.h"
-#include "base.h"
+#include "numcpp/core.h"
+#include "numcpp/base.h"
 
-#include "io.h"
-#include "solvers.h"
-#include "transformations.h"
+#include "numcpp/io.h"
+#include "numcpp/solvers.h"
+#include "numcpp/transformations.h"
+#include "numcpp/graphics.h"
 
 
 

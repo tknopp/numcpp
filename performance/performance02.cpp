@@ -24,7 +24,7 @@ int main()
     toc(t);
   }
 
-  std::cout << MemoryBlock::numAllocations << std::endl;
+  //std::cout << MemoryBlock::numAllocations << std::endl;
 
   {
     auto t = tic();
@@ -39,7 +39,7 @@ int main()
     toc(t);
   }
 
-  std::cout << MemoryBlock::numAllocations << std::endl;
+  //std::cout << MemoryBlock::numAllocations << std::endl;
 
   return 0;
 }

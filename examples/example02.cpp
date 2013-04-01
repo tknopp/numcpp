@@ -18,6 +18,8 @@ int main()
   print(y);
   reverse_(y);
   print(y);
+  shuffle_(y);
+  print(y);
 
   auto z = copy(y);
   z(0) = 30;
@@ -27,9 +29,9 @@ int main()
 
   print(transpose_(x));
 
-  hdf5write(x, "test.h5", "/testV");
+  h5write(x, "test.h5", "/testV");
 
-  auto kk = hdf5read<double,2>("test.h5", "/testV");
+  auto kk = h5read<double,2>("test.h5", "/testV");
 
   print(kk);
 
@@ -49,6 +51,19 @@ int main()
   export_pdf(fliplr(p), "p_lr.pdf", colormaps::winter);
 
   export_pdf(rotl90(p), "p_rotl90.pdf");
+
+  {
+    auto x = linspace(0,1,100);
+    auto fig = Figure();
+
+    fig.imshow(phantom(512));
+
+    fig.plot(sin(2*pi*x), "green");
+    fig.plot(cos(2*pi*x), "red");
+    fig.plot(sin(2*pi*x), cos(2*pi*x), "yellow");
+
+    fig.save("first_plot.pdf");
+  }
 
   return 0;
 }

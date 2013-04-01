@@ -2,10 +2,31 @@
 Base Module
 ******************
 
-.. cpp:class:: AbstractArray<T,D,Derived>
+Overview
+=======================
 
-   Abstract D dimensional containing elements of type T. The template parameter Derived has the type of the concrete implementation (using the Curiously Recurring Template Pattern (CRTP)).
+Trigonometric Functions
+________________________
 
-.. cpp:class:: Array<T,D>
 
-   Dense D dimensional array containing elements of type T. Implements the abstract interface AbstractArray.
+================================  ====================================================================================
+:cpp:func:`sin(x) <sin>`          Trigonometric sine, element-wise
+:cpp:func:`cos(x) <cos>`          Trigonometric cosine, element-wise.
+================================  ====================================================================================
+
+Reference
+===========
+
+Trigonometric Functions
+________________________
+
+.. cpp:function:: ExpressionTemplate sin(const AbstractArray\<T,D,R\>& x)
+
+   Vecotrized sinus function. Calculates sinus of each element.
+   Note that sin is implemented via an expression template and evaluated lazyly.
+
+.. cpp:function:: ExpressionTemplate cos(const AbstractArray\<T,D,R\>& x)
+
+   Vecotrized cosine function. Calculates cosine of each element.
+   Note that cosine is implemented via an expression template and evaluated lazyly.
+
