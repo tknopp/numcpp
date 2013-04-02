@@ -30,7 +30,7 @@ VECTORIZE(acos, acos)
 VECTORIZE(atan, atan)
 
 /*!
-@fn template<class T , int D, class R > ExpressionTemplate sin(const AbstractArray<T,D,R>& x)
+@fn template <class T, class Op> Array_sin < AbstractArray<T,Op::dim, Op> > sin( const AbstractArray<T,Op::dim, Op>& op)
 @brief Trigonometric sinus of \a x, elementwise.
 */
 

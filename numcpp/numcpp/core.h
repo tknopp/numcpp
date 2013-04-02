@@ -7,7 +7,7 @@
 
 
 /*!
-@defgroup core
-@brief Core Module
+@defgroup core Core
+@brief Core module containing the multidimensional array object
 */
 

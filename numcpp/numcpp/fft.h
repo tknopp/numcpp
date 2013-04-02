@@ -2,6 +2,6 @@
 
 
 /*!
-@defgroup FFT
-@brief FFT Module
+@defgroup fft FFT
+@brief FFT module containing Fourier and related transformations
 */

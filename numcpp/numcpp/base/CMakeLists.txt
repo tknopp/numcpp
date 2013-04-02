@@ -15,7 +15,7 @@ add_custom_target(NumCppBase SOURCES
                   rounding.h
                   products.h
                   norms.h
-                  linalg.h
+                  diag.h
                   minMax.h)
 
 

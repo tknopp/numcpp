@@ -12,7 +12,7 @@
 #include "base/hyperbolic.h"
 #include "base/exponential.h"
 #include "base/rounding.h"
-#include "base/linalg.h"
+#include "base/diag.h"
 #include "base/minMax.h"
 
 
@@ -21,6 +21,9 @@
 
 
 /*!
-@defgroup base
-@brief Base Module
+@defgroup base Base
+@brief Base module containing basic array functions.
+
+For instance, the base module contains the functions: reshape, sum, min, max, flipud.
+
 */

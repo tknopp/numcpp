@@ -4,6 +4,6 @@
 
 
 /*!
-@defgroup graphics
-@brief Graphics Module
+@defgroup graphics Graphics
+@brief Graphics module containing rudimental graphics output functions.
 */

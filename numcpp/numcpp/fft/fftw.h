@@ -7,7 +7,7 @@
 /*!
 @file
 
-@addtogroup FFT
+@addtogroup fft
 @{
 */
 
