@@ -9,11 +9,11 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++0x -O3 -msse2  -ffast-math") #
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-INCLUDE (CheckIncludeFiles)
+#INCLUDE (CheckIncludeFiles)
 # usage: CHECK_INCLUDE_FILES (<header> <RESULT_VARIABLE> )
 
-CHECK_INCLUDE_FILES (malloc.h HAVE_MALLOC_H)
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+#CHECK_INCLUDE_FILES (malloc.h HAVE_MALLOC_H)
+#CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 #find_package (CLAPACK)
 #if (CLAPACK_FOUND)
@@ -24,6 +24,5 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DI
 
 add_subdirectory (numcpp)
 add_subdirectory (examples)
-#add_subdirectory (tests)
+add_subdirectory (tests)
 add_subdirectory (performance)
- 

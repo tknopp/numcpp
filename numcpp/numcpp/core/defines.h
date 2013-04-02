@@ -100,7 +100,7 @@ struct complexBaseType
   typedef T type;
 };
 
-#define COMPLEX_BASE_TYPE(T) (typename complexBaseType<T>::type)
+#define COMPLEX_BASE_TYPE(T) typename complexBaseType<T>::type
 
 typedef std::complex<double> cdouble;
 typedef std::complex<double> cfloat;

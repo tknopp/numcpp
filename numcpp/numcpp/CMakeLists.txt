@@ -1,12 +1,12 @@
 add_subdirectory(core)
 add_subdirectory(base)
 add_subdirectory(io)
-add_subdirectory(transformations)
+add_subdirectory(fft)
 add_subdirectory(solvers)
 add_subdirectory(graphics)
 
 add_custom_target(NumCpp SOURCES
-core.h solvers.h io.h transformations.h base.h graphics.h)
+core.h solvers.h io.h fft.h base.h graphics.h)
 
 #file (GLOB _sources RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} core/*.h)
 

@@ -114,7 +114,7 @@ In 2D the upper left and the lower right quarter as well as the upper right and 
 are swapped.
 */
 template<class T, int D>
-Array<T,D> fftshift(const Array<T,D>& x)
+Array<T,D> fftshift(const Array<T,D>& x);
 
 template<class T>
 Vector<T> fftshift(const Vector<T>& x)
