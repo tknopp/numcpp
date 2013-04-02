@@ -22,17 +22,17 @@ using std::asin;
 using std::acos;
 using std::atan;
 
-/*!
-\def template<class T , int D, class R > ExpressionTemplate sin(const AbstractArray<T,D,R>& x)
-Trigonometric sinus of \a x, elementwise.
-*/
-
 VECTORIZE(sin, sin)
 VECTORIZE(cos, cos)
 VECTORIZE(tan, tan)
 VECTORIZE(asin, asin)
 VECTORIZE(acos, acos)
 VECTORIZE(atan, atan)
+
+/*!
+@fn template<class T , int D, class R > ExpressionTemplate sin(const AbstractArray<T,D,R>& x)
+@brief Trigonometric sinus of \a x, elementwise.
+*/
 
 
 /*! @} */

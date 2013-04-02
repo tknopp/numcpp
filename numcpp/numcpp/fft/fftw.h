@@ -1,14 +1,22 @@
-#ifndef FFTW_H
-#define FFTW_H
+#ifndef NUMCPP_FFTW_H
+#define NUMCPP_FFTW_H
 
 #include <fftw3.h>
-//#include "../core.h"
+#include "../core.h"
+
+/*!
+@file
+
+@addtogroup FFT
+@{
+*/
+
 
 namespace numcpp
 {
 
 template<class T, int D, class R>
-  Array< std::complex< typename complexBaseType<T>::type >, D >
+  Array< std::complex< COMPLEX_BASE_TYPE(T) >, D >
   _fft (const AbstractArray< T, D, R >& x, int dir)
 {
   auto N = x.size();
@@ -19,7 +27,7 @@ template<class T, int D, class R>
     shape[d] = x.shape(d);
   //std::copy(std::begin(x.shape()), std::end(x.shape()), std::begin(shape));
 
-  Array< std::complex< typename complexBaseType<T>::type >, D > y( x.shape() );
+  Array< std::complex< COMPLEX_BASE_TYPE(T) >, D > y( x.shape() );
 
   fftw_complex *out = (fftw_complex*) y.data();
   fftw_complex *in = out;
@@ -40,15 +48,25 @@ template<class T, int D, class R>
   return y;
 }
 
+/*!
+Calculates the FFT of the array \a x.
+
+Note that for multidimensional input arrays, the respective multidimensional fft is performed
+*/
 template<class T, int D, class R>
-  Array< std::complex< typename complexBaseType<T>::type >, D >
+  Array< std::complex< COMPLEX_BASE_TYPE(T) >, D >
   fft (const AbstractArray< T, D, R >& x)
 {
   return _fft(x, FFTW_FORWARD);
 }
 
+/*!
+Calculates the inverse FFT of the array \a x.
+
+Note that for multidimensional input arrays, the respective multidimensional fft is performed
+*/
 template<class T, int D, class R>
-  Array< std::complex< typename complexBaseType<T>::type >, D >
+  Array< std::complex< COMPLEX_BASE_TYPE(T) >, D >
   ifft (const AbstractArray< T, D, R >& x)
 {
   return _fft(x, FFTW_BACKWARD);
@@ -88,6 +106,16 @@ Vector<T> solve(const FFTMatrix<T,D>& A, const Vector<T>& x )
   return  reshape(ifft(reshape(x,A.fftShape() )), x.size());
 }
 
+/*!
+Perform an fftshift on the array \a x.
+
+For a 1D array, an fftshifft essentially swaps the first and the second half of the array.
+In 2D the upper left and the lower right quarter as well as the upper right and lower left quarter
+are swapped.
+*/
+template<class T, int D>
+Array<T,D> fftshift(const Array<T,D>& x)
+
 template<class T>
 Vector<T> fftshift(const Vector<T>& x)
 {
@@ -120,6 +148,8 @@ Matrix<T> fftshift(const Matrix<T>& x)
   return y;
 }
 
+/*! @} */
+
 }
 
-#endif // FFTW_H
+#endif

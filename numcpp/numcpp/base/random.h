@@ -6,6 +6,9 @@
 #include <algorithm>
 #include <chrono>
 
+namespace numcpp
+{
+
 /*!
 @file
 
@@ -14,9 +17,6 @@
 @ingroup base
 @{
 */
-
-namespace numcpp
-{
 
 /*!
 Create a D dimensional random array of normally distributed values.

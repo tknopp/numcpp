@@ -3,6 +3,9 @@
 
 #include "../core.h"
 
+namespace numcpp
+{
+
 /*!
 @file
 
@@ -11,10 +14,6 @@
 @ingroup base
 @{
 */
-
-
-namespace numcpp
-{
 
 template<class T, int D>
 class ConstantArray : public AbstractArray<T,D,ConstantArray<T,D> >

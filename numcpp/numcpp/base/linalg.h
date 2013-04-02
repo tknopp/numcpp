@@ -3,6 +3,9 @@
 
 #include "../core.h"
 
+namespace numcpp
+{
+
 /*!
 @file
 
@@ -11,11 +14,6 @@
 @ingroup base
 @{
 */
-
-namespace numcpp
-{
-
-
 
 // diagonal matrices
 
