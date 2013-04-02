@@ -1,0 +1,3 @@
+#define NUMCPP_USE_CAIRO
+#define NUMCPP_USE_LAPACK
+#define NUMCPP_USE_OPENMP
