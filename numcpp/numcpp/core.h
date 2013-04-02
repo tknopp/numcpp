@@ -4,3 +4,10 @@
 #include "core/arithmetic.h"
 #include "core/relational.h"
 #include "core/coreFunc.h"
+
+
+/*!
+@defgroup core
+@brief Core Module
+*/
+

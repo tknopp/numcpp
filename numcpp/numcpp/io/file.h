@@ -9,6 +9,12 @@
 namespace numcpp
 {
 
+/*!
+@file
+
+@addtogroup io
+@{
+*/
 
 template<class T=double>
 Vector<T> fromfile(std::string filename, long count=-1, std::string sep="")
@@ -56,6 +62,8 @@ void tofile(Array<T, D> x, std::string filename, std::string sep="")
     file.close();
   }
 }
+
+/*! @} */
 
 }
 

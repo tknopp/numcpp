@@ -10,6 +10,13 @@
 namespace numcpp
 {
 
+/*!
+@file
+
+@addtogroup io
+@{
+*/
+
 inline hid_t h5create(std::string filename, unsigned flags = H5F_ACC_TRUNC,
              hid_t create_plist=H5P_DEFAULT, hid_t access_plist=H5P_DEFAULT )
 {
@@ -112,8 +119,9 @@ Array<T,D> h5read(std::string filename, std::string location)
 
 
 
+/*! @} */
 
 
 }
 
-#endif // NUMCPP_HDF5_H
+#endif

@@ -18,3 +18,9 @@
 
 
 //#include "base/signal.h"
+
+
+/*!
+@defgroup base
+@brief Base Module
+*/

@@ -11,17 +11,6 @@
 
 
 /*!
-@defgroup base
-@brief Base Module
-*/
-
-/*!
-@defgroup core
-@brief Core Module
-*/
-
-
-/*!
 @mainpage
 Numcpp is a numerical C++ library that uses features of the new C++ standard C++11, which enables a clean implementation ...
 

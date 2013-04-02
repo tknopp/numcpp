@@ -9,6 +9,13 @@
 namespace numcpp
 {
 
+/*!
+@file
+
+@addtogroup graphics
+@{
+*/
+
 template<class T, class R>
 void export_pdf(const AbstractMatrix<T,R>& x, std::string filename, double winMin, double winMax, const colormap& cm = colormaps::gray)
 {
@@ -58,6 +65,8 @@ void export_pdf(const AbstractMatrix<T,R>& x, std::string filename, const colorm
   export_pdf<T>(x, filename, min(x), max(x), cm);
 }*/
 
+/*! @} */
+
 }
 
-#endif // NUMCPP_IMAGE_H
+#endif

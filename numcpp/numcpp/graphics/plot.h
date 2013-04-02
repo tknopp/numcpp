@@ -9,6 +9,13 @@
 namespace numcpp
 {
 
+/*!
+@file
+
+@addtogroup graphics
+@{
+*/
+
 class Figure
 {
 public:
@@ -140,8 +147,8 @@ private:
 
 };
 
-
+/*! @} */
 
 }
 
-#endif // NUMCPP_PLOT_H
+#endif
