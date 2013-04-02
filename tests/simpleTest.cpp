@@ -3,23 +3,6 @@
 
 using namespace numcpp;
 
-template<class T>
-class test
-{
-public:
-  void print();
-
-
-};
-
-template<class T>
-  void test<T>::print()
-  {
-    printf("hhh");
-
-  }
-
-extern template class test<int>;
 
 /*
 void test1()
@@ -321,26 +304,21 @@ void testDot()
 {
   size_t M = 3;
   size_t N = 3;
-  Matrix<double> A = zeros(M,N);
+  auto A = array<double>({1, 7, 3, 9, 9, 4, 1, 0, 4},3,3);
 
-  for(size_t m=0; m<M; m++)
-    for(size_t n=0; n<N; n++)
-      A(m,n) = 2*m+n;
 
   Vector<double> x = ones(N);
-  Vector<double> y = dot(A,conj(x));
+  Vector<double> y = dot(A,x);
 
   print(A);
   print(x);
   print(y);
 
-  auto z = kaczmarz(A, y, 30,0.000001);
 
-  print(z);
+  auto r = solve(A, y);
 
-  //auto r = solve(A, y);
-
-  //print(r);
+  print(r);
+  print(dot(A,r));
 
 }
 
@@ -421,16 +399,14 @@ int main()
   //std::cout << _array<double>({{1,2,3},{1,2,3}}) << std::endl;
 
   //testNewArray();
-  testArrayFunctions();
+  //testArrayFunctions();
   //testMultiIndex();
-  //testDot();
+  testDot();
   //testFFT();
   //testRandn();
   //testExternalData();
   //testSVD();
 
-  test<double> t;
-  t.print();
 
   return 0;
 }

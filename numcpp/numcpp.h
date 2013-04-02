@@ -8,7 +8,7 @@
 #include "numcpp/solvers.h"
 #include "numcpp/fft.h"
 #include "numcpp/graphics.h"
-
+#include "numcpp/linalg.h"
 
 /*!
 @mainpage

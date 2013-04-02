@@ -54,14 +54,14 @@ template<class T, class U, class R, class V>
 {
   auto M = A.shape(0);
   auto N = A.shape(1);
-  Vector< COMMON_TYPE(T,U) > y = zeros(M);
+  Vector< COMMON_TYPE(T,U) > y = zeros(N);
 
   #ifdef _OPENMP
   #pragma omp parallel for
   #endif
   for(size_t m=0; m<M; m++)
     for(size_t n=0; n<N; n++)
-      y[m] += conj(A(m,n)) * x[n];
+      y[n] += A(m,n) * x[m];
   return y;
 }
 

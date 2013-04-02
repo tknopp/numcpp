@@ -103,7 +103,7 @@ struct complexBaseType
 #define COMPLEX_BASE_TYPE(T) typename complexBaseType<T>::type
 
 typedef std::complex<double> cdouble;
-typedef std::complex<double> cfloat;
+typedef std::complex<float> cfloat;
 
 template<class T, class U>
 struct commonArithmeticType
