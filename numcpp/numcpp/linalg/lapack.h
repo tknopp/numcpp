@@ -27,12 +27,10 @@ extern "C"
 */
 
 #define LAPACK_GELS(typeChar,T,cast) \
-inline int lapack_gels(char *trans, long *m, long *n, long * \
-    nrhs, T *a, long *lda, T *b, long *ldb, \
-    T *work, long *lwork, long *info) { \
+inline int lapack_gels(char *trans, long *m, long *n, long * nrhs, T *a, long *lda, T *b, long *ldb, \
+                       T *work, long *lwork, long *info) { \
   using namespace lapack; \
-  return typeChar ## gels_(trans, m, n, nrhs, ( cast *) a, lda, \
-      ( cast *) b, ldb, ( cast *) work, lwork, info); \
+  return typeChar ## gels_(trans, m, n, nrhs, ( cast *) a, lda, ( cast *) b, ldb, ( cast *) work, lwork, info); \
 }
 
 LAPACK_GELS(s,float,lapack::real)

@@ -14,6 +14,9 @@ namespace numcpp
 @{
 */
 
+/*!
+Solve the linear system of equations A*x = b.
+*/
 template<class T>
 Vector<T> solve(const Matrix<T>& A, const Vector<T>& b)
 {
