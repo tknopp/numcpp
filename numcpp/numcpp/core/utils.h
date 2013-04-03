@@ -12,6 +12,13 @@
 namespace numcpp
 {
 
+/*!
+@file
+
+@addtogroup core
+@{
+*/
+
 template<class Vector>
 typename Vector::value_type prod(Vector x)
 {
@@ -88,13 +95,35 @@ void println (const Vector& x)
   std::cout << std::endl;
 }
 
+/// Clock type that can hold the current time point.
 typedef std::chrono::high_resolution_clock clock;
 
+/*!
+Start a timer and return the current clock time.
+Example:
+@code
+auto t = tic();
+// do some calculations
+toc(t);
+@endcode
+\sa toc()
+*/
 inline clock::time_point tic()
 {
   return clock::now();
 }
 
+/*!
+Returns the time that is ellapsed since the time point \a t and now.
+If the parameter \a print is true, the function prints the ellapsed time
+in a pretty format to the console.
+@code
+auto t = tic();
+// do some calculations
+toc(t);
+@endcode
+\sa tic()
+*/
 inline size_t toc(clock::time_point t, bool print=true)
 {
   auto diff = tic() - t;
@@ -114,6 +143,7 @@ inline size_t toc(clock::time_point t, bool print=true)
 
 
 
+/*! @} */
 
 
 }

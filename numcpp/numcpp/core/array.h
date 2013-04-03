@@ -32,14 +32,14 @@ namespace numcpp
 @{
 */
 
-/**
- * Multidimensional Strided Array
- *
- * The core of the numcpp library is a multidimensional array object named Array.
- *
- * @tparam T type of each array element
- * @tparam D dimension / rank of the array
- */
+/*!
+Multidimensional Strided Array
+
+The core of the numcpp library is a multidimensional array object named Array.
+
+@tparam T type of each array element
+@tparam D dimension / rank of the array
+*/
 template<class T, int D>
 class Array : public AbstractArray<T,D,Array<T,D> >
 {

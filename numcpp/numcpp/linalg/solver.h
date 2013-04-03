@@ -47,8 +47,6 @@ Vector<T> solve(const Matrix<T>& A, const Vector<T>& b)
 
   Vector<T> x = bwork(slice(0,N));
 
-  //Eigen::Map<Eigen::Matrix<T,Eigen::Dynamic, 1>> x_(x.data(), N, 1);
-
   return x;
 }
 

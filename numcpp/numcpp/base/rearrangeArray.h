@@ -14,6 +14,12 @@
 namespace numcpp
 {
 
+
+/*!
+Transpose the array \a x inplace.
+The transposition will internally only swap the strides of the array and is therefore a cheap operation.
+\sa transpose()
+*/
 template<class T, int D>
 Array<T,D> transpose_(Array<T,D>& x)
 {
@@ -21,6 +27,11 @@ Array<T,D> transpose_(Array<T,D>& x)
   return x;
 }
 
+/*!
+Return the transpose of the array \a x.
+Note that this function will create a copy of the array \a x.
+\sa transpose_()
+*/
 template<class T, int D, class R>
 Array<T,D> transpose(const AbstractArray<T,D,R>& x)
 {
@@ -39,6 +50,9 @@ Array<T,DNew> reshape(const Array<T,D>& x, const std::array<size_t,DNew>& shape)
   return y;
 }
 
+/*!
+Reshape array \a x.
+*/
 template<class T, int D, class...A>
 Array<T,sizeof...(A)> reshape(const Array<T,D>& x, A...args)
 {
@@ -46,6 +60,9 @@ Array<T,sizeof...(A)> reshape(const Array<T,D>& x, A...args)
   return reshape(x, shape);
 }
 
+/*!
+Reshape array \a x.
+*/
 template<class T, int D, class R, class...A>
 Array<T,sizeof...(A)> reshape(const AbstractArray<T,D,R>& x, A...args)
 {

@@ -3,6 +3,9 @@
 
 #include "array.h"
 
+namespace numcpp
+{
+
 /*!
 @file
 
@@ -10,9 +13,6 @@
 @{
 */
 
-
-namespace numcpp
-{
 
 VECTORIZE(std::abs, abs)
 VECTORIZE(std::sqrt, sqrt)

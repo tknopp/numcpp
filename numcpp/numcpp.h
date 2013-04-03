@@ -10,56 +10,5 @@
 #include "numcpp/graphics.h"
 #include "numcpp/linalg.h"
 
-/*!
-@mainpage
-\section Introduction
-NumCpp is a numerical C++ library, which allows to write numerical algorithms in a similar way as in Numpy or Matlab. 
-It uses features of the new C++11 standard simplifying both the implementation of NumCpp and the external API. 
-Here is a simple example of its usage:
-
-@code
-#include <numcpp.h>
-using namespace numcpp;
-
-int main()
-{
-  Vector<double> x = ones(16);
-  auto y = fft(x);
-  auto z = reshape(y,4,4);
-
-  print(z);
-}
-@endcode
-
-\section Features
-
-The features of NumCpp are
-
-* Simple API similar to Numpy/Matlab
-* Truely multidimensional array object
-* Clean implementation
-* High performance using expression templates
-* Mixing of datatypes in expressions
-
-
-\section License
-
-The core functionallity of NumCpp is licensed under the <a href="http://www.gnu.org/copyleft/lesser.html">LGPL</a>.
-However, some functionality requires to link against software that is licensed under the GPL 
-<a href="http://www.gnu.org/copyleft/gpl.html">GPL</a>. For instance the fft function internally uses the FFTW library,
-which is licensed under the GPL. If you plan to use NumCpp in a closed source software, please <a href="mailto:tobias.knopp@gmail.com">contact us</a>
-to obtain a version of NumCpp where all GPL modules are replaced by GPL-free modules.
-
-Contact
-==================
-For questions and discussions you can use the <a href="https://groups.google.com/forum/?hl=de&fromgroups#!forum/numcpp">google group numcpp</a>.
-
-If you are missing functionality in NumCpp you can either contribute to the project,
-or request features on a consulting basis (please <a href="mailto:tobias.knopp@gmail.com">contact us</a>)
-
-*/
-
-
-
-#endif // NUMCPP_H
+#endif
 
