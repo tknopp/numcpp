@@ -18,7 +18,7 @@ namespace numcpp
 /*!
 Transpose the array \a x inplace.
 The transposition will internally only swap the strides of the array and is therefore a cheap operation.
-\sa transpose()
+\sa ::transpose
 */
 template<class T, int D>
 Array<T,D> transpose_(Array<T,D>& x)
@@ -30,7 +30,7 @@ Array<T,D> transpose_(Array<T,D>& x)
 /*!
 Return the transpose of the array \a x.
 Note that this function will create a copy of the array \a x.
-\sa transpose_()
+\sa ::transpose_
 */
 template<class T, int D, class R>
 Array<T,D> transpose(const AbstractArray<T,D,R>& x)

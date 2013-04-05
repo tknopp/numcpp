@@ -15,6 +15,10 @@ namespace numcpp
 @{
 */
 
+/*!
+Return the p-norm of the input array x (considered as vector).
+The parameter \a p is in the range of [0,infinity). Infinity is defined by INFINITY.
+*/
 template<class T, int D, class R>
 double norm(const AbstractArray<T,D,R>& x, double p=2.0)
 {

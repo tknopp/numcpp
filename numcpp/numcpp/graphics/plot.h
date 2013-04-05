@@ -36,14 +36,14 @@ public:
 
 
   template<class T, class R>
-  void plot(const AbstractVector<T,R>& y, color_rgba color = colors::black, double lw = 0.01)
+  void plot(const AbstractVector<T,R>& y, color_t color = colors::black, double lw = 0.01)
   {
       plot(range(0, y.size()), y, color, lw);
   }
 
   template<class T, class R, class U, class Y>
   void plot(const AbstractVector<T,R>& x, const AbstractVector<U,Y>& y,
-            color_rgba color = colors::black, double lw = 0.01)
+            color_t color = colors::black, double lw = 0.01)
   {
       cairo_save(cr);
       cairo_scale(cr, width, height);
@@ -118,7 +118,7 @@ private:
 
   template<class T, class R, class U, class Y>
   void draw_data(cairo_t* cr, const AbstractVector<T,R>& x, const AbstractVector<U,Y>& y,
-                 color_rgba color = colors::black, double lw = 0.01)
+                 color_t color = colors::black, double lw = 0.01)
   {
       double maxX = max(x);
       double minX = min(x);

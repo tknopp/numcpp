@@ -34,6 +34,11 @@ VECTORIZE(atan, atan)
 @brief Trigonometric sinus of \a x, elementwise.
 */
 
+/*!
+@fn template <class T, class Op> Array_cos < AbstractArray<T,Op::dim, Op> > cos( const AbstractArray<T,Op::dim, Op>& op)
+@brief Trigonometric cosine of \a x, elementwise.
+*/
+
 
 /*! @} */
 

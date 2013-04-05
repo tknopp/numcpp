@@ -4,6 +4,7 @@
 #include "slice.h"
 #include <array>
 
+/// NumCpp Namspace
 namespace numcpp
 {
 

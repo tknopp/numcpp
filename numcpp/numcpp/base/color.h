@@ -19,11 +19,25 @@ namespace numcpp
 @{
 */
 
-struct color_rgba
-{
-  color_rgba() = default;
+/*!
+color_t is an RGBA color type.
+It consists of four doubles decribing the color in RGBA colorspace.
+For standard colors, a string constructor exists that allows to specify
+colors as strings. Here are some example color definitions:
+@code
+color_t c = "blue";
+color_t f = {1.0, 0.5, 1.0. 1.0};
+color_t h = color.green;
 
-  color_rgba(std::initializer_list<double> data)
+h.r = h.g = h.b = h.a = 1.0;
+@endcode
+*/
+struct color_t
+{
+  color_t() = default;
+
+  /// Create color from initializer list
+  color_t(std::initializer_list<double> data)
   {
     r = *(data.begin());
     g = *(data.begin()+1);
@@ -31,7 +45,8 @@ struct color_rgba
     a = *(data.begin()+3);
   }
 
-  color_rgba(const char* str_c)
+  /// Create color from string
+  color_t(const char* str_c)
   {
     std::string str = str_c;
 
@@ -49,19 +64,22 @@ struct color_rgba
   double a;
 };
 
+/// namespace containing default colors
 namespace colors
 {
-  const color_rgba black = color_rgba("black");
-  const color_rgba white = color_rgba("white");
-  const color_rgba red   = color_rgba("red");
-  const color_rgba blue  = color_rgba("blue");
-  const color_rgba green = color_rgba("green");
-  const color_rgba yellow = color_rgba("yellow");
+  const color_t black = color_t("black");
+  const color_t white = color_t("white");
+  const color_t red   = color_t("red");
+  const color_t blue  = color_t("blue");
+  const color_t green = color_t("green");
+  const color_t yellow = color_t("yellow");
 }
 
 
-
-union argb_int
+/*!
+color_argb_int describes a 32 bit ARGB color type
+*/
+union color_argb_int
 {
     uint32_t value;
     struct
@@ -73,8 +91,15 @@ union argb_int
     } channel;
 };
 
-using colormap = std::vector<color_rgba>;
+/*!
+colormap is a vector of colors the describe a color gradient.
+It is used for instance when mapping floating point numbers on colors.
 
+@sa color_t @sa ::colorize
+*/
+using colormap = std::vector<color_t>;
+
+/// namespace containing default colormaps
 namespace colormaps
 {
   const colormap gray = {colors::black, colors::white};
@@ -82,6 +107,10 @@ namespace colormaps
   const colormap winter = {colors::blue, colors::green};
 }
 
+/*!
+Colorize the floating point array \a x.
+The parameters \a winMin and \a winMax specify the range that is mapped on the colormap \a cm.
+*/
 template<class T, int D, class R>
 Array<uint32_t,D> colorize(const AbstractArray<T,D,R>& x, const T& winMin, const T& winMax, const colormap& cm)
 {
@@ -93,9 +122,9 @@ Array<uint32_t,D> colorize(const AbstractArray<T,D,R>& x, const T& winMin, const
   return coloredData;
 }
 
-inline uint32_t rgbaToInt(const color_rgba& v)
+inline uint32_t rgbaToInt(const color_t& v)
 {
-  argb_int x;
+  color_argb_int x;
   x.channel.r = (uint8_t) (v.r *255)  & 0x000000FF;
   x.channel.g = (uint8_t) (v.g *255)  & 0x000000FF;
   x.channel.b = (uint8_t) (v.b *255)  & 0x000000FF;
@@ -104,6 +133,10 @@ inline uint32_t rgbaToInt(const color_rgba& v)
   return x.value;
 }
 
+/*!
+Colorize a floating point value \a x.
+The parameters \a winMin and \a winMax specify the range that is mapped on the colormap \a cm.
+*/
 template<class T>
 uint32_t colorize(const T& x, const T& winMin, const T& winMax, const colormap& cm)
 {
@@ -115,7 +148,7 @@ uint32_t colorize(const T& x, const T& winMin, const T& winMax, const colormap& 
     return rgbaToInt(cm[1]);
   else
   {
-    color_rgba v = {cm[0].r+(cm[1].r-cm[0].r)*norm,
+    color_t v = {cm[0].r+(cm[1].r-cm[0].r)*norm,
               cm[0].g+(cm[1].g-cm[0].g)*norm,
               cm[0].b+(cm[1].b-cm[0].b)*norm,
               cm[0].a+(cm[1].a-cm[0].a)*norm};

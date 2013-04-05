@@ -16,6 +16,9 @@ namespace numcpp
 @{
 */
 
+/*!
+Return the mean value of the array \a x.
+*/
 template<class T, int D, class R>
 double mean(const AbstractArray<T,D,R>& x)
 {
@@ -23,7 +26,10 @@ double mean(const AbstractArray<T,D,R>& x)
   return y / x.size();
 }
 
-
+/*!
+Return the mean value of the array \a x.
+This is an overload of the mean function for complex numbers
+*/
 template<class T, int D, class R>
 std::complex<double> mean(const AbstractArray<std::complex<T>,D,R>& x)
 {
@@ -31,6 +37,9 @@ std::complex<double> mean(const AbstractArray<std::complex<T>,D,R>& x)
   return y / x.size();
 }
 
+/*!
+Return the standard deviation of \a x.
+*/
 template<class T, int D, class R>
 double stdDev(const AbstractArray<T,D,R>& x)
 {

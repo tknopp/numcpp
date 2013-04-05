@@ -575,7 +575,7 @@ SHOW_FILES             = YES
 # Namespaces page.  This will remove the Namespaces entry from the Quick Index 
 # and from the Folder Tree View (if specified). The default is YES.
 
-SHOW_NAMESPACES        = NO
+SHOW_NAMESPACES        = YES
 
 # The FILE_VERSION_FILTER tag can be used to specify a program or script that 
 # doxygen should invoke to get the current version for each file (typically from 
@@ -1552,7 +1552,7 @@ MACRO_EXPANSION        = YES
 # then the macro expansion is limited to the macros specified with the 
 # PREDEFINED and EXPAND_AS_DEFINED tags.
 
-EXPAND_ONLY_PREDEF     = NO
+EXPAND_ONLY_PREDEF     = YES
 
 # If the SEARCH_INCLUDES tag is set to YES (the default) the includes files 
 # pointed to by INCLUDE_PATH will be searched when a #include is found.
@@ -1588,7 +1588,7 @@ PREDEFINED             =
 # Use the PREDEFINED tag if you want to use a different macro definition that 
 # overrules the definition found in the source code.
 
-EXPAND_AS_DEFINED      = 
+EXPAND_AS_DEFINED      = VECTORIZE VECTORIZE_ONE_ARG
 
 # If the SKIP_FUNCTION_MACROS tag is set to YES (the default) then 
 # doxygen's preprocessor will remove all references to function-like macros 
