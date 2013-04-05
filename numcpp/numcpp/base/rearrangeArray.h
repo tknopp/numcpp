@@ -1,6 +1,9 @@
 #ifndef NUMCPP_REARRANGE_ARRAY_H
 #define NUMCPP_REARRANGE_ARRAY_H
 
+namespace numcpp
+{
+
 /*!
 @file
 
@@ -9,11 +12,6 @@
 @ingroup base
 @{
 */
-
-
-namespace numcpp
-{
-
 
 /*!
 Transpose the array \a x inplace.
@@ -73,7 +71,9 @@ Array<T,sizeof...(A)> reshape(const AbstractArray<T,D,R>& x, A...args)
   return y;
 }
 
-
+/*!
+Rotate matrix by -90 degree.
+*/
 template<class T, class R>
 Matrix<T> rotl90(const AbstractMatrix<T,R>& A)
 {
@@ -88,6 +88,9 @@ Matrix<T> rotl90(const AbstractMatrix<T,R>& A)
     return B;
 }
 
+/*!
+Rotate matrix by +90 degree.
+*/
 template<class T, class R>
 Matrix<T> rotr90(const AbstractMatrix<T,R>& A)
 {
@@ -102,6 +105,9 @@ Matrix<T> rotr90(const AbstractMatrix<T,R>& A)
     return B;
 }
 
+/*!
+Rotate matrix by 180 degree.
+*/
 template<class T, class R>
 Matrix<T> rot180(const AbstractMatrix<T,R>& A)
 {
@@ -116,6 +122,9 @@ Matrix<T> rot180(const AbstractMatrix<T,R>& A)
     return B;
 }
 
+/*!
+Reverse a vector inplace.
+*/
 template<class T>
 Vector<T> reverse_(Vector<T>& x)
 {
@@ -131,18 +140,18 @@ Vector<T> reverse_(Vector<T>& x)
     return x;
 }
 
+/*!
+Reverse a vector.
+*/
 template<class T, class R>
 Vector<T> reverse(const AbstractVector<T,R>& x)
 {
   return reverse_(copy(x));
 }
 
-template<class T>
-Vector<T> flipdim_(Vector<T>& x, size_t)
-{
-  return reverse_(x);
-}
-
+/*!
+Reverse the elements of an array x along axis \a d (inplace).
+*/
 template<class T, int D>
 Array<T,D> flipdim_(Array<T,D>& x, size_t axis)
 {
@@ -175,6 +184,16 @@ Array<T,D> flipdim_(Array<T,D>& x, size_t axis)
   return x;
 }
 
+template<class T>
+Vector<T> flipdim_(Vector<T>& x, size_t)
+{
+  return reverse_(x);
+}
+
+
+/*!
+Reverse the elements of an array x along axis \a d.
+*/
 template<class T, int D, class R>
 Array<T,D> flipdim(const AbstractArray<T,D,R>& x, size_t axis)
 {
@@ -182,24 +201,36 @@ Array<T,D> flipdim(const AbstractArray<T,D,R>& x, size_t axis)
   return flipdim_(y, axis);
 }
 
+/*!
+Reverse the columns of a matrix (inplace).
+*/
 template<class T, int D>
 Array<T,D> flipud_(Array<T,D>& x)
 {
   return flipdim_(x, 0);
 }
 
+/*!
+Reverse the rows of a matrix (inplace).
+*/
 template<class T, int D>
 Array<T,D> fliplr_(Array<T,D>& x)
 {
   return flipdim_(x, 1);
 }
 
+/*!
+Reverse the columns of a matrix.
+*/
 template<class T, int D, class R>
 Array<T,D> flipud(AbstractArray<T,D,R>& x)
 {
   return flipdim(x, 0);
 }
 
+/*!
+Reverse the rows of a matrix.
+*/
 template<class T, int D, class R>
 Array<T,D> fliplr(AbstractArray<T,D,R>& x)
 {

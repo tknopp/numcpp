@@ -5,31 +5,72 @@
 \section commandTabArraySizeProp Array Size Properties
 
 <table>
-<tr><td>256 colors</td><td>Indexed color modes.  You need ... ...</td></tr>
-<tr><td>Hi color (15 or 15 bits)</td><td>Displays real colors ... ...</td></tr>
-<tr><td>True color (24 bits)</td><td>Displays real colors, but ... ...</td></tr>
+  <tr>
+    <th>Matlab</th>
+    <th>Numpy</th>
+    <th>Numcpp</th>
+	<th>Description</th>
+  </tr>
+  <tr>
+    <td>ndims(x)</td>
+	<td>ndim(x) or a.ndim</td>
+	<td>\link numcpp::ndims ndims\endlink(x) or a.ndims</td>
+	<td>number of dimensions (rank) of x</td>
+  </tr>
+  <tr>
+    <td>size(x)</td>
+	<td>shape(x) or x.shape</td>
+	<td>\link numcpp::shape shape\endlink(x) or x.shape()</td>
+	<td>number of elements (shape) of x</td>
+  </tr>
+  <tr>
+    <td>size(x,d)</td>
+	<td>shape(x,d) or a.shaped[d]</td>
+	<td>\link numcpp::shape shape\endlink(x,d) or a.shape(d)</td>
+	<td>number of elements along axis d</td>
+  </tr>
+  <tr>
+    <td>length(x(:))</td>
+	<td>x.size</td>
+	<td>\link numcpp::size size\endlink(x) or a.size()</td>
+	<td>total number of elements of x</td>
+  </tr>
 </table>
-
-==============  ==========================  =========================  =================================
-Matlab          Numpy                       Numcpp                     Description
-==============  ==========================  =========================  =================================
-ndims(x)        ndim(a) or a.ndim           ndims(a) or a.ndims        number of dimensions (rank) of a
-size(x)         shape(a) or a.shape         shape(a) or a.shape()      vector of  
-size(x,d)       shape(a,d) or a.shaped[d]   shape(a,d) or a.shape(d)   number of elements along axis d
-length(a(:))    a.size                      size(a) or a.size()        total number of elements of a
-==============  ==========================  =========================  =================================
 
 
 \section commandTabMatMan Matrix Manipulation
 
+<table>
+  <tr>
+    <th>Matlab</th>
+    <th>Numpy</th>
+    <th>Numcpp</th>
+	<th>Description</th>
+  </tr>
+  <tr>
+    <td>fliplr(x)</td>
+	<td>fliplr(x)</td>
+	<td>\link numcpp::fliplr fliplr\endlink(x) or \link numcpp::fliplr_ fliplr_\endlink(x)</td>
+	<td>flip left-right(use fliplr_ for inplace)</td>
+  </tr>
+  <tr>
+    <td>flipud(x)</td>
+	<td>flipud(x)</td>
+	<td>\link numcpp::flipud flipud\endlink(x) or \link numcpp::flipud_ flipud_\endlink(x)</td>
+	<td>flip left-right(use flipud_ for inplace)</td>
+  </tr>
+  <tr>
+    <td>flipdim(x,d)</td>
+	<td>flipdim(x,d)</td>
+	<td>\link numcpp::flipdim flipdim\endlink(x,d) or \link numcpp::flipdim_ flipdim_\endlink(x,d)</td>
+	<td>flip elements along axis d (use flipdim_ for inplace)</td>
+  </tr>
+  <tr>
+    <td>rot90(x)</td>
+	<td>rot90(x)</td>
+	<td>\link numcpp::rot90 rot90\endlink(x)</td>
+	<td>rotate by 90 degrees</td>
+  </tr>  
+</table>
 
-==============  ==========================  =============================  =====================================================
-Matlab          Numpy                       Numcpp                         Description
-==============  ==========================  =============================  =====================================================
-fliplr(a)       fliplr(a)                   fliplr(a) or fliplr\_(a)        Flip left-right  (use fliplr\_ for inplace)
-flipud(a)       flipud(a)                   flipud(a) or flipud\_(a)        Flip up-down  (use flipud\_ for inplace)
-flipdim(a,d)    flipdim(a,d)                flipdim(a,d) or flipdim_(a,d)  Flip elements along axis d (use flipdim\_ for inplace)
-
-rot90(a)        rot90(a)                    rotl90(a)                      Rotate 90 degrees
-==============  ==========================  =============================  =====================================================
 */

@@ -108,46 +108,59 @@ protected:
 };
 
 
-// zeros
+/// Return an constant array containing only zero values.
+/// Note that this function returns an expression template.
 template<int D, class Int=size_t>
 ConstantArray<int,D> zeros(std::array<Int,D> shape)
 {
   return ConstantArray<int,D> (0, shape);
 }
 
+/// \overload
 template<class...A>
 ConstantArray<int,sizeof...(A)> zeros(A...args)
 {
   return ConstantArray<int,sizeof...(A)> (0, {((size_t)args)...});
 }
 
-// ones
-
+/// Return an constant array containing only ones as values.
+/// Note that this function returns an expression template.
 template<int D, class Int=size_t>
 ConstantArray<int,D> ones(std::array<Int,D> shape)
 {
   return ConstantArray<int,D> (1, shape);
 }
 
+/// \overload
 template<class...A>
 ConstantArray<int,sizeof...(A)> ones(A...args)
 {
   return ConstantArray<int,sizeof...(A)> (1, {((size_t)args)...});
 }
 
-// linspace
-
+/// Return a vector containing linear spaced values.
 inline LinearVector<double> linspace(double start, double end, size_t size)
 {
   return LinearVector<double>(start, end, (end-start) / size);
 }
 
+/// Return a vector containing linear spaced values.
 inline LinearVector<int> range(size_t start, size_t end, size_t step=1)
 {
   return LinearVector<int>(start, end, step);
 }
 
+/*!
+Return coordinate matrices from two coordinate vectors.
 
+Example:
+\code
+auto x = range(0,3);       // x = [0, 1, 2]
+auto cc = meshgrid(x,x);
+auto xx = cc.first;        // xx = [0, 1, 2; 0, 1, 2; 0, 1, 2]
+auto yy = cc.second;       // yy = [0, 0, 0; 1, 1, 1; 2, 2, 2]
+\endcode
+*/
 template<class T, class R1, class U, class R2>
 std::pair< Matrix<T>, Matrix<U> >
 meshgrid(const AbstractVector<T,R1>& x, const AbstractVector<U,R2>& y)
@@ -169,18 +182,14 @@ meshgrid(const AbstractVector<T,R1>& x, const AbstractVector<U,R2>& y)
   return std::make_pair(xx, yy);
 }
 
+/*!
+Generates the (modified) Shepp-Logan phantom of P. Toft as an NxN matrix.
 
+Reference: Peter Toft: "The Radon Transform - Theory and Implementation", Ph.D. thesis.
+   Department of Mathematical Modelling, Technical University of Denmark, June 1996. 326 pages.
+*/
 inline Matrix<double> phantom(size_t N)
 {
-    // phantom(N)
-    //  generates the (modified) Shepp-Logan phantom of P. Toft
-    //  as an NxN matrix.
-    //
-    // Reference: Peter Toft: "The Radon Transform - Theory and Implementation", Ph.D. thesis.
-    //   Department of Mathematical Modelling, Technical University of Denmark, June 1996. 326 pages.
-
-    // Author: Markus Fenn, 2005
-
     Matrix<double> I = zeros(N,N);
 
     auto z = meshgrid( linspace(-1,1,N) , (-1)*linspace(-1,1,N) );

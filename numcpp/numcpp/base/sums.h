@@ -63,6 +63,24 @@ Array<T, D-1> sum(const Array<T,D>& x, Int axis) // TODO AbstractArray
   return y;
 }
 
+template<class T>
+Vector<T> sum(const Matrix<T>& x, int axis) // TODO AbstractArray
+{
+  int otherAxis = (axis == 0) ? 1 : 0;
+  std::array<size_t,D-1> shape;
+
+  Vector<T> y = zeros(otherAxis);
+
+  std::array<size_t,2> index = {0, 0};
+
+  for(; index[1] < x.shape(1); (index[1])++)
+    for(; index[0] < x.shape(0); (index[0])++)
+	  y(index[otherAxis]) += x(index);
+
+  return y;
+}
+
+
 
 
 // diff

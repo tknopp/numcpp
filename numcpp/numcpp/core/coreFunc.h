@@ -20,7 +20,7 @@ VECTORIZE_ONE_ARG(std::pow,pow,int)
 VECTORIZE_ONE_ARG(std::pow,pow,double)
 
 /*!
-Number of dimensions (i.e. rank) ao the array \a x.
+Number of dimensions (rank) of the array \a x.
 */
 template <class T, int D, class Derived>
 int ndims(const AbstractArray<T,D,Derived>& x)
@@ -28,10 +28,22 @@ int ndims(const AbstractArray<T,D,Derived>& x)
   return D;
 }
 
+/*!
+Number of elements (shape) of the array \a x along axis \a d.
+*/
 template <class T, int D, class Derived>
 size_t shape(const AbstractArray<T,D,Derived>& x, int d)
 {
   return x.shape(d);
+}
+
+/*!
+Total number of elements of the array \a x.
+*/
+template <class T, int D, class Derived>
+int size(const AbstractArray<T,D,Derived>& x)
+{
+  return x.size();
 }
 
 /*!

@@ -20,7 +20,7 @@ namespace numcpp
 */
 
 /*!
-color_t is an RGBA color type.
+RGBA color type.
 It consists of four doubles decribing the color in RGBA colorspace.
 For standard colors, a string constructor exists that allows to specify
 colors as strings. Here are some example color definitions:
@@ -67,17 +67,23 @@ struct color_t
 /// namespace containing default colors
 namespace colors
 {
+  /// black color
   const color_t black = color_t("black");
+  /// white color
   const color_t white = color_t("white");
+  /// red color
   const color_t red   = color_t("red");
+  /// blue color
   const color_t blue  = color_t("blue");
+  /// green color
   const color_t green = color_t("green");
+  /// yellow color
   const color_t yellow = color_t("yellow");
 }
 
 
 /*!
-color_argb_int describes a 32 bit ARGB color type
+32 bit ARGB color type
 */
 union color_argb_int
 {
@@ -102,8 +108,11 @@ using colormap = std::vector<color_t>;
 /// namespace containing default colormaps
 namespace colormaps
 {
+  /// gray colormap (black to white)
   const colormap gray = {colors::black, colors::white};
+  /// autumn colormap (red to yellow)
   const colormap autumn = {colors::red, colors::yellow};
+  /// winter colormap (blue to green)
   const colormap winter = {colors::blue, colors::green};
 }
 

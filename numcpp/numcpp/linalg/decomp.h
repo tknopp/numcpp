@@ -3,6 +3,12 @@
 
 #include "../core.h"
 
+
+
+
+namespace numcpp
+{
+
 /*!
 @file
 
@@ -10,9 +16,6 @@
 @{
 */
 
-
-namespace numcpp
-{
 
 
 /*! @} */
