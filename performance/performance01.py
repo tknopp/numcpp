@@ -1,4 +1,5 @@
 from numpy import *
+import timeit
 
 def performance01():
   N=1000000
@@ -18,4 +19,8 @@ def performance01():
     for i in xrange(0,M):
       x += i
 
+
+tic = timeit.default_timer()
 performance01()
+toc = timeit.default_timer()
+print(toc-tic)

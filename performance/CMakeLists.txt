@@ -1,5 +1,5 @@
 #include_directories (${NUMCPP_SOURCE_DIR}/numcpp /usr/local/Cellar/eigen/3.1.2/include/eigen3/)
-include_directories (${NUMCPP_SOURCE_DIR}/numcpp ${NUMCPP_SOURCE_DIR}/third_party)
+include_directories (${NUMCPP_SOURCE_DIR}/numcpp ${NUMCPP_SOURCE_DIR}/../)
 #link_directories (/opt/local/lib/)
 
 add_executable (performance01 performance01.cpp)

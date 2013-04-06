@@ -418,9 +418,11 @@ private:
   template<class U, int F, size_t DNew> friend Array<U,DNew> reshape(const Array<U,F>& x, const std::array<size_t,DNew>& shape);
 };
 
+/// Alias for one-dimensional array (vector)
 template <class T>
 using Vector = Array<T, 1 >;
 
+/// Alias for two-dimensional array (matrix)
 template <class T>
 using Matrix = Array<T, 2 >;
 

@@ -12,14 +12,14 @@ void performance03NumCpp(size_t N, size_t M)
 
     auto t = tic();
 
-    EnableCaching();
+    //EnableCaching();
 
     for(auto i=0; i<M; i++)
     {
       y += dot(A,x) + dot(A,ones(N))*i;
     }
 
-    DisableCaching();
+    //DisableCaching();
 
     toc(t);
 }

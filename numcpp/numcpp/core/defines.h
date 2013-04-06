@@ -6,6 +6,16 @@
 #include <cmath>
 
 
+namespace numcpp
+{
+
+/*!
+@file
+
+@addtogroup core
+@{
+*/
+
 #define VECTORIZE(func,funcName) \
 template <class Op> \
 class Array_ ## funcName : public  AbstractArray<decltype(func(std::declval< typename Op::value_type >())), Op::dim, Array_ ## funcName <Op>  > \
@@ -82,8 +92,6 @@ template <class T, class Op> \
 
 
 
-namespace numcpp
-{
 
 template<class T>
 struct complexBaseType;
@@ -102,7 +110,9 @@ struct complexBaseType
 
 #define COMPLEX_BASE_TYPE(T) typename complexBaseType<T>::type
 
+/// Alias for complex double
 typedef std::complex<double> cdouble;
+/// Alias for complex float
 typedef std::complex<float> cfloat;
 
 template<class T, class U>
@@ -112,6 +122,9 @@ struct commonArithmeticType
 };
 
 #define COMMON_TYPE(T,U) decltype( std::declval< T >() * std::declval< U >() )
+
+
+/*! @} */
 
 }
 

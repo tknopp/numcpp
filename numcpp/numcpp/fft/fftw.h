@@ -18,7 +18,7 @@ namespace numcpp
 
 template<int D>
 Array< std::complex<double>, D >&
-internal_fft_ (const Array< std::complex<double>, D >& x, int dir)
+internal_fft_ (Array< std::complex<double>, D >& x, int dir)
 {
   auto N = x.size();
 
@@ -35,7 +35,7 @@ internal_fft_ (const Array< std::complex<double>, D >& x, int dir)
   p = fftw_plan_dft(D, shape.data(), in, out, dir, FFTW_ESTIMATE);
 
   if(dir == FFTW_BACKWARD)
-    y *= 1. / y.size();
+    x *= 1. / x.size();
 
   fftw_execute(p);
 
@@ -46,7 +46,7 @@ internal_fft_ (const Array< std::complex<double>, D >& x, int dir)
 
 template<int D>
 Array< std::complex<float>, D >&
-internal_fft_ (const Array< std::complex<float>, D >& x, int dir)
+internal_fft_ (Array< std::complex<float>, D >& x, int dir)
 {
   auto N = x.size();
 
@@ -63,7 +63,7 @@ internal_fft_ (const Array< std::complex<float>, D >& x, int dir)
   p = fftwf_plan_dft(D, shape.data(), in, out, dir, FFTW_ESTIMATE);
 
   if(dir == FFTW_BACKWARD)
-    y *= 1. / y.size();
+    x *= 1. / x.size();
 
   fftwf_execute(p);
 
@@ -78,9 +78,9 @@ Calculates the FFT of the array \a x (inplace).
 Note that for multidimensional input arrays, the respective multidimensional fft is performed
 \sa ::fft \sa ::ifft_ \sa ::ifft
 */
-template<class T, int D, class R>
+template<class T, int D>
 Array< std::complex<T>, D >&
-fft_(const Array< std::complex<T>, D >& x)
+fft_(Array< std::complex<T>, D >& x)
 {
   return internal_fft_(x, FFTW_FORWARD);
 }
@@ -91,9 +91,9 @@ Calculates the inverse FFT of the array \a x (inplace).
 Note that for multidimensional input arrays, the respective multidimensional fft is performed
 \sa ::fft \sa ::fft_ \sa ::ifft
 */
-template<class T, int D, class R>
+template<class T, int D>
 Array< std::complex<T>, D >&
-ifft_(const Array< std::complex<T>, D >& x)
+ifft_(Array< std::complex<T>, D >& x)
 {
   return internal_fft_(x, FFTW_BACKWARD);
 }
@@ -108,7 +108,7 @@ template<class T, int D, class R>
 Array< std::complex< COMPLEX_BASE_TYPE(T) >, D >
 fft(const AbstractArray< T, D, R >& x)
 {
-  Array< std::complex< COMPLEX_BASE_TYPE(T), D > y(x.shape());
+  Array< std::complex< COMPLEX_BASE_TYPE(T) >, D > y(x.shape());
   y = x;
   fft_(y);
   return y;
@@ -124,7 +124,7 @@ template<class T, int D, class R>
 Array< std::complex< COMPLEX_BASE_TYPE(T) >, D >
 ifft(const AbstractArray< T, D, R >& x)
 {
-  Array< std::complex< COMPLEX_BASE_TYPE(T), D > y(x.shape());
+  Array< std::complex< COMPLEX_BASE_TYPE(T)>, D > y(x.shape());
   y = x;
   ifft_(y);
   return y;
@@ -135,28 +135,23 @@ ifft(const AbstractArray< T, D, R >& x)
 
 template<int D>
 Array<double, D >&
-internal_fft_r2r_ (const Array<double, D >& x, const fftw_r2r_kind kind)
+internal_fft_r2r_ (Array<double, D >& x, const int kind)
 {
   auto N = x.size();
 
   std::array<int,D> shape;
-  fftw_r2r_kind kinds[D];
+  int kinds[D];
 
   for(int d=0; d<D; d++)
   {
     shape[d] = x.shape(d);
-	kinds[d] = kind;
+    kinds[d] = kind;
   }
   //std::copy(std::begin(x.shape()), std::end(x.shape()), std::begin(shape));
 
-  double *out = (double*) x.data();
-  double *in = out;
   fftw_plan p;
 
-  p = fftw_plan_r2r(D, shape.data(), in, out, kinds, FFTW_ESTIMATE);
-
-  if(dir == FFTW_BACKWARD)
-    y *= 1. / y.size();
+  p = fftw_plan_r2r(D, shape.data(), x.data(), x.data(), (fftwf_r2r_kind*) kinds, FFTW_ESTIMATE);
 
   fftw_execute(p);
 
@@ -168,28 +163,23 @@ internal_fft_r2r_ (const Array<double, D >& x, const fftw_r2r_kind kind)
 
 template<int D>
 Array<float, D >&
-internal_fft_r2r_ (const Array<float, D >& x, const fftw_r2r_kind kind)
+internal_fft_r2r_ (Array<float, D >& x, const int kind)
 {
   auto N = x.size();
 
   std::array<int,D> shape;
-  fftw_r2r_kind kinds[D];
+  int kinds[D];
 
   for(int d=0; d<D; d++)
   {
     shape[d] = x.shape(d);
-	kinds[d] = kind;
+    kinds[d] = kind;
   }
   //std::copy(std::begin(x.shape()), std::end(x.shape()), std::begin(shape));
 
-  double *out = (double*) x.data();
-  double *in = out;
   fftwf_plan p;
 
-  p = fftwf_plan_r2r(D, shape.data(), in, out, kinds, FFTW_ESTIMATE);
-
-  if(dir == FFTW_BACKWARD)
-    y *= 1. / y.size();
+  p = fftwf_plan_r2r(D, shape.data(), x.data(), x.data(), (fftwf_r2r_kind*) kinds, FFTW_ESTIMATE);
 
   fftwf_execute(p);
 
@@ -203,11 +193,11 @@ Calculates the DCT of the array \a x (inplace).
 
 Note that for multidimensional input arrays, the respective multidimensional DCT is performed
 */
-template<class T, int D, class R>
+template<class T, int D>
 Array< T, D >&
-dct_(const Array< T, D >& x)
+dct_(Array< T, D >& x)
 {
-  return internal_fft_r2r_(x, FFTW_REDFT01);
+  return internal_fft_r2r_(x, FFTW_REDFT10);
 }
 
 /*!
@@ -215,11 +205,13 @@ Calculates the inverse DCT of the array \a x (inplace).
 
 Note that for multidimensional input arrays, the respective multidimensional DCT is performed
 */
-template<class T, int D, class R>
+template<class T, int D>
 Array< T, D >&
-idct_(const Array< T, D >& x)
+idct_(Array< T, D >& x)
 {
-  return internal_fft_r2r_(x, FFTW_REDFT01);
+  internal_fft_r2r_(x, FFTW_REDFT01);
+  x *= 1. / (2 * x.size());
+  return x;
 }
 
 

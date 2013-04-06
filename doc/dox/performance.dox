@@ -1,0 +1,24 @@
+/*!
+@page performance Performance
+
+<table>
+  <tr>
+    <th> </th>
+    <th>NumCpp</th>
+    <th>Numpy</th>
+    <th>Octave</th>
+    <th>Julia</th>
+    <th>Eigen</th>
+  </tr>
+  <tr>
+    <td>test01</td>
+    <td>1.0</td>
+    <td>4.12</td>
+    <td></td>
+    <td>1.99</td>
+    <td>1.08</td>
+  </tr>
+</table>
+
+
+*/

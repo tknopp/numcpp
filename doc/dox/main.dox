@@ -23,19 +23,21 @@ int main()
 
 The features of NumCpp are
 
-- Simple API similar to Numpy/Matlab
-- Truely multidimensional array object
-- Clean implementation
-- High performance using expression templates
-- Mixing of datatypes in expressions
+- \ref conceptInterface "Simple Interface" similar to Numpy/Matlab
+- Truely \ref conceptMultidimensional "multidimensional array object" allowing for \ref conceptStrided "strided" slicing
+- High \ref performance "performance" using \ref conceptExpressionTemplates "expression templates"
+- \ref conceptMixingDatatypes "Mixing of datatypes" in expressions
 
+\section Download
+
+NumCpp is hosted on <a href="https://github.com/tknopp/NumCpp">github</a> and can be downloaded from <a href="https://github.com/tknopp/NumCpp/archive/master.zip">here</a>.
 
 \section License
 
-The core functionallity of NumCpp is licensed under the <a href="http://www.gnu.org/copyleft/lesser.html">LGPL</a>.
-However, some functionality requires to link against software that is licensed under the GPL 
-<a href="http://www.gnu.org/copyleft/gpl.html">GPL</a>. For instance the fft function internally uses the FFTW library,
-which is licensed under the GPL. If you plan to use NumCpp in a closed source software, please <a href="mailto:tobias.knopp@gmail.com">contact us</a>
+The base functionallity of NumCpp is licensed under the <a href="http://www.gnu.org/copyleft/lesser.html">LGPL</a>.
+Some modules that require to link against software that is <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a> licensed are 
+licensed under the GPL as well. For instance the fft module uses internally the FFTW library, which is licensed under the GPL. 
+If you plan to use NumCpp in a closed source software, please <a href="mailto:tobias.knopp@gmail.com">contact us</a>
 to obtain a version of NumCpp where all GPL modules are replaced by GPL-free modules.
 
 Contact
