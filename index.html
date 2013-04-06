@@ -35,20 +35,20 @@
 
 <p>NumCpp is a numerical C++ library, which allows to write numerical algorithms in a similar way as in Numpy or Matlab. It uses features of the new C++11 standard simplifying both the implementation of NumCpp and the external API. Here is a simple example of its usage:</p>
 
-<pre><code>#include &lt;numcpp.h&gt;
-using namespace numcpp;
+<div class="highlight"><pre><span class="cp">#include &lt;numcpp.h&gt;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">numcpp</span><span class="p">;</span>
 
-int main()
-{
-  Vector&lt;double&gt; x = ones(16);
-  auto y = fft(x);
-  auto z = reshape(y,4,4);
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">Vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">ones</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">z</span> <span class="o">=</span> <span class="n">reshape</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
 
-  print(z);
-}
-</code></pre>
+  <span class="n">print</span><span class="p">(</span><span class="n">z</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
-<p><a href="numcpp.github.com/doc">Documentation</a></p>
+<p><a href="http://numcpp.github.com/doc">Documentation</a></p>
 
 <h3>Welcome to GitHub Pages.</h3>
 
