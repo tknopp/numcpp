@@ -31,7 +31,26 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>Welcome to GitHub Pages.</h3>
+        <h3>Introduction</h3>
+
+<p>NumCpp is a numerical C++ library, which allows to write numerical algorithms in a similar way as in Numpy or Matlab. It uses features of the new C++11 standard simplifying both the implementation of NumCpp and the external API. Here is a simple example of its usage:</p>
+
+<pre><code>#include &lt;numcpp.h&gt;
+using namespace numcpp;
+
+int main()
+{
+  Vector&lt;double&gt; x = ones(16);
+  auto y = fft(x);
+  auto z = reshape(y,4,4);
+
+  print(z);
+}
+</code></pre>
+
+<p><a href="numcpp.github.com/doc">Documentation</a></p>
+
+<h3>Welcome to GitHub Pages.</h3>
 
 <p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
 
