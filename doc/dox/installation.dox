@@ -1,0 +1,35 @@
+namespace numcpp
+{
+
+/*!
+@page installation Installation
+
+\section Installation
+
+NumCpp is a header only library, which means that the installation only requires to put the numcpp folder into the include path.
+For the future, we plan to also provide binary versions of numcpp, where the most common datatypes are supported. This will
+lower the build times.
+
+\subsection Compiler
+
+NumCpp is written in C++ using the C++11 standard, which means one will need a recent compiler with C++11 support.
+- GCC: Tested with version 4.8.
+- LLVM: Not yet tested. But recent versions should work.
+- Intel: Not yet tested. Version 13 should work.
+- Microsoft: There is a beta version of the microsoft compiler that has support for variadic templates. But its not tested yet.
+
+\subsection Dependencies
+
+Besides the C++11 compiler including a C++11 standard libraries, the core and the base module of NumCpp have no further dependencies.
+However, some modules use third party libraries, which have to be linked when using these modules. Here is a list of dependencies:
+- \ref fft "FFT": The FFT module uses the fftw 3 library. For double datatypes, one has to link against libfftw while float datatypes
+require to link against libfftwf. Both can be used simultanously.
+- \ref io "IO": The IO module has dupport for reading and writing hdf5 files. When using this unctionality, one has to link against libhdf5
+- \ref graphics "Graphics": The graphics module uses the cairo graphics library for drawing and exporting to image files. On has to link against libcairo when using this module. 
+
+
+*/
+
+
+};
+

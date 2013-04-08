@@ -31,6 +31,8 @@ The features of NumCpp are
 \section Download
 
 NumCpp is hosted on <a href="https://github.com/tknopp/NumCpp">github</a> and can be downloaded from <a href="https://github.com/tknopp/NumCpp/archive/master.zip">here</a>.
+An introduction how to install and use NumCpp can be found \ref installation "here"
+
 
 \section License
 
