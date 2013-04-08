@@ -1,4 +1,5 @@
 #include "core/array.h"
+#include "core/stridedarray.h"
 #include "core/complex.h"
 #include "core/stream.h"
 #include "core/arithmetic.h"

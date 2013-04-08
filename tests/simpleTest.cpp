@@ -304,7 +304,7 @@ void testDot()
 {
   size_t M = 3;
   size_t N = 3;
-  auto A = array<double>({1, 7, 3, 9, 9, 4, 1, 0, 4},3,3);
+  auto A = array({1.0, 7, 3, 9, 9, 4, 1, 0, 4},3,3);
 
 
   Vector<double> x = ones(N);

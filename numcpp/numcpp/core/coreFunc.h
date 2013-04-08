@@ -47,21 +47,23 @@ int size(const AbstractArray<T,D,Derived>& x)
 }
 
 /*!
-Create a deep copy of the array \a x.
-*/
-template<class T, int D, class R>
-Array<T,D> copy(const AbstractArray<T,D,R>& x)
-{
-  return Array<T,D>(x);
-}
-
-/*!
 Create a similar array to \a x that has the same type, dimension and shape.
 */
 template<class T, int D, class R>
 Array<T,D> similar(const AbstractArray<T,D,R>& x)
 {
   return Array<T,D>(x.shape());
+}
+
+/*!
+Create a deep copy of the array \a x.
+*/
+template<class T, int D, class R>
+Array<T,D> copy(const AbstractArray<T,D,R>& x)
+{
+  auto y = similar(x);
+  y = x;
+  return y; //Array<T,D>(x);
 }
 
 /*!

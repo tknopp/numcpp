@@ -16,25 +16,31 @@ namespace numcpp
 /*!
 Transpose the array \a x inplace.
 The transposition will internally only swap the strides of the array and is therefore a cheap operation.
-\sa ::transpose
 */
 template<class T, int D>
-Array<T,D> transpose_(Array<T,D>& x)
+StridedArray<T,D> transpose(StridedArray<T,D>& x)
 {
   std::reverse(x.strides().begin(), x.strides().end());
   return x;
 }
 
+template<class T, int D>
+StridedArray<T,D> transpose(const Array<T,D>& x)
+{
+  StridedArray<T,D> y = x;
+  std::reverse(y.strides().begin(), y.strides().end());
+  return y;
+}
+
 /*!
 Return the transpose of the array \a x.
 Note that this function will create a copy of the array \a x.
-\sa ::transpose_
 */
 template<class T, int D, class R>
 Array<T,D> transpose(const AbstractArray<T,D,R>& x)
 {
   auto y = copy(x);
-  return transpose_(y);
+  return transpose(y);
 }
 
 
@@ -43,7 +49,7 @@ Array<T,DNew> reshape(const Array<T,D>& x, const std::array<size_t,DNew>& shape)
 {
   Array<T,DNew> y(x.getMem());
   std::copy(std::begin(shape), std::end(shape), begin(y.shape_));
-  y.initContiguousStrides(0);
+  y.initContiguousStrides();
 
   return y;
 }

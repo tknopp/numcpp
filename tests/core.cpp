@@ -27,12 +27,26 @@ TEST_CASE( "numcpp/core/array/shape", "Array Shape tests" )
   }
 }
 
+TEST_CASE( "numcpp/core/array/order", "Array order test" ) {
+
+  {
+    double x [] = {1,2,3,4};
+    Matrix<double> y(x, false, 2, 2);
+    Matrix<double, COLUMN_MAJOR_ORDER> z(x, false, 2, 2);
+
+    REQUIRE( z(0,0) == y(0,0) );
+    REQUIRE( z(1,0) == y(0,1) );
+    REQUIRE( z(0,1) == y(1,0) );
+    REQUIRE( z(1,1) == y(1,1) );
+  }
+}
+
 TEST_CASE( "numcpp/core/array/external", "Array external data test" ) {
 
   SECTION( "NoOwnership", "Don't take the ownership of the memory")
   {
     double x [] = {1,2,3,4};
-    Matrix<double> y(x, false, 4, 2);
+    Matrix<double> y(x, false, 2, 2);
 
     REQUIRE( x[0] == y(0,0) );
     REQUIRE( x[1] == y(0,1) );
@@ -43,7 +57,7 @@ TEST_CASE( "numcpp/core/array/external", "Array external data test" ) {
   SECTION( "WithOwnership", "Take the ownership of the memory")
   {
     int* x = new int[4] {1,2,3,4};
-    Matrix<int> y(x, false, 4, 2);
+    Matrix<int> y(x, false, 2, 2);
 
     REQUIRE( x[0] == y(0,0) );
     REQUIRE( x[1] == y(0,1) );
@@ -52,7 +66,6 @@ TEST_CASE( "numcpp/core/array/external", "Array external data test" ) {
   }
 
 }
-
 
 TEST_CASE( "numcpp/core/array/logical", "Logical array operators" )
 {

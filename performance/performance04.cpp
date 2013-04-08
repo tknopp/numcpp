@@ -3,11 +3,11 @@
 
 using namespace numcpp;
 
-void performance03NumCpp(size_t N, size_t M)
+void performance04NumCpp(size_t N, size_t M)
 {
-    Vector<float> x = randn<float>(N);
+    Matrix<float> B = randn<float>(N,N);
     Matrix<float> A = randn<float>(N,N);
-    Vector<float> y(N);
+    Matrix<float> C(N,N);
 
 
     auto t = tic();
@@ -16,7 +16,7 @@ void performance03NumCpp(size_t N, size_t M)
 
     for(auto i=0; i<M; i++)
     {
-      y += dot(A,x)*i; // + dot(A,ones(N))*i;
+       dot(A,B); // + dot(A,ones(N))*i;
     }
 
     //DisableCaching();
@@ -24,16 +24,16 @@ void performance03NumCpp(size_t N, size_t M)
     toc(t);
 }
 
-void performance03Eigen(size_t N, size_t M)
+void performance04Eigen(size_t N, size_t M)
 {
-    Eigen::VectorXf x = Eigen::VectorXf::Random(N);
+    Eigen::MatrixXf B = Eigen::MatrixXf::Random(N,N);
     Eigen::MatrixXf A = Eigen::MatrixXf::Random(N,N);
-    Eigen::VectorXf y(N);
+    Eigen::MatrixXf C(N,N);
 
     auto t = tic();
     for(auto i=0; i<M; i++)
     {
-      y += A*x*i; //; + A*Eigen::VectorXf::Ones(N)*i;
+      C += A*B*i; //; + A*Eigen::VectorXf::Ones(N)*i;
     }
 
     toc(t);
@@ -42,14 +42,14 @@ void performance03Eigen(size_t N, size_t M)
 
 int main()
 {
-  for(int l=6; l<12; l++)
+  for(int l=3; l<10; l++)
   {
     auto N = pow(2,l);
     auto M = N;
     std::cout << "NumCpp\n";
-    performance03NumCpp(N,M);
+    performance04NumCpp(N,M);
     std::cout << "Eigen\n";
-    performance03Eigen(N,M);
+    performance04Eigen(N,M);
     std::cout << "\n";
   }
 

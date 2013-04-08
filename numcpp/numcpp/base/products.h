@@ -48,10 +48,48 @@ template<class T, class U, class R, class V>
   #pragma omp parallel for
   #endif
   for(size_t m=0; m<M; m++)
+  {
+    T tmp = 0;
     for(size_t n=0; n<N; n++)
-      y[m] += A(m,n) * x[n];
+      tmp += A(m,n) * x(n);
+    y(m) = tmp;
+  }
   return y;
 }
+
+template<class T, class U, class R, class V>
+  Matrix< COMMON_TYPE(T,U) >
+  dot(const AbstractMatrix<T,R>& A, const AbstractMatrix<U,V>& B)
+{
+  auto M = A.shape(0);
+  auto N = A.shape(1);
+  auto K = B.shape(1);
+  Matrix< COMMON_TYPE(T,U) > C = zeros(M,K);
+
+  omp_lock_t* lock = new omp_lock_t;
+  omp_init_lock (lock);
+  Vector<U> tmpV(N);
+
+  #ifdef _OPENMP
+  #pragma omp parallel for
+  #endif
+  for(size_t k=0; k<K; k++)
+  {
+    omp_set_lock (lock);
+     tmpV = copy(B(full,k));
+      omp_unset_lock (lock);
+    for(size_t m=0; m<M; m++)
+    {
+      T tmp = 0;
+      for(size_t n=0; n<N; n++)
+        tmp += A(m,n) * tmpV(n);
+      C(m,k) = tmp;
+    }
+  }
+    omp_destroy_lock (lock);
+  return C;
+}
+
 
 template<class T, class U, class R, class V>
   COMMON_TYPE(T,U)

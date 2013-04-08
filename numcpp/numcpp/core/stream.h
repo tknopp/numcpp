@@ -48,7 +48,7 @@ std::ostream& operator<< (std::ostream& os,const AbstractArray<T,D,R> & x)
   os << "}\n";
   return os;
 }
-
+/*
 template<class T, int D>
 std::ostream& operator<< (std::ostream& os,const Array<T,D> & x)
 {
@@ -76,10 +76,10 @@ std::ostream& operator<< (std::ostream& os,const Array<T,D> & x)
   }
   os << "}\n";
   return os;
-}
+}*/
 
-template<class T>
-std::ostream& operator<< (std::ostream& os,const Matrix<T> & x)
+template<class T, class R>
+std::ostream& operator<< (std::ostream& os,const AbstractStridedMatrix<T,R> & x)
 {
   os << "Matrix<"<<  typeStr<T>::value
      << "> {\n";

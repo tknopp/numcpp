@@ -37,6 +37,22 @@ Vector removeOnes(Vector x)
   return x;
 }
 
+template<int D>
+std::array<size_t,D> multiIndex(const size_t& index, const std::array<size_t,D>& shape)
+{
+  std::array<size_t,D> multIdx;
+  long remaining = index;
+
+  for(size_t i=0; i<D; i++)
+  {
+    multIdx[i] = remaining % shape[i];
+    remaining -= multIdx[i];
+    remaining /= shape[i];
+  }
+  return multIdx;
+}
+
+
 template<class T>
 void print(const T& x)
 {

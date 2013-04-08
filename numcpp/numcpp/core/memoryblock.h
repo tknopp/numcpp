@@ -84,6 +84,7 @@ public:
     , refCount(rhs.refCount)
     , ownData(rhs.ownData)
   {
+    //std::cout << "Create new view of data: " << refCount << " RefCount was " << (*refCount) << std::endl;
     if(ownData)
       (*refCount)++;
   }
@@ -103,6 +104,7 @@ public:
   {
     if(ownData && data_)
     {
+      //std::cout << "Delete view of data: " << refCount << " RefCount was " << (*refCount) << std::endl;
       (*refCount)--;
       if(*refCount == 0)
       {

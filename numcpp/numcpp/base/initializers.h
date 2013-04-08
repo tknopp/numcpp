@@ -231,13 +231,12 @@ Vector<T> array(std::vector<T> x)
   return y;
 }
 
-template<class T=double, class...A>
-Array<T, sizeof...(A)> array(std::vector<T> x, A...shape)
+template<class T=double, int O=ROW_MAJOR_ORDER, class...A>
+Array<T, sizeof...(A), O> array(std::vector<T> x, A...shape)
 {
-  Array<T, sizeof...(shape)> y(((size_t)shape)...);
+  Array<T, sizeof...(shape), O> y(((size_t)shape)...);
 
-  for(size_t i=0; i<x.size(); i++)
-    y[i] = x[i];
+  std::copy(x.begin(), x.end(), y.data());
 
   return y;
 }

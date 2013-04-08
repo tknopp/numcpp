@@ -9,6 +9,8 @@ int main()
   Matrix<double> x = reshape(range(0,N*N-1),N,N);
 
   print(x);
+  print(transpose(x));
+
   print(rotl90(x));
   print(rotr90(x));
   print(rot180(x));
@@ -26,8 +28,6 @@ int main()
 
   print(y);
   print(z);
-
-  print(transpose_(x));
 
   h5write(x, "test.h5", "/testV");
 

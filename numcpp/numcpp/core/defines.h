@@ -16,6 +16,10 @@ namespace numcpp
 @{
 */
 
+#define COLUMN_MAJOR_ORDER 1
+#define ROW_MAJOR_ORDER 0
+#define DEFAULT_MAJOR_ORDER 0
+
 #define VECTORIZE(func,funcName) \
 template <class Op> \
 class Array_ ## funcName : public  AbstractArray<decltype(func(std::declval< typename Op::value_type >())), Op::dim, Array_ ## funcName <Op>  > \
