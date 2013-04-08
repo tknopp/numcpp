@@ -3,7 +3,7 @@
 
 using namespace numcpp;
 
-void performance04NumCpp(size_t N, size_t M)
+size_t performance04NumCpp(size_t N, size_t M)
 {
     Matrix<float> B = randn<float>(N,N);
     Matrix<float> A = randn<float>(N,N);
@@ -21,10 +21,10 @@ void performance04NumCpp(size_t N, size_t M)
 
     //DisableCaching();
 
-    toc(t);
+    return toc(t);
 }
 
-void performance04Eigen(size_t N, size_t M)
+size_t performance04Eigen(size_t N, size_t M)
 {
     Eigen::MatrixXf B = Eigen::MatrixXf::Random(N,N);
     Eigen::MatrixXf A = Eigen::MatrixXf::Random(N,N);
@@ -36,21 +36,30 @@ void performance04Eigen(size_t N, size_t M)
       C += A*B*i; //; + A*Eigen::VectorXf::Ones(N)*i;
     }
 
-    toc(t);
+   return toc(t);
 
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-  for(int l=3; l<10; l++)
+  int l = 6;
+  int code = 0;
+  if(argc > 1)
+    l = atoi(argv[1]);
+  if(argc > 2)
+    code = atoi(argv[2]);
+
+  auto N = pow(2,l);
+  auto M = N;
+
+  if(code == 0)
   {
-    auto N = pow(2,l);
-    auto M = N;
     std::cout << "NumCpp\n";
-    performance04NumCpp(N,M);
+    return performance04NumCpp(N,M);
+  } else
+  {
     std::cout << "Eigen\n";
-    performance04Eigen(N,M);
-    std::cout << "\n";
+    return performance04Eigen(N,M);
   }
 
   return 0;

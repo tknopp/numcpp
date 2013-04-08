@@ -65,19 +65,22 @@ template<class T, class U, class R, class V>
   auto N = A.shape(1);
   auto K = B.shape(1);
   Matrix< COMMON_TYPE(T,U) > C = zeros(M,K);
-
-  omp_lock_t* lock = new omp_lock_t;
-  omp_init_lock (lock);
   Vector<U> tmpV(N);
 
   #ifdef _OPENMP
+  omp_lock_t* lock = new omp_lock_t;
+  omp_init_lock (lock);
   #pragma omp parallel for
   #endif
   for(size_t k=0; k<K; k++)
   {
+    #ifdef _OPENMP
     omp_set_lock (lock);
-     tmpV = copy(B(full,k));
-      omp_unset_lock (lock);
+    #endif
+    tmpV = copy(B(full,k));
+    #ifdef _OPENMP
+    omp_unset_lock (lock);
+    #endif
     for(size_t m=0; m<M; m++)
     {
       T tmp = 0;
@@ -86,7 +89,9 @@ template<class T, class U, class R, class V>
       C(m,k) = tmp;
     }
   }
-    omp_destroy_lock (lock);
+  #ifdef _OPENMP
+  omp_destroy_lock (lock);
+  #endif
   return C;
 }
 
