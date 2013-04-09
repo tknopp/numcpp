@@ -51,6 +51,7 @@ int main(int argc, char* argv[])
 
   auto N = pow(2,l);
   auto M = N;
+  return 77;
 
   if(code == 0)
   {
