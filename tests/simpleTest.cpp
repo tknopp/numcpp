@@ -115,28 +115,9 @@ void testRealImag()
 }
 */
 
-/*
-void testArray()
-{
-  auto x = array({1,2,3,4});
-  auto y = array<cdouble>({1,2,3,4}).reshape({2,2});
-
-  print(x);
-  print(y);
-
-}
-
 
 /*
-void testTrig()
-{
-  auto x = linspace(0, 1, 10);
 
-  print( x );
-  print( 2*pi*I*x );
-  print( exp(2*pi*I*x) );
-
-}
 
 void testDiff()
 {
@@ -300,27 +281,6 @@ void testMultiIndex()
 
 }
 
-void testDot()
-{
-  size_t M = 3;
-  size_t N = 3;
-  auto A = array({1.0, 7, 3, 9, 9, 4, 1, 0, 4},3,3);
-
-
-  Vector<double> x = ones(N);
-  Vector<double> y = dot(A,x);
-
-  print(A);
-  print(x);
-  print(y);
-
-
-  auto r = solve(A, y);
-
-  print(r);
-  print(dot(A,r));
-
-}
 
 void testFFT()
 {
@@ -375,38 +335,6 @@ void testRandn()
 int main()
 {
   std::cout << "Unit Test NumCpp" << std::endl;
-
-  //test1();
-  //test2();
-  //testAdd();
-  //testMult();
-  //testEye();
-
-  //testLinspace();
-  //testRealImag();
-  ////testViews1();
-  //testViews2();
-
-  //testArray();
-  //testSum();
-  //testTrig();
-  //testDiff();
-  //testComparison();
-
-  //testMemoryBlock();
-
-  //std::cout << shapeOfNDVector({{{1,3},{2,3},{3,3}},{{1,3},{2,3},{3,3}}}) << std::endl;
-  //std::cout << _array<double>({{1,2,3},{1,2,3}}) << std::endl;
-
-  //testNewArray();
-  //testArrayFunctions();
-  //testMultiIndex();
-  testDot();
-  //testFFT();
-  //testRandn();
-  //testExternalData();
-  //testSVD();
-
 
   return 0;
 }
