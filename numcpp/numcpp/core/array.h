@@ -256,6 +256,39 @@ public:
     return x;
   }
 
+
+  template<class...A>
+  auto operator()(A...args) const
+    -> typename std::enable_if< isNonRegArray< A... >::value ,
+        NonRegularArray<T,countNonRegIndices< A... >::value>
+        >::type
+  {
+
+    std::array< std::vector<size_t>, countNonRegIndices< A... >::value > indices;
+	std::vector< std::vector<size_t> > indexVec;
+
+	convertToNonRegIndicesVector(indexVec, args...);
+
+	size_t offset = 0;
+	std::array<size_t, countNonRegIndices< A... >::value > strides;
+
+	size_t j=0;
+	for(size_t i=0; i<D; i++)
+	{
+		if( indexVec[i].size() == 1 )
+			offset += indexVec[i][0] * this->strides(i);
+		else
+		{
+			indices[j] = indexVec[i];
+			strides[j] = this->strides(i);
+			j++;
+		}
+	}
+
+    return NonRegularArray<T,countNonRegIndices< A... >::value> (indices, strides, offset, this->mem);
+  }
+
+
   T* data() const
   {
     return reinterpret_cast<T*>(mem.data());

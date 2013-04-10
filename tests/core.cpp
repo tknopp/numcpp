@@ -41,6 +41,19 @@ TEST_CASE( "numcpp/core/array/order", "Array order test" ) {
   }
 }
 
+TEST_CASE( "numcpp/core/array/nonregularindices", "Non-regular indexing test" ) {
+
+  {
+    auto x = eval ( range(0,10) );
+
+	auto y = x({0, 2, 7});
+
+    REQUIRE( y(0) == x(0) );
+    REQUIRE( y(1) == x(2) );
+    REQUIRE( y(2) == x(7) );
+  }
+}
+
 TEST_CASE( "numcpp/core/array/external", "Array external data test" ) {
 
   SECTION( "NoOwnership", "Don't take the ownership of the memory")

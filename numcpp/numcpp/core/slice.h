@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <initializer_list>
+#include <vector>
 
 namespace numcpp
 {
@@ -109,6 +110,69 @@ struct isSlicedArray
   static const bool value = countSlices<Args...>::value != 0;
 };
 
+
+
+
+template<typename... Args>
+struct countNonRegIndices;
+
+template<>
+struct countNonRegIndices<> { static const int value = 0;};
+
+template< class Int, typename... Args>
+struct countNonRegIndices<Int, Args... >
+{ static const int value = countSlices<Args...>::value;};
+
+template<typename... Args>
+struct countNonRegIndices<Slice, Args...>
+{ static const int value = 1 + countSlices<Args...>::value;};
+
+template< class Int, typename... Args>
+struct countNonRegIndices<std::vector<Int>, Args...>
+{ static const int value = 1 + countSlices<Args...>::value;};
+
+template<typename... Args>
+struct isNonRegArray
+{
+  static const bool value = countNonRegIndices<Args...>::value != 0;
+};
+
+
+
+
+inline std::vector<size_t> convertToIndexList(const std::vector<size_t>& list)
+{
+  return list;
+}
+
+inline std::vector<size_t> convertToIndexList(const size_t index)
+{
+	return std::vector<size_t> { index };
+}
+
+inline std::vector<size_t> convertToIndexList(const Slice& sl)
+{
+	std::vector<size_t> indices;
+
+	size_t i = sl.start;
+
+	while(i < sl.end)
+	{
+		indices.push_back(i);
+		i += sl.step;
+	}
+
+	return indices;
+}
+
+inline void convertToNonRegIndicesVector(std::vector< std::vector<size_t>>& indices) {};
+
+template<class T, typename... Args>
+void convertToNonRegIndicesVector(std::vector< std::vector<size_t>>& indices, T element, Args... args)
+{
+	indices.push_back( convertToIndexList(element) );
+	convertToNonRegIndicesVector(indices, args...);
+}
 
 
 }

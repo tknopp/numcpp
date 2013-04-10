@@ -55,15 +55,6 @@ public:
   {
   }
 
-  template <class U, class V>
-  StridedArray(const AbstractStridedArray<U,D,V>& rhs)
-    : shape_(rhs.shape())
-    , strides_(rhs.strides())
-    , mem(rhs.getMem())
-  {
-    std::cout << "HUUUHHUUU" << std::endl;
-  }
-
   // This one is extremly(!) important. Otherwise the assignment will make a shallow copy...
   StridedArray& operator= (const StridedArray& rhs)
   {
@@ -76,14 +67,6 @@ public:
       operator[](i) = rhs[i];
 
     return *this;
-  }
-
-  size_t size() const
-  {
-      size_t size = shape_[0];
-      for(int d=1; d<D; d++)
-          size *= shape_[d];
-      return size;
   }
 
   const std::array<size_t,D>& shape() const

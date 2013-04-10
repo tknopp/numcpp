@@ -2,6 +2,7 @@ add_custom_target(NumCppCore SOURCES
                   abstractarray.h
                   array.h
                   stridedarray.h
+				  nonregulararray.h
                   defines.h
                   utils.h
                   iterator.h
