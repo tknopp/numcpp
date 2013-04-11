@@ -46,8 +46,7 @@ TEST_CASE( "numcpp/core/array/nonregularindices", "Non-regular indexing test" ) 
   {
     auto x = eval ( range(0,10) );
 
-    std::vector<int> idx = {0, 2, 7};
-
+    auto idx = {0, 2, 7};
     auto y = x(idx);
 
     print(y);

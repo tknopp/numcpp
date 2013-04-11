@@ -9,7 +9,7 @@ int main()
                           1, 0, 4}, M, N);
 
 
-  auto x = eval(ones(N));
+  auto x = (ones(N));
   auto y = dot(A,x);
 
   print(A);

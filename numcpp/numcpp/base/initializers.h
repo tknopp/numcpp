@@ -53,7 +53,7 @@ public:
 
   template<class...A>
   typename std::enable_if< !isSlicedArray< A... >::value,
-        T &
+        T
         >::type
   operator()(A...args) const
   {
