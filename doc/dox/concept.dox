@@ -6,9 +6,12 @@ namespace numcpp
 
 \section conceptInterface Simple Functional Interface / Clean Implementation
 
-
 The aim of the NumCpp project is to develop a C++ library having a simple interface similar to the Numpy/Matlab API.
 
+\subsection conceptCpp11 Use of C++11 Features
+
+NumCpp is implemented using C++11 feature, which considerably simplifies the implementation of numcpp. Further
+NumCpp is designed to be used with C++11 features such as for instance the auto functionallity.
 
 \section conceptMultidimensional Multidimensional Array
 
@@ -41,7 +44,10 @@ Vector<double> x = randn(N);
 auto y = dot(A,x)
 @endcode
 
-\section conceptStrided Strided Array
+\subsection conceptStrided Indexing and Slicing
+
+NumCpp provides indexing and slicing capabilities similar to Matlab and Numpy.
+In order to access individual elements in a matrix 
 
 Strided array
 
