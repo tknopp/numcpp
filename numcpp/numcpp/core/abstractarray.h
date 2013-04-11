@@ -169,7 +169,7 @@ public:
   }*/
 
   template<class...A>
-  typename std::enable_if< !isSlicedArray< A... >::value,
+  typename std::enable_if< !isSlicedArray< A... >::value && !isNonRegArray< A...>::value,
         T &
         >::type
   operator()(A...args) const

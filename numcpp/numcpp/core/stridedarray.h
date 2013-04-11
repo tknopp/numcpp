@@ -55,6 +55,22 @@ public:
   {
   }
 
+  template <class U, class V>
+  StridedArray(const AbstractArray<U,D,V>& rhs)
+    : shape_(rhs.shape())
+    , offset_(0)
+  {
+    initContiguousStrides(0);
+
+    size_t count = size();
+
+    #ifdef _OPENMP
+    #pragma omp parallel for
+    #endif
+    for (size_t i = 0; i < count; ++i)
+      operator[](i) = rhs[i];
+  }
+
   // This one is extremly(!) important. Otherwise the assignment will make a shallow copy...
   StridedArray& operator= (const StridedArray& rhs)
   {

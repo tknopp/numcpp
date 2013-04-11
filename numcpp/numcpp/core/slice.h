@@ -25,8 +25,32 @@ struct Slice
   {
   }
 
-  template<class Int>
-  Slice(Int index)
+  //   template<class Int>
+  Slice(long index)
+    : start(index)
+    , end(index+1)
+    , step(0)
+  {
+
+  }
+
+  Slice(unsigned long index)
+    : start(index)
+    , end(index+1)
+    , step(0)
+  {
+
+  }
+
+  Slice(int index)
+    : start(index)
+    , end(index+1)
+    , step(0)
+  {
+
+  }
+
+  Slice(unsigned int index)
     : start(index)
     , end(index+1)
     , step(0)
@@ -42,7 +66,7 @@ struct Slice
 
   }
 
-  template<class Int>
+  /*template<class Int>
   Slice(std::initializer_list<Int> list)
   {
     auto it = list.begin();
@@ -64,7 +88,7 @@ struct Slice
       step = *it;
     }
 
-  }
+  }*/
 
   long start;
   long end;
@@ -119,17 +143,29 @@ struct countNonRegIndices;
 template<>
 struct countNonRegIndices<> { static const int value = 0;};
 
-template< class Int, typename... Args>
-struct countNonRegIndices<Int, Args... >
-{ static const int value = countSlices<Args...>::value;};
+template< typename... Args>
+struct countNonRegIndices<int, Args... >
+{ static const int value = countNonRegIndices<Args...>::value;};
+
+template< typename... Args>
+struct countNonRegIndices<size_t, Args... >
+{ static const int value = countNonRegIndices<Args...>::value;};
 
 template<typename... Args>
 struct countNonRegIndices<Slice, Args...>
-{ static const int value = 1 + countSlices<Args...>::value;};
+{ static const int value = countNonRegIndices<Args...>::value;};
 
 template< class Int, typename... Args>
 struct countNonRegIndices<std::vector<Int>, Args...>
-{ static const int value = 1 + countSlices<Args...>::value;};
+{ static const int value = 1 + countNonRegIndices<Args...>::value;};
+
+template<  class Int, typename... Args>
+struct countNonRegIndices<std::initializer_list<Int>, Args...>
+{ static const int value = 1 + countNonRegIndices<Args...>::value;};
+/*
+template<typename... Args>
+struct countNonRegIndices<std::initializer_list<int>, Args...>
+{ static const int value = 1 + countNonRegIndices<Args...>::value;};*/
 
 template<typename... Args>
 struct isNonRegArray
@@ -140,38 +176,46 @@ struct isNonRegArray
 
 
 
-inline std::vector<size_t> convertToIndexList(const std::vector<size_t>& list)
+inline std::vector<size_t> convertToIndexList(const std::vector<size_t> list)
 {
   return list;
 }
 
+inline std::vector<size_t> convertToIndexList(const std::vector<int> list)
+{
+  std::vector<size_t> x;
+  for(int i=0; i<list.size(); i++)
+   x.push_back(list[i]);
+  return x;
+}
+
 inline std::vector<size_t> convertToIndexList(const size_t index)
 {
-	return std::vector<size_t> { index };
+    return std::vector<size_t> { index };
 }
 
-inline std::vector<size_t> convertToIndexList(const Slice& sl)
+/*inline std::vector<size_t> convertToIndexList(const Slice& sl)
 {
-	std::vector<size_t> indices;
+    std::vector<size_t> indices;
 
-	size_t i = sl.start;
+    size_t i = sl.start;
 
-	while(i < sl.end)
-	{
-		indices.push_back(i);
-		i += sl.step;
-	}
+    while(i < sl.end)
+    {
+        indices.push_back(i);
+        i += sl.step;
+    }
 
-	return indices;
-}
+    return indices;
+}*/
 
 inline void convertToNonRegIndicesVector(std::vector< std::vector<size_t>>& indices) {};
 
 template<class T, typename... Args>
 void convertToNonRegIndicesVector(std::vector< std::vector<size_t>>& indices, T element, Args... args)
 {
-	indices.push_back( convertToIndexList(element) );
-	convertToNonRegIndicesVector(indices, args...);
+    indices.push_back( convertToIndexList(element) );
+    convertToNonRegIndicesVector(indices, args...);
 }
 
 

@@ -9,6 +9,7 @@
 #include "abstractarray.h"
 #include "constants.h"
 #include "stridedarray.h"
+#include "nonregulararray.h"
 
 #include <initializer_list>
 #include <iostream>
@@ -265,25 +266,25 @@ public:
   {
 
     std::array< std::vector<size_t>, countNonRegIndices< A... >::value > indices;
-	std::vector< std::vector<size_t> > indexVec;
+    std::vector< std::vector<size_t> > indexVec;
 
-	convertToNonRegIndicesVector(indexVec, args...);
+    convertToNonRegIndicesVector(indexVec, args...);
 
-	size_t offset = 0;
-	std::array<size_t, countNonRegIndices< A... >::value > strides;
+    size_t offset = 0;
+    std::array<size_t, countNonRegIndices< A... >::value > strides;
 
-	size_t j=0;
-	for(size_t i=0; i<D; i++)
-	{
-		if( indexVec[i].size() == 1 )
-			offset += indexVec[i][0] * this->strides(i);
-		else
-		{
-			indices[j] = indexVec[i];
-			strides[j] = this->strides(i);
-			j++;
-		}
-	}
+    size_t j=0;
+    for(size_t i=0; i<D; i++)
+    {
+        if( indexVec[i].size() == 1 )
+            offset += indexVec[i][0] * this->strides_[i];
+        else
+        {
+            indices[j] = indexVec[i];
+            strides[j] = this->strides_[i];
+            j++;
+        }
+    }
 
     return NonRegularArray<T,countNonRegIndices< A... >::value> (indices, strides, offset, this->mem);
   }

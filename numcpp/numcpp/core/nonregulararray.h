@@ -49,18 +49,18 @@ public:
   using AbstractStridedArray<T,D,NonRegularArray<T,D> >::operator*=;
 
   // Constructors
-  
+
   template<class Int>
-  Array(const std::array< std::vector<size_t>, D >& indices, 
+  NonRegularArray(const std::array< std::vector<size_t>, D >& indices,
         const std::array<Int,D>& strides, const size_t offset, const MemoryBlock& mem)
-	, strides_(strides)
-	, offset_(offset)
-	, indices_(indices)
-	, mem(mem)
+    : strides_(strides)
+    , offset_(offset)
+    , indices_(indices)
+    , mem(mem)
   {
     for(int d=0; d<D; d++)
-	  shape_[d] = indices_[d].size();
-  }  
+      shape_[d] = indices_[d].size();
+  }
 
   // This one is extremly(!) important. Otherwise the assignment will make a shallow copy...
   NonRegularArray& operator= (const NonRegularArray& rhs)
@@ -114,8 +114,8 @@ public:
   {
     size_t flatIndex = offset_;
 
-    for(size_t i=0; i<D; i++)
-      flatIndex += strides_[i] * indices_[d][index[i]];
+    for(size_t d=0; d<D; d++)
+      flatIndex += strides_[d] * indices_[d][index[d]];
 
     return flatIndex;
   }
@@ -123,7 +123,7 @@ public:
 private:
   std::array<size_t,D> shape_;
   std::array<size_t,D> strides_;
-  size_t offset_ = 0;  
+  size_t offset_ = 0;
   std::array<std::vector<size_t>,D> indices_;
   MemoryBlock mem;
 

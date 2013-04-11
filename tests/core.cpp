@@ -46,7 +46,13 @@ TEST_CASE( "numcpp/core/array/nonregularindices", "Non-regular indexing test" ) 
   {
     auto x = eval ( range(0,10) );
 
-	auto y = x({0, 2, 7});
+    std::vector<int> idx = {0, 2, 7};
+
+    auto y = x(idx);
+
+    print(y);
+
+    //auto p = x({0, 2, 7, 6});
 
     REQUIRE( y(0) == x(0) );
     REQUIRE( y(1) == x(2) );
