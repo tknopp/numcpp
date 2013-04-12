@@ -11,8 +11,8 @@ int main()
   auto y = eval(log(abs(fftshift(fft(x)))));
 
   // export x and y to an pdf file using different colormaps
-  export_pdf( x, "shepp_logan_phantom.pdf", colormaps::winter);
-  export_pdf( y, "shepp_logan_phantom_fft.pdf");
+  export_image( x, "shepp_logan_phantom.pdf", colormaps::winter);
+  export_image( y, "shepp_logan_phantom_fft.png");
 
   // export x and y into the same hdf5 file
   auto file = h5create("shepp_logan_phantom.h5");

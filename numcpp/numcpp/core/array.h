@@ -260,18 +260,22 @@ public:
 
   template<class...A>
   auto operator()(A...args) const
-    -> typename std::enable_if< isNonRegArray< A... >::value ,
-        NonRegularArray<T,countNonRegIndices< A... >::value>
+    -> typename std::enable_if< isNonRegArray< A... >::value,
+        NonRegularArray<T, D - countInts< A... >::value>
         >::type
   {
 
-    std::array< std::vector<size_t>, countNonRegIndices< A... >::value > indices;
+    std::array< std::vector<size_t>, D - countInts< A... >::value > indices;
     std::vector< std::vector<size_t> > indexVec;
 
-    convertToNonRegIndicesVector(indexVec, args...);
+    std::vector<size_t> shapeVec;
+    for(size_t i=0; i<D; i++)
+      shapeVec.push_back(shape_[i]);
+
+    convertToNonRegIndicesVector(indexVec, shapeVec.begin(), args...);
 
     size_t offset = 0;
-    std::array<size_t, countNonRegIndices< A... >::value > strides;
+    std::array<size_t, D - countInts< A... >::value > strides;
 
     size_t j=0;
     for(size_t i=0; i<D; i++)
@@ -286,7 +290,9 @@ public:
         }
     }
 
-    return NonRegularArray<T,countNonRegIndices< A... >::value> (indices, strides, offset, this->mem);
+    std::cout << "hallo " <<   D - countInts< A... >::value << std::endl;
+
+    return NonRegularArray<T, D - countInts< A... >::value> (indices, strides, offset, this->mem);
   }
 
 

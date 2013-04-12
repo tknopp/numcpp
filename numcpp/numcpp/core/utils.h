@@ -43,7 +43,7 @@ std::array<size_t,D> multiIndex(const size_t& index, const std::array<size_t,D>&
   std::array<size_t,D> multIdx;
   long remaining = index;
 
-  for(size_t i=0; i<D; i++)
+  for(int i=D-1; i>=0; i--)
   {
     multIdx[i] = remaining % shape[i];
     remaining -= multIdx[i];

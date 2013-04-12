@@ -89,6 +89,11 @@ public:
     return shape_;
   }
 
+  const std::array<size_t,D>& strides() const
+  {
+    return strides_;
+  }
+
   T& operator[](size_t index)
   {
     return operator[](multiIndex<D>(index, shape_));

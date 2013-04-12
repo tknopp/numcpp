@@ -35,7 +35,7 @@ int main()
 
   print(kk);
 
-  export_pdf(kk, "test.pdf");
+  export_image(kk, "test.pdf");
 
   auto zz = meshgrid(range(1,4), range(10,15));
 
@@ -44,13 +44,13 @@ int main()
 
   auto p = phantom(128);
 
-  export_pdf(p, "p.pdf");
+  export_image(p, "p.pdf");
 
 
-  export_pdf(flipud(p), "p_ud.pdf", colormaps::autumn);
-  export_pdf(fliplr(p), "p_lr.pdf", colormaps::winter);
+  export_image(flipud(p), "p_ud.pdf", colormaps::autumn);
+  export_image(fliplr(p), "p_lr.pdf", colormaps::winter);
 
-  export_pdf(rotl90(p), "p_rotl90.pdf");
+  export_image(rotl90(p), "p_rotl90.pdf");
 
   {
     auto x = linspace(0,1,100);
