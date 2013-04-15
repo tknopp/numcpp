@@ -61,6 +61,8 @@ public:
 
   Array()
   {
+    for(int d=0; d<D; d++)
+      shape_[d] = 0;
   }
 
   /**
@@ -132,15 +134,22 @@ public:
 
 
   template<class...A>
-  explicit Array(std::initializer_list<T> data, A...shape)
+  Array(std::initializer_list<T> data, A...shape)
     : shape_({((size_t)shape)...})
+    , mem(prod(shape_)*sizeof(T))
   {
-    mem.allocate(prod(shape_)*sizeof(T));
+    std::copy(data.begin(), data.end(), this->data());
+  }
 
-    std::vector<T> data_ = data;
-    for(int i=0; i<size(); i++)
-      operator[](i) = data_[i];
+  template<class...A>
+  Array(std::initializer_list<T> data)
+  {
+    shape_[0] = data.size();
+    for(int d=1; d<D; d++)
+      shape_[d] = 1;
 
+    mem.allocate(shape_[0]*sizeof(T));
+    std::copy(data.begin(), data.end(), this->data());
   }
 
   Array(const Array& rhs)
@@ -171,6 +180,16 @@ public:
   // This one is extremly(!) important. Otherwise the assignment will make a shallow copy...
   Array& operator= (const Array& rhs)
   {
+    if(D != ndims(rhs))
+    {
+      if(size() != rhs.size())
+      {
+        std::copy(rhs.shape().begin(), rhs.shape().end(), shape_.begin());
+        mem.free();
+        mem.allocate(prod(shape_)*sizeof(T));
+      }
+    }
+
     size_t count = size();
 
     #ifdef _OPENMP
@@ -301,7 +320,12 @@ public:
     return reinterpret_cast<T*>(mem.data());
   }
 
-  const MemoryBlock& getMem() const
+  MemoryBlock& getMem()
+  {
+    return mem;
+  }
+
+  MemoryBlock getMem() const
   {
     return mem;
   }

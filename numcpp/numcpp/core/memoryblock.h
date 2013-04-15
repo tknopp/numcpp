@@ -102,6 +102,22 @@ public:
 
   ~MemoryBlock()
   {
+    free();
+  }
+
+  void allocate(size_t size)
+  {
+    this->size = size;
+    ownData = true;
+    data_ = new char[size]; // TODO 16 Byte aligned memory
+    refCount = new size_t;
+    (*refCount) = 1;
+    GlobalData::GetInstance().totalAllocatedBytes += size;
+    GlobalData::GetInstance().numAllocations++;
+  }
+
+  void free()
+  {
     if(ownData && data_)
     {
       //std::cout << "Delete view of data: " << refCount << " RefCount was " << (*refCount) << std::endl;
@@ -119,17 +135,6 @@ public:
         }
       }
     }
-  }
-
-  void allocate(size_t size)
-  {
-    this->size = size;
-    ownData = true;
-    data_ = new char[size]; // TODO 16 Byte aligned memory
-    refCount = new size_t;
-    (*refCount) = 1;
-    GlobalData::GetInstance().totalAllocatedBytes += size;
-    GlobalData::GetInstance().numAllocations++;
   }
 
   char* data() const {return data_;}

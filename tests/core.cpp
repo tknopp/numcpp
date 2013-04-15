@@ -1,7 +1,9 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include <numcpp/core.h>
-#include <numcpp/base.h>
+#include <numcpp/base/initializers.h>
+#include <numcpp/base/rearrangeArray.h>
+
 using namespace numcpp;
 
 TEST_CASE( "numcpp/core/array/shape", "Array Shape tests" )
@@ -108,8 +110,8 @@ TEST_CASE( "numcpp/core/array/external", "Array external data test" ) {
 
 TEST_CASE( "numcpp/core/array/logical", "Logical array operators" )
 {
-  auto x = array<bool>({true, false});
-  auto y = array<bool>({false, true});
+  Vector<bool> x = {true, false};
+  Vector<bool> y = {false, true};
 
   {
     REQUIRE_FALSE( all(x && y) );
@@ -120,8 +122,8 @@ TEST_CASE( "numcpp/core/array/logical", "Logical array operators" )
 
 TEST_CASE( "numcpp/core/array/angle", "Angle function" )
 {
-  auto x = array<cdouble>({1, -1, I, -I});
-  auto y = array<double>({0, pi, pi/2, -pi/2.});
+  Vector<cdouble> x = {1, -1, I, -I};
+  Vector<double> y = {0, pi, pi/2, -pi/2.};
 
   {
     REQUIRE( all( angle(x) == y ) );

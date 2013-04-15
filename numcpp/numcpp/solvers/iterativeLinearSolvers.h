@@ -19,11 +19,11 @@ Vector<double> rowEnergy(Matrix<T> A)
 }
 
 template<class T, class U >
-Vector< typename commonArithmeticType<T,U>::type >
+Vector< COMMON_TYPE(T,U) >
   kaczmarz(Matrix<T> A, Vector<U> b, int iterations, double lambda,
            bool enforceReal = false, bool enforcePositive = false)
 {
-  typedef typename commonArithmeticType<T,U>::type returnType;
+  using returnType = COMMON_TYPE(T,U);
   size_t M = A.shape(0);
   size_t N = A.shape(1);
 
@@ -67,6 +67,48 @@ Vector< typename commonArithmeticType<T,U>::type >
   }
 
   return x;
+}
+
+// CGNR
+
+template<class T, class U, class V >
+Vector< COMMON_TYPE(T,U) >
+  cgnr(Matrix<T> A, Vector<U> b, int iterations, double lambda)
+{
+  using returnType = COMMON_TYPE(T,U);
+  size_t M = A.shape(0);
+  size_t N = A.shape(1);
+  size_t NMMax = (N > M ? N : M);
+
+  Vector< returnType > x = zeros(N);
+  Vector< returnType > residual = zeros(M);
+  Vector< returnType > p(N+M), z(NMMax+M), v(M);
+
+  /* initialize */
+
+  residual = b - dot(A, x);
+  z = vdot(A, residual);
+  p = z;
+
+  /* loop */
+  for(int j=0; j< iterations; j++)
+  {
+    v = dot(A, p);
+
+    auto alpha_tmp = sum( pow(z, 2) );
+    auto alpha = alpha_tmp / ( sum( pow(v, 2) ) + lambda*sum( pow(p, 2) )  );
+
+    x += alpha*p;
+    residual -= alpha*v;
+    z = vdot(A, residual);
+    z -= lambda*x;
+
+    auto beta = sum( pow(z, 2) );
+    beta /= alpha_tmp;
+
+    p = z - beta*p;
+  }
+
 }
 
 // Compressed Sensing

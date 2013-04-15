@@ -192,7 +192,12 @@ public:
     return getSelf().data();
   }
 
-  const MemoryBlock& getMem() const
+  MemoryBlock& getMem()
+  {
+    return getSelf().getMem();
+  }
+
+  MemoryBlock getMem() const
   {
     return getSelf().getMem();
   }
@@ -216,6 +221,16 @@ public:
   template <class U, class V>
   AbstractStridedArray& operator= (const AbstractArray<U,D,V>& rhs)
   {
+    if(D != rhs.ndims())
+    {
+      if(size() != rhs.size())
+      {
+        //std::copy(rhs.shape().begin(), rhs.shape().end(), shape());
+        //getMem().free();
+        //getMem().allocate(rhs.size()*sizeof(T));
+      }
+    }
+
     size_t count = size();
 
     #ifdef _OPENMP
