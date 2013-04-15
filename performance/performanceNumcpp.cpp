@@ -62,7 +62,7 @@ size_t performance03Numcpp(size_t N, size_t M)
 
     for(auto i=0; i<M; i++)
     {
-       dot(A,B); // + dot(A,ones(N))*i;
+       C += dot(A,B); // + dot(A,ones(N))*i;
     }
 
     //DisableCaching();

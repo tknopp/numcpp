@@ -39,15 +39,17 @@ LAPACK_GELS(z,cdouble,lapack::doublecomplex)
 LAPACK_GELS(c,cfloat,lapack::complex)
 
 
-#define LAPACK_GESVD(typeChar,T,cast) \
+#define LAPACK_GESVD_COMPLEX(typeChar,T,cast) \
 inline int lapack_gesvd(char *jobu, char *jobvt, long *m, long *n,  \
-          T *a, long *lda, T *s, T *u,  \
-          long *ldu, T *vt, long *ldvt, T *work,  \
+          std::complex<T> *a, long *lda, T *s, std::complex<T> *u,  \
+          long *ldu, std::complex<T> *vt, long *ldvt, T *work,  \
           long *lwork, T *rwork, long *info) {  \
   using namespace lapack; \
-  return typeChar ## gels_(trans, m, n, nrhs, ( cast *) a, lda, ( cast *) b, ldb, ( cast *) work, lwork, info); \
+  return typeChar ## gesvd_(jobu, jobvt, m, n, ( cast *) a, lda,  ( cast *) s, ( cast *) u, ldu, \
+                           ( cast *) vt, ldvt,  ( cast *) work, lwork, ( cast *) rwork, info); \
 }
 
+//LAPACK_GESVD_COMPLEX(z,float,lapack::doublecomplex, )
 
 /*  extern "C" {
   extern int zgesvd_(char *jobu, char *jobvt, long *m, long *n,

@@ -2,7 +2,7 @@ add_custom_target(NumCppCore SOURCES
                   abstractarray.h
                   array.h
                   stridedarray.h
-				  nonregulararray.h
+                  nonregulararray.h
                   defines.h
                   utils.h
                   iterator.h
@@ -14,4 +14,5 @@ add_custom_target(NumCppCore SOURCES
                   slice.h
                   basearray.h
                   constants.h
-                  coreFunc.h)
+                  coreFunc.h
+                  extern.h)

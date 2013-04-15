@@ -10,7 +10,7 @@ int main()
   // the eval call is necessary as abs is an expression template
   auto y = eval(log(abs(fftshift(fft(x)))));
 
-  // export x and y to an pdf file using different colormaps
+  // export x and y to image files (pdf/png) using different colormaps
   export_image( x, "shepp_logan_phantom.pdf", colormaps::winter);
   export_image( y, "shepp_logan_phantom_fft.png");
 
@@ -31,16 +31,21 @@ Example showing the data and image export capabilities of NumCpp.
 NumCpp uses the Cairo graphics library for exporting arrays as images.
 
 @code
+#include <numcpp.h>
+using namespace numcpp;
+
+int main()
+{
   // create Shepp Logan phantom (type Matrix<double>)
   auto x = phantom(256);
 
   // calculate the absolute value of the FFT of x
   // the eval call is necessary as abs is an expression template
-  auto y = eval( log( abs( fftshift( fft( x ) ) ) ) );
+  auto y = eval(log(abs(fftshift(fft(x)))));
 
-  // export x and y to an pdf file using different colormaps
-  export_pdf( x, "shepp_logan_phantom.pdf", colormaps::winter);
-  export_pdf( y, "shepp_logan_phantom_fft.pdf");
+  // export x and y to image files (pdf/png) using different colormaps
+  export_image( x, "shepp_logan_phantom.pdf", colormaps::winter);
+  export_image( y, "shepp_logan_phantom_fft.png");
 
   // export x and y into the same hdf5 file
   auto file = h5create("shepp_logan_phantom.h5");
@@ -50,6 +55,7 @@ NumCpp uses the Cairo graphics library for exporting arrays as images.
 
   // export x into a simple binary file
   tofile( x, "shepp_logan_phantom.dat");
+}
 @endcode
 
 The generate PDF file contain the following images:

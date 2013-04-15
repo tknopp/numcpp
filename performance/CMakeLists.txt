@@ -17,5 +17,8 @@ target_link_libraries (performanceNumcpp ${NUMCPP_LIBS})
 add_executable (performanceEigen performanceEigen.cpp)
 target_link_libraries (performanceEigen ${NUMCPP_LIBS})
 
+add_executable (performanceBlitz performanceBlitz.cpp)
+target_link_libraries (performanceBlitz ${NUMCPP_LIBS})
+
 #add_custom_target(NumCpp SOURCES performance01.jl performance01.py)
 

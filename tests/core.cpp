@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include <numcpp.h>
+#include <numcpp/core.h>
+#include <numcpp/base.h>
 using namespace numcpp;
 
 TEST_CASE( "numcpp/core/array/shape", "Array Shape tests" )
