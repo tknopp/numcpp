@@ -9,6 +9,7 @@
 #include "numcpp/fft.h"
 #include "numcpp/graphics.h"
 #include "numcpp/linalg.h"
+#include "numcpp/sparse.h"
 
 #endif
 

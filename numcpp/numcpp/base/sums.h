@@ -40,20 +40,20 @@ Array<T, D-1> sum(const Array<T,D>& x, Int axis) // TODO AbstractArray
 {
   static_assert(D > 1, "sum(x,axis) is only supported for array of dimension D>1!");
 
-  std::array<size_t,D-1> shape;
+  std::array<size_t,D-1> shape_;
 
-  copyShapeToSubArray<D>(x.shape(), shape, axis);
+  copyShapeToSubArray<D>(x.shape(), shape_, axis);
 
-  Array<T, D-1> y = zeros<D-1>(shape);
+  Array<T, D-1> y = zeros<D-1>(shape_);
 
   std::array<size_t,D> index;
-  Iterator<D-1> it(shape);
+  Iterator<D-1> it(shape_);
 
   for(size_t k=0; k<y.size(); k++, it++)
   {
     copyShapeFromSubArray<D>(*it, index, axis);
 
-    for(size_t i=0; i<x.shape(axis); i++)
+    for(size_t i=0; i<shape(x,axis); i++)
     {
       index[axis] = i;
       y[*it] += x[index];

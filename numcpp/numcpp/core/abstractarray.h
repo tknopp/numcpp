@@ -34,24 +34,17 @@ public:
   typedef T value_type;
   static const int dim = D;
 
-  size_t ndims() const
-  {
-    return D;
-  }
-
   size_t size() const
   {
-    return getSelf().size();
+      size_t size = shape()[0];
+      for(int d=1; d<D; d++)
+          size *= shape()[d];
+      return size;
   }
 
   const std::array<size_t,D>& shape() const
   {
     return getSelf().shape();
-  }
-
-  size_t shape(int d) const
-  {
-    return shape()[d];
   }
 
   T& operator[](size_t index)
@@ -105,32 +98,11 @@ public:
   typedef T value_type;
   static const int dim = D;
 
-  size_t ndims() const
-  {
-    return D;
-  }
-
-  /*size_t size() const
-  {
-    return getSelf().size();
-  }*/
-
-  size_t size() const
-  {
-      size_t size = shape()[0];
-      for(int d=1; d<D; d++)
-          size *= shape()[d];
-      return size;
-  }
+  using AbstractArray<T,D,AbstractStridedArray<T,D,Derived>>::size;
 
   const std::array<size_t,D>& shape() const
   {
     return getSelf().shape();
-  }
-
-  size_t shape(int d) const
-  {
-    return shape()[d];
   }
 
   const std::array<size_t,D>& strides() const
@@ -221,7 +193,7 @@ public:
   template <class U, class V>
   AbstractStridedArray& operator= (const AbstractArray<U,D,V>& rhs)
   {
-    if(D != rhs.ndims())
+    if(D != D)
     {
       if(size() != rhs.size())
       {

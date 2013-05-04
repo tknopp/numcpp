@@ -54,7 +54,7 @@ public:
   using AbstractStridedArray<T,D,Array<T,D,O> >::operator[];
   using AbstractStridedArray<T,D,Array<T,D,O> >::operator();
   using AbstractStridedArray<T,D,Array<T,D,O> >::operator+=;
-  using AbstractStridedArray<T,D,Array<T,D,O> >::operator=;
+  //using AbstractStridedArray<T,D,Array<T,D,O> >::operator=;
   using AbstractStridedArray<T,D,Array<T,D,O> >::operator*=;
 
   // Constructors
@@ -134,10 +134,11 @@ public:
 
 
   template<class...A>
-  Array(std::initializer_list<T> data, A...shape)
+  Array(std::vector<T> data, A...shape)
     : shape_({((size_t)shape)...})
     , mem(prod(shape_)*sizeof(T))
   {
+    initContiguousStrides();
     std::copy(data.begin(), data.end(), this->data());
   }
 
@@ -147,6 +148,8 @@ public:
     shape_[0] = data.size();
     for(int d=1; d<D; d++)
       shape_[d] = 1;
+
+    initContiguousStrides();
 
     mem.allocate(shape_[0]*sizeof(T));
     std::copy(data.begin(), data.end(), this->data());
@@ -180,14 +183,14 @@ public:
   // This one is extremly(!) important. Otherwise the assignment will make a shallow copy...
   Array& operator= (const Array& rhs)
   {
-    if(D != ndims(rhs))
+
+    if(true) // size() != rhs.size())
     {
-      if(size() != rhs.size())
-      {
-        std::copy(rhs.shape().begin(), rhs.shape().end(), shape_.begin());
+      std::copy(rhs.shape().begin(), rhs.shape().end(), shape_.begin());
+      initContiguousStrides();
+      if(mem.isAllocated())
         mem.free();
-        mem.allocate(prod(shape_)*sizeof(T));
-      }
+      mem.allocate(prod(shape_)*sizeof(T));
     }
 
     size_t count = size();
@@ -197,6 +200,42 @@ public:
     #endif
     for (size_t i = 0; i < count; ++i)
       operator[](i) = rhs[i];
+
+    return *this;
+  }
+
+  template <class U, class V>
+  Array& operator= (const AbstractArray<U,D,V>& rhs)
+  {
+    if(size() != rhs.size())
+    {
+      std::copy(rhs.shape().begin(), rhs.shape().end(), shape_.begin());
+      initContiguousStrides();
+      if(mem.isAllocated())
+        mem.free();
+      mem.allocate(prod(shape_)*sizeof(T));
+    }
+
+    size_t count = size();
+
+    #ifdef _OPENMP
+    #pragma omp parallel for
+    #endif
+    for (size_t i = 0; i < count; ++i)
+      operator[](i) = rhs[i];
+
+    return *this;
+  }
+
+  Array& operator=(const T& rhs)
+  {
+    size_t count = size();
+
+    #ifdef _OPENMP
+    #pragma omp parallel for
+    #endif
+    for(size_t i = 0; i< count; i++)
+      operator[](i) = rhs;
 
     return *this;
   }
@@ -392,6 +431,7 @@ using Matrix = Array<T, 2, O>;
 
 
 }
+
 
 
 

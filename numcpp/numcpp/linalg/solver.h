@@ -21,8 +21,8 @@ template<class T>
 Vector<T> solve(const Matrix<T>& A, const Vector<T>& b)
 {
   char trans = 'T';
-  long M = A.shape(0);
-  long N = A.shape(1);
+  long M = shape(A,0);
+  long N = shape(A,1);
   long one = 1;
   long lwork = -1;
   long info;

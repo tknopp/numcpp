@@ -137,7 +137,9 @@ public:
     }
   }
 
-  char* data() const {return data_;}
+  char* data() const { return data_; }
+
+  bool isAllocated() { return refCount != nullptr; }
 
   static void EnableCaching()
   {

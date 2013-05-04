@@ -35,11 +35,6 @@ public: \
     return func (op_[i]); \
   } \
   \
-  size_t size() const \
-  { \
-    return op_.size(); \
-  } \
-  \
   const std::array<size_t,Op::dim>& shape() const\
   { \
     return op_.shape(); \
@@ -70,11 +65,6 @@ public: \
   value_type operator[] (size_t i) const \
   { \
     return func (op_[i], arg_); \
-  } \
-  \
-  size_t size() const \
-  { \
-    return op_.size(); \
   } \
   \
   const std::array<size_t,Op::dim>& shape() const \
@@ -126,7 +116,7 @@ struct commonArithmeticType
 };
 
 #define COMMON_TYPE(T,U) decltype( std::declval< T >() * std::declval< U >() )
-
+#define COMMON_TYPE_ARRAY(x,y) decltype( x[0] * y[0] )
 
 /*! @} */
 

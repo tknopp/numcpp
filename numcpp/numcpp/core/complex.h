@@ -65,9 +65,13 @@ auto operator /(U y, std::complex<T> x)
   return std::complex<decltype(x.real() / y)>(x.real()*y/denominator, -x.imag()*y/denominator);
 }
 
-VECTORIZE(std::conj, conj)
-VECTORIZE(std::real, real)
-VECTORIZE(std::imag, imag)
+using std::conj;
+using std::real;
+using std::imag;
+
+VECTORIZE(conj, conj)
+VECTORIZE(real, real)
+VECTORIZE(imag, imag)
 
 template<class T>
 T angle(const std::complex<T>& z)

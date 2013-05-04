@@ -26,11 +26,6 @@ public: \
     return op1_(args...) OP op2_(args...); \
   } \
   \
-  size_t size() const \
-  { \
-    return op1_.size(); \
-  } \
-  \
   const std::array<size_t,Op1::dim>& shape() const \
   { \
     return op1_.shape(); \
@@ -59,11 +54,6 @@ public: \
   value_type operator[] (size_t i) const \
   { \
     return op1_ OP op2_[i]; \
-  } \
-  \
-  size_t size() const \
-  { \
-    return op2_.size(); \
   } \
   \
   const std::array<size_t,Op2::dim>& shape() const \
@@ -96,11 +86,6 @@ public: \
   value_type operator[] (size_t i) const \
   { \
     return op1_[i] OP op2_; \
-  } \
-  \
-  size_t size() const \
-  { \
-    return op1_.size(); \
   } \
   \
   const std::array<size_t,Op1::dim>& shape() const \

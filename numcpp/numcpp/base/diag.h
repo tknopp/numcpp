@@ -35,7 +35,7 @@ Create a vector containing the main diagonal of a matrix
 template<class T, class R>
 Vector<T> diag(const AbstractMatrix<T,R>& x)
 {
-  size_t N = x.shape(0);
+  size_t N = shape(x,0);
   Vector<T> y = zeros(N);
   for(size_t i=0; i<N; i++)
     y(i) = x(i,i);

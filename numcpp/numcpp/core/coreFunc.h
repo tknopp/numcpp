@@ -1,5 +1,5 @@
-#ifndef NUMCPP_COREFUNC_H
-#define NUMCPP_COREFUNC_H
+#ifndef NUMCPP_CORE_FUNC_H
+#define NUMCPP_CORE_FUNC_H
 
 #include "array.h"
 
@@ -13,11 +13,14 @@ namespace numcpp
 @{
 */
 
+using std::abs;
+using std::sqrt;
+using std::pow;
 
-VECTORIZE(std::abs, abs)
-VECTORIZE(std::sqrt, sqrt)
-VECTORIZE_ONE_ARG(std::pow,pow,int)
-VECTORIZE_ONE_ARG(std::pow,pow,double)
+VECTORIZE(abs, abs)
+VECTORIZE(sqrt, sqrt)
+VECTORIZE_ONE_ARG(pow,pow,int)
+VECTORIZE_ONE_ARG(pow,pow,double)
 
 /*!
 Number of dimensions (rank) of the array \a x.
@@ -34,7 +37,7 @@ Number of elements (shape) of the array \a x along axis \a d.
 template <class T, int D, class Derived>
 size_t shape(const AbstractArray<T,D,Derived>& x, int d)
 {
-  return x.shape(d);
+  return x.shape()[d];
 }
 
 /*!

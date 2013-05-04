@@ -36,12 +36,12 @@ template<class T, class U, class R, class V>
 }
 
 
-template<class T, class U, class R, class V>
+template<class T, class U, class V>
   Vector< COMMON_TYPE(T,U) >
-  dot(const AbstractMatrix<T,R>& A, const AbstractVector<U,V>& x)
+  dot(const Matrix<T>& A, const AbstractVector<U,V>& x)
 {
-  auto M = A.shape(0);
-  auto N = A.shape(1);
+  auto M = shape(A,0);
+  auto N = shape(A,1);
   Vector< COMMON_TYPE(T,U) > y = zeros(M);
 
   #ifdef _OPENMP
@@ -61,9 +61,9 @@ template<class T, class U, class R, class V>
   Matrix< COMMON_TYPE(T,U) >
   dot(const AbstractMatrix<T,R>& A, const AbstractMatrix<U,V>& B)
 {
-  auto M = A.shape(0);
-  auto N = A.shape(1);
-  auto K = B.shape(1);
+  auto M = shape(A,0);
+  auto N = shape(A,1);
+  auto K = shape(B,1);
   Matrix< COMMON_TYPE(T,U) > C = zeros(M,K);
   Vector<U> tmpV(N);
 
@@ -96,27 +96,38 @@ template<class T, class U, class R, class V>
 }
 
 
+template<class T, class U, int D, int L, class R, class V>
+  Array<COMMON_TYPE(T,U), D+L-2>
+  vdot(const AbstractArray<T,D,R>& x, const AbstractArray<U,L,V>& y)
+{
+  return dot(conj(x), y);
+}
+
 template<class T, class U, class R, class V>
   COMMON_TYPE(T,U)
   vdot(const AbstractVector<T,R>& x, const AbstractVector<U,V>& y)
 {
-  return sum(conj(x)*y);
+  return dot(conj(x), y);
 }
 
-template<class T, class U, class R, class V>
+template<class T, class U, class V>
   Vector< COMMON_TYPE(T,U) >
-  vdot(const AbstractMatrix<T,R>& A, const AbstractVector<U,V>& x)
+  hdot(const Matrix<T>& A, const AbstractVector<U,V>& x)
 {
-  auto M = A.shape(0);
-  auto N = A.shape(1);
+  auto M = shape(A,0);
+  auto N = shape(A,1);
   Vector< COMMON_TYPE(T,U) > y = zeros(N);
 
   #ifdef _OPENMP
   #pragma omp parallel for
   #endif
-  for(size_t m=0; m<M; m++)
-    for(size_t n=0; n<N; n++)
-      y[n] += A(m,n) * x[m];
+  for(size_t n=0; n<N; n++)
+  {
+    T tmp = 0;
+    for(size_t m=0; m<M; m++)
+      tmp += conj( A(m,n) ) * x(m);
+    y(n) = tmp;
+  }
   return y;
 }
 

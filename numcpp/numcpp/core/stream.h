@@ -33,15 +33,15 @@ std::ostream& operator<< (std::ostream& os,const AbstractArray<T,D,R> & x)
      << "," << D << "> {\n";
   os << "  shape = ";
   for(int i=0; i<D; i++)
-    os << x.shape(i) << " ";
+    os << shape(x,i) << " ";
   os << "\n";
 
   os << "  data = ";
   size_t j = 0;
-  size_t nrRows = x.size() / x.shape(D-1);
+  size_t nrRows = x.size() / shape(x,D-1);
   for(size_t i=0; i< nrRows; i++)
   {
-    for(size_t l=0; l< x.shape(D-1); l++,j++)
+    for(size_t l=0; l< shape(x,D-1); l++,j++)
       os << x[j] << " ";
     os << "\n";
   }
@@ -85,7 +85,7 @@ std::ostream& operator<< (std::ostream& os,const AbstractStridedMatrix<T,R> & x)
      << "> {\n";
   os << "  shape = ";
   for(int i=0; i<2; i++)
-    os << x.shape(i) << " ";
+    os << shape(x,i) << " ";
   os << "\n";
   os << "  strides = ";
   for(int i=0; i<2; i++)
@@ -93,12 +93,12 @@ std::ostream& operator<< (std::ostream& os,const AbstractStridedMatrix<T,R> & x)
   os << "\n";
 
   os << "  data = ";
-  for(size_t i=0; i< x.shape(0); i++)
+  for(size_t i=0; i< shape(x,0); i++)
   {
-    for(size_t l=0; l< x.shape(1); l++)
+    for(size_t l=0; l< shape(x,1); l++)
       os << x(i,l) << " ";
     os << "\n";
-    if(i<x.shape(0)-1)
+    if(i<shape(x,0)-1)
       os << "         ";
   }
   os << "}\n";

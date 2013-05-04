@@ -13,10 +13,10 @@ TEST_CASE( "numcpp/core/array/shape", "Array Shape tests" )
   SECTION( "Vector", "Vector Tests")
   {
     REQUIRE( x.size() == 10 );
-    REQUIRE( x.shape(0) == 10 );
+    REQUIRE( shape(x,0) == 10 );
     REQUIRE( x.shape()[0] == 10 );
     REQUIRE( x.shape()[0] == 10 );
-    REQUIRE( x.ndims() == 1 );
+    REQUIRE( ndims(x) == 1 );
   }
 
   Matrix<double> A(10,10);
@@ -24,9 +24,9 @@ TEST_CASE( "numcpp/core/array/shape", "Array Shape tests" )
   SECTION( "Matrix", "Matrix Tests")
   {
     REQUIRE( A.size() == 100 );
-    REQUIRE( A.shape(0) == 10 );
-    REQUIRE( A.shape(1) == 10 );
-    REQUIRE( A.ndims() == 2 );
+    REQUIRE( shape(A,0) == 10 );
+    REQUIRE( shape(A,1) == 10 );
+    REQUIRE( ndims(A) == 2 );
   }
 }
 
@@ -61,19 +61,19 @@ TEST_CASE( "numcpp/core/array/nonregularindices", "Non-regular indexing test" ) 
   {
     auto x = reshape( range(0,25), 5, 5 );
 
-    print(x);
+    //print(x);
 
     auto y = x(V{0, 2, 3}, 0);
 
-    print(y);
+    //print(y);
 
     auto z = x(V{0, 2, 3}, S{0,4});
 
-    print(z);
+    //print(z);
 
     auto u = x(V{0, 2, 3}, full);
 
-    print(u);
+    //print(u);
 
     //REQUIRE( y(0) == x(0) );
     //REQUIRE( y(1) == x(2) );

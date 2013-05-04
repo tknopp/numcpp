@@ -22,17 +22,17 @@ internal_fft_ (Array< std::complex<double>, D >& x, int dir)
 {
   auto N = x.size();
 
-  std::array<int,D> shape;
+  std::array<int,D> shape_;
 
   for(int d=0; d<D; d++)
-    shape[d] = x.shape(d);
+    shape_[d] = shape(x,d);
   //std::copy(std::begin(x.shape()), std::end(x.shape()), std::begin(shape));
 
   fftw_complex *out = (fftw_complex*) x.data();
   fftw_complex *in = out;
   fftw_plan p;
 
-  p = fftw_plan_dft(D, shape.data(), in, out, dir, FFTW_ESTIMATE);
+  p = fftw_plan_dft(D, shape_.data(), in, out, dir, FFTW_ESTIMATE);
 
   if(dir == FFTW_BACKWARD)
     x *= 1. / x.size();
@@ -50,17 +50,17 @@ internal_fft_ (Array< std::complex<float>, D >& x, int dir)
 {
   auto N = x.size();
 
-  std::array<int,D> shape;
+  std::array<int,D> shape_;
 
   for(int d=0; d<D; d++)
-    shape[d] = x.shape(d);
+    shape_[d] = shape(x,d);
   //std::copy(std::begin(x.shape()), std::end(x.shape()), std::begin(shape));
 
   fftwf_complex *out = (fftwf_complex*) x.data();
   fftwf_complex *in = out;
   fftwf_plan p;
 
-  p = fftwf_plan_dft(D, shape.data(), in, out, dir, FFTW_ESTIMATE);
+  p = fftwf_plan_dft(D, shape_.data(), in, out, dir, FFTW_ESTIMATE);
 
   if(dir == FFTW_BACKWARD)
     x *= 1. / x.size();
@@ -139,19 +139,19 @@ internal_fft_r2r_ (Array<double, D >& x, const int kind)
 {
   auto N = x.size();
 
-  std::array<int,D> shape;
+  std::array<int,D> shape_;
   int kinds[D];
 
   for(int d=0; d<D; d++)
   {
-    shape[d] = x.shape(d);
+    shape_[d] = shape(x, d);
     kinds[d] = kind;
   }
   //std::copy(std::begin(x.shape()), std::end(x.shape()), std::begin(shape));
 
   fftw_plan p;
 
-  p = fftw_plan_r2r(D, shape.data(), x.data(), x.data(), (fftwf_r2r_kind*) kinds, FFTW_ESTIMATE);
+  p = fftw_plan_r2r(D, shape_.data(), x.data(), x.data(), (fftwf_r2r_kind*) kinds, FFTW_ESTIMATE);
 
   fftw_execute(p);
 
@@ -167,19 +167,19 @@ internal_fft_r2r_ (Array<float, D >& x, const int kind)
 {
   auto N = x.size();
 
-  std::array<int,D> shape;
+  std::array<int,D> shape_;
   int kinds[D];
 
   for(int d=0; d<D; d++)
   {
-    shape[d] = x.shape(d);
+    shape_[d] = shape(x,d);
     kinds[d] = kind;
   }
   //std::copy(std::begin(x.shape()), std::end(x.shape()), std::begin(shape));
 
   fftwf_plan p;
 
-  p = fftwf_plan_r2r(D, shape.data(), x.data(), x.data(), (fftwf_r2r_kind*) kinds, FFTW_ESTIMATE);
+  p = fftwf_plan_r2r(D, shape_.data(), x.data(), x.data(), (fftwf_r2r_kind*) kinds, FFTW_ESTIMATE);
 
   fftwf_execute(p);
 
@@ -325,8 +325,8 @@ Vector<T> fftshift(const Vector<T>& x)
 template<class T>
 Matrix<T> fftshift(const Matrix<T>& x)
 {
-  size_t N = x.shape(0);
-  size_t M = x.shape(1);
+  size_t N = shape(x,0);
+  size_t M = shape(x,1);
   Matrix<T> y(N,M);
 
   auto k = slice(0,N/2);

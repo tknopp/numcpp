@@ -253,8 +253,8 @@ void testMultiIndex()
 {
   Array<double,2> x = zeros(3,3);
 
-  for(size_t i=0; i<x.shape(0); i++)
-    for(size_t j=0; j<x.shape(1); j++)
+  for(size_t i=0; i<shape(x,0); i++)
+    for(size_t j=0; j<shape(x,1); j++)
       x[{i,j}] = 2*i+j;
       // x[{i,all,slice(0,end)}] x[]
 
