@@ -1,6 +1,6 @@
 
 .DS_Store
-
+html/
 CMakeLists.txt.user
 doc/doxygen
 doc/sphinx/.build
