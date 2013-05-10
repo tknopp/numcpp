@@ -10,6 +10,7 @@
 #include "numcpp/graphics.h"
 #include "numcpp/linalg.h"
 #include "numcpp/sparse.h"
+#include "numcpp/tomography.h"
 
 #endif
 

@@ -1,5 +1,5 @@
-#ifndef FILE_H
-#define FILE_H
+#ifndef NUMCPP_FILE_H
+#define NUMCPP_FILE_H
 
 //#include "../core.h"
 #include <fstream>
@@ -67,4 +67,4 @@ void tofile(Array<T, D> x, std::string filename, std::string sep="")
 
 }
 
-#endif // FILE_H
+#endif

@@ -16,6 +16,7 @@ namespace numcpp
 using std::abs;
 using std::sqrt;
 using std::pow;
+using std::round;
 
 VECTORIZE(abs, abs)
 VECTORIZE(sqrt, sqrt)

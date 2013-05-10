@@ -1,10 +1,17 @@
-#ifndef ITERATIVE_LINEAR_SOLVERS_H
-#define ITERATIVE_LINEAR_SOLVERS_H
+#ifndef NUMCPP_ITERATIVE_LINEAR_SOLVERS_H
+#define NUMCPP_ITERATIVE_LINEAR_SOLVERS_H
 
 //#include "../core.h"
 
 namespace numcpp
 {
+
+/*!
+@file
+
+@addtogroup solvers
+@{
+*/
 
 template<class T>
 Vector<double> rowEnergy(Matrix<T> A)
@@ -18,6 +25,9 @@ Vector<double> rowEnergy(Matrix<T> A)
   return energy;
 }
 
+/*!
+Kaczmarz algorithm for solving a linear system of equations of the form \a A \a x = \b.
+*/
 template<class T, class U >
 auto kaczmarz(Matrix<T> A, Vector<U> b, int iterations, double lambda = 0,
            bool enforceReal = false, bool enforcePositive = false)
@@ -61,7 +71,9 @@ auto kaczmarz(Matrix<T> A, Vector<U> b, int iterations, double lambda = 0,
 }
 
 // CGNR
-
+/*!
+CGNR algorithm (Conjugate Residual Normal Equation) for solving a linear system of equations of the form \a A \a x = \b.
+*/
 template<class Matrix, class U >
 auto cgnr(const Matrix& A, const Vector<U>& b, int iterations, double lambda = 0)
   -> Vector< COMMON_TYPE_ARRAY(A, b) >
@@ -100,7 +112,9 @@ auto cgnr(const Matrix& A, const Vector<U>& b, int iterations, double lambda = 0
 }
 
 // Compressed Sensing
-
+/*!
+SL0 algorithm for solving a sparse linear system of equations of the form \a A \a x = \b.
+*/
 template<class Matrix, class U >
 auto SL0(const Matrix& A, const Vector<U>& b, int iterations, int innerIterations=3, double lambda=1e-3,
       double lambdDecreaseFactor=0.5, double mu0=2)
@@ -127,7 +141,8 @@ auto SL0(const Matrix& A, const Vector<U>& b, int iterations, int innerIteration
   return x;
 }
 
+/*! @} */
 
 }
 
-#endif // ITERATIVE_LINEAR_SOLVERS_H
+#endif

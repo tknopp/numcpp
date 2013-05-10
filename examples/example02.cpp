@@ -1,6 +1,5 @@
 #include <numcpp.h>
 
-
 using namespace numcpp;
 
 int main()

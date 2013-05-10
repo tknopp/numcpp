@@ -7,6 +7,16 @@
 namespace numcpp
 {
 
+/*!
+@file
+
+@addtogroup sparse
+@{
+*/
+
+/*!
+Sparse matrix class
+*/
 template<class T>
 class SparseMatrixCRS : public AbstractArray<T,2,SparseMatrixCRS<T>>
 {
@@ -112,6 +122,9 @@ private:
 };
 
 
+/*!
+Matrix vector product between the sparse matrix \a A and the abstract vector \a x.
+*/
 template<class T, class U, class V>
   Vector< COMMON_TYPE(T,U) >
   dot(const SparseMatrixCRS<T>& A, const AbstractVector<U,V>& x)
@@ -132,6 +145,9 @@ template<class T, class U, class V>
   return y;
 }
 
+/*!
+Matrix vector product between the adjoint of the sparse matrix \a A and the abstract vector \a x.
+*/
 template<class T, class U, class V>
   Vector< COMMON_TYPE(T,U) >
   hdot(const SparseMatrixCRS<T>& A, const AbstractVector<U,V>& x)
@@ -151,7 +167,7 @@ template<class T, class U, class V>
 }
 
 
-
+/*! @} */
 
 }
 

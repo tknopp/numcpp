@@ -3,41 +3,23 @@ using namespace numcpp;
 
 int main()
 {
-  size_t M = 3, N = 3;
-  auto A = array<double>({1, 7, 3,
-                          9, 9, 4,
-                          1, 0, 4}, M, N);
+  size_t N = 8;
+  size_t M = N;
 
+  Vector<double> x = linspace(-0.5, 0.5, M);//rand(M) - 0.5
 
-  auto x = eval(ones(N));
-  auto y = dot(A,x);
+  Vector<cdouble> fHat = range(0,M); //randn<double>(M); + I*randn<double>(M);//+im*randn(M)
 
-  print(A);
-  print(x);
-  print(y);
+  auto f = ndftAdjoint(fHat, x);
+  auto fApprox = nfftAdjoint(fHat, x);
 
-  auto z = solve(A, y);
+  print(f);
+  print(fApprox);
 
-  print(z);
+  //f = ndft_adjoint(F,fHat)
+  //fApprox = nfft_adjoint(F,fHat)
+  //println( norm(f-fApprox) / norm(f)  )
+
+  //println(F)
 }
-/*!
-@page example05 Solving Linear Systems
-
-@code
-int main()
-{
-  size_t M = 3, N = 3;
-  auto A = array<double>({1, 7, 3,
-                          9, 9, 4,
-                          1, 0, 4}, M, N);
-
-
-  auto x = eval(ones(N));
-  auto y = dot(A,x);
-
-  auto z = solve(A, y);
-
-}
-@endcode
-*/
 

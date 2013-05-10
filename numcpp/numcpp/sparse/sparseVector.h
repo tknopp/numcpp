@@ -6,6 +6,16 @@
 namespace numcpp
 {
 
+/*!
+@file
+
+@addtogroup sparse
+@{
+*/
+
+/*!
+Sparse vector class
+*/
 template<class T>
 class SparseVector : public AbstractArray<T,1,SparseVector<T>>
 {
@@ -99,6 +109,8 @@ double norm(const SparseVector<T>& x, double p=2.0)
 
   return std::pow( sum( pow( abs( x.data() ), p) ), 1./p );
 }
+
+/*! @} */
 
 }
 

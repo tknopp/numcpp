@@ -6,9 +6,10 @@ add_subdirectory(solvers)
 add_subdirectory(graphics)
 add_subdirectory(linalg)
 add_subdirectory(sparse)
+add_subdirectory(tomography)
 
 add_custom_target(NumCpp SOURCES
-core.h solvers.h io.h fft.h base.h graphics.h linalg.h sparse.h)
+core.h solvers.h io.h fft.h base.h graphics.h linalg.h sparse.h tomography.h)
 
 #file (GLOB _sources RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} core/*.h)
 

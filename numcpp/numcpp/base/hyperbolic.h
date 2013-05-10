@@ -4,9 +4,13 @@
 namespace numcpp
 {
 
-VECTORIZE(std::sinh, sinh)
-VECTORIZE(std::cosh, cosh)
-VECTORIZE(std::tanh, tanh)
+using std::sinh;
+using std::cosh;
+using std::tanh;
+
+VECTORIZE(sinh, sinh)
+VECTORIZE(cosh, cosh)
+VECTORIZE(tanh, tanh)
 
 }
 

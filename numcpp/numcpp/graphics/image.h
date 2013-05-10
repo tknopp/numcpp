@@ -35,16 +35,16 @@ void export_image(const AbstractMatrix<T,R>& x, std::string filename, double win
     png = true;
 
   if(png)
-    surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24, y.shape(0), x.shape(1));
+    surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24, shape(y,0), shape(x,1));
   else
-    surface = cairo_pdf_surface_create(filename.c_str(), y.shape(0), x.shape(1));
+    surface = cairo_pdf_surface_create(filename.c_str(), shape(y,0), shape(x,1));
 
   cr = cairo_create(surface);
 
   cairo_surface_t *image;
 
   image = cairo_image_surface_create_for_data((unsigned char*) y.data(),
-                                              CAIRO_FORMAT_ARGB32, y.shape(0), y.shape(1), y.shape(0) * sizeof(int32_t));
+                                              CAIRO_FORMAT_ARGB32, shape(y,0), shape(y,1), shape(y,0) * sizeof(int32_t));
 
   //cairo_scale (cr, 256.0/w, 256.0/h);
 

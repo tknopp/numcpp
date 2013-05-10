@@ -1,80 +1,131 @@
-#ifndef NFFT_H
-#define NFFT_H
+#ifndef NUMCPP_NFFT_H
+#define NUMCPP_NFFT_H
 
 #include "fftw.h"
+#include "../graphics.h"
 
 namespace numcpp
 {
 
-template<class T, class U=double>
-class NFFTMatrix
+/*class GlobalData
 {
 public:
-  NFFTMatrix(size_t N, Vector<U> x)
-    : m(2)
-    , n(2*N)
-    , sigma(2.0)
-    , windowLUT(2000)
-    , windowHatInvLUT(N)
-    , tmpVec(n)
-  {
-     for(size_t l=0; l<windowLUT.size(); l++)
-     {
-       U y = ((l-1) / (windowLUT.size()-1) * 2 - 1) * m/n * 2;
-       windowLUT[l] = window_kaiser_bessel(y, n, m, sigma)
-      }
+  size_t totalAllocatedBytes = 0;
+  size_t numAllocations = 0;
+  bool cachingEnabled_ = false;
+  std::unordered_multimap<size_t, std::pair<char*,size_t*>> cache_;
 
-  windowHatInvLUT = zeros(Float64, N)
-  for y=1:N
-    windowHatInvLUT[y] = 1. / window_kaiser_bessel_hat(y-1-N/2, n, m, sigma)
-  end
-
-  tmpVec = zeros(Complex128, n)
-
-  NFFTPlan(N, length(x), x, m, sigma, n, window_kaiser_bessel,
-      window_kaiser_bessel_hat, Complex128, windowLUT, windowHatInvLUT, tmpVec )
-
-  }
-
-private:
-  size_t M;
-  size_t N;
-  size_t n;
-  Vector<U> x;
-  U sigma;
-  int m;
-  Vector<U> windowLUT;
-  Vector<U> windowHatInvLUT;
-  Vector<T> tmpVec;
+  static GlobalData& GetInstance();
 };
 
-/*
-nfftConvolve (p::NFFTPlan, fHat::Vector{T})
-  NLUT = length(p.windowLUT)
-
-  for k=1:p.M # loop over nonequispaced nodes
-    c = int(floor(p.x[k]*p.n))
-    for l=(c-p.m):(c+p.m+1) # loop over nonzero elements
-
-      idx = mod(l+p.n/2, p.n) + 1
-
-      #p.tmpVec[idx] += fHat[k] * p.window( p.x[k] - l/p.n , p.n, p.m, p.sigma)
-
-      idx2 = round(((p.x[k]*p.n - l)/p.m/2. + 1)*(NLUT-1)/2) +1
-      p.tmpVec[idx] += fHat[k] * p.windowLUT[idx2]
-    end
-  end
-end
-
-function apodization{T}(p::NFFTPlan, g::Vector{T})
-  f = zeros(T, p.N)
-  const offset = (p.n - p.N) / 2
-  for y=1:p.N
-    f[y] = g[y+offset] * p.windowHatInvLUT[y]
-  end
-  return f
-end
+inline GlobalData &GlobalData::GetInstance()
+{
+   static GlobalData instance;
+   return instance;
+}
 */
+
+template<class T>
+T nfft_window_hat(T k, size_t n, size_t m, T sigma)
+{
+  T b = pi*(2-1.0/sigma);
+  return besseli0(m*sqrt(b*b-pow(2*pi*k/n,2)));
+}
+
+template<class T>
+T nfft_window(T x, size_t n, size_t m, T sigma)
+{
+  T b = pi*(2-1.0/sigma);
+  T arg = m*m - n*n*x*x;
+  if(abs(x) < m/static_cast<T>(n))
+    return sinh(b*sqrt(arg)) / sqrt(arg)/pi;
+  else if(abs(x) > m/static_cast<T>(n))
+    return 0;//sin(b*sqrt(-m^2+n^2*x^2))/sqrt(-m^2+n^2*x^2)/pi;
+  else
+    return b / pi;
+}
+
+template<class T>
+Vector< std::complex<T> > ndftAdjoint(const Vector<std::complex<T>>& fHat, const Vector<T>& x)
+{
+  size_t N = size(fHat);
+  size_t M = size(x);
+
+  Vector< std::complex<T> > g = zeros(N);
+
+  for(size_t n=0; n<N; n++)
+  {
+    for(size_t k=0; k<M; k++)
+    {
+      g(n) += fHat(k) * exp(2*pi*I*x(k)*(n-N/2.0) );
+    }
+  }
+
+  return g;
+}
+
+template<class T>
+Vector<std::complex<T> > nfftAdjoint(const Vector<std::complex<T>>& fHat, const Vector<T>& x, size_t m=2, T sigma=2.0 )
+{
+  size_t N = size(fHat);
+  size_t n = round(sigma*N);
+  size_t M = size(x);
+  Vector<T> windowLUT = zeros(2000);
+  Vector<T> windowHatInvLUT = zeros(N);
+  Vector< std::complex<T> > tmpVec = zeros(n);
+
+  // initialization of LUTs
+  for(size_t l=0; l<size(windowLUT); l++)
+  {
+    T y = (l / static_cast<T>(size(windowLUT)-1) * 2 - 1) * m/static_cast<T>(n) * 2;
+    windowLUT(l) = nfft_window(y, n, m, sigma);
+  }
+
+  for(size_t k=0; k<N; k++)
+  {
+    windowHatInvLUT(k) = 1. / nfft_window_hat(k-N/2.0, n, m, sigma);
+  }
+
+  auto fig = Figure();
+  fig.plot(windowLUT, "blue");
+  fig.save("windowLUT.pdf");
+
+  auto fig2 = Figure();
+  fig2.plot(windowHatInvLUT, "blue");
+  fig2.save("windowHatInvLUT.pdf");
+
+  // convolution
+  for(size_t k=0; k<M; k++) // loop over nonequispaced nodes
+  {
+    size_t c = (size_t) std::floor(x(k)*n);
+    for(size_t l=(c-m); l<(c+m+1); l++) // loop over nonzero elements
+    {
+      size_t idx = (l+n/2) % n;
+      // p.tmpVec[idx] += fHat[k] * p.window( p.x[k] - l/p.n , p.n, p.m, p.sigma)
+
+      size_t idx2 = round(((x(k)*n - l)/m/2.0 + 1)*(size(windowLUT)-1)/2.0);
+      tmpVec(idx) += fHat(k) * windowLUT(idx2);
+    }
+  }
+
+  // fft
+  tmpVec = fftshift(ifft(fftshift(tmpVec))) * n;
+
+  // apodization
+  Vector< std::complex<T> > f = zeros(N);
+  size_t offset = (n - N) / 2;
+
+  for(size_t n=0; n<N; n++)
+  {
+    f(n) = tmpVec(n+offset) * windowHatInvLUT(n);
+  }
+
+  return f;
+}
+
+
+
+
 }
 
 #endif

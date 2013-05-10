@@ -1,4 +1,6 @@
-
-
 #include "solvers/iterativeLinearSolvers.h"
-#include "solvers/decompositions.h"
+
+/*!
+@defgroup solvers Solvers
+@brief Iterative algorithms for solving linear systems
+*/

@@ -3,41 +3,26 @@ using namespace numcpp;
 
 int main()
 {
-  size_t M = 3, N = 3;
-  auto A = array<double>({1, 7, 3,
-                          9, 9, 4,
-                          1, 0, 4}, M, N);
+  size_t N = 256;
+  auto x = phantom(N);
 
+  Vector<double> xi = linspace(-sqrt(2)/2, sqrt(2)/2, N);
+  Vector<double> gamma = linspace(0, 2*pi, N);
 
-  auto x = eval(ones(N));
-  auto y = dot(A,x);
+  auto R = radon(x, xi, gamma);
 
-  print(A);
-  print(x);
-  print(y);
+  export_image(R, "Radon.png");
 
-  auto z = solve(A, y);
+  auto B = fbp(R, gamma, 256);
 
-  print(z);
+  export_image(B, "Reco.png");
+
 }
 /*!
-@page example05 Solving Linear Systems
+@page example06 Radon
 
 @code
-int main()
-{
-  size_t M = 3, N = 3;
-  auto A = array<double>({1, 7, 3,
-                          9, 9, 4,
-                          1, 0, 4}, M, N);
 
-
-  auto x = eval(ones(N));
-  auto y = dot(A,x);
-
-  auto z = solve(A, y);
-
-}
 @endcode
 */
 
