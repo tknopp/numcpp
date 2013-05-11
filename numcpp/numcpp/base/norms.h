@@ -30,6 +30,12 @@ double norm(const AbstractArray<T,D,R>& x, double p=2.0)
   return std::pow( sum( pow(abs(x),p) ), 1./p );
 }
 
+template<class T, int D, class R1, class R2>
+double nrmsd(const AbstractArray<T,D,R1>& x, const AbstractArray<T,D,R2>& y)
+{
+  return norm(x-y) / norm(x);
+}
+
 
 /*! @} */
 

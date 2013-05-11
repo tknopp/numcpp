@@ -110,8 +110,8 @@ protected:
 
 /// Return an constant array containing only zero values.
 /// Note that this function returns an expression template.
-template<int D, class Int=size_t>
-ConstantArray<int,D> zeros(std::array<Int,D> shape)
+template<int D>
+ConstantArray<int,D> zeros(const std::array<size_t,D>& shape)
 {
   return ConstantArray<int,D> (0, shape);
 }
@@ -141,7 +141,7 @@ ConstantArray<int,sizeof...(A)> ones(A...args)
 /// Return a vector containing linear spaced values.
 inline LinearVector<double> linspace(double start, double end, size_t size)
 {
-  return LinearVector<double>(start, end, (end-start) / size);
+  return LinearVector<double>(start, end + (end-start) / (size-1), (end-start) / (size-1));
 }
 
 /// Return a vector containing linear spaced values.

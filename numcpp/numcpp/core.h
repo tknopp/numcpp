@@ -10,6 +10,7 @@
 #include "core/arithmetic.h"
 #include "core/relational.h"
 
+#define NUMCPP_HEADER_ONLY
 #ifndef NUMCPP_HEADER_ONLY
 #include "core/extern.h"
 #endif
