@@ -192,27 +192,33 @@ public:
     // convolution
     t = tic();
     Vector< std::complex<T> > fHat = zeros(M);
+
+    std::array<ptrdiff_t,2> l;
+    std::array<size_t, 2> idx;
+    std::array<T, 2> c;
     for(size_t k=0; k<M; k++) // loop over nonequispaced nodes
     {
-      auto cx = std::floor(x(k,0)*n[0]);
-      auto cy = std::floor(x(k,1)*n[1]);
-      for(ptrdiff_t lx=(cx-m); lx<(cx+m+1); lx++) // loop over nonzero elements
+      for(int d=0; d<2; d++)
+        c[d] = std::floor(x(k,d)*n[d]);
+
+      for(l[0]=(c[0]-m); l[0]<(c[0]+m+1); l[0]++) // loop over nonzero elements
       {
-        ptrdiff_t idx_x = (lx+n[0]/2) % n[0];
-        for(ptrdiff_t ly=(cy-m); ly<(cy+m+1); ly++) // loop over nonzero elements
+        idx[0] = (l[0]+n[0]/2) % n[0];
+        for(l[1]=(c[1]-m); l[1]<(c[1]+m+1); l[1]++)
         {
-          ptrdiff_t idx_y = (ly+n[1]/2) % n[1];
+          idx[1] = (l[1]+n[1]/2) % n[1];
 
           // Use linear interpolation and a LUT
-          T idx2_x = abs(((x(k,0)*n[0] - lx)/m )*(size(windowLUT[0])-1));
-          T idx2_y = abs(((x(k,1)*n[1] - ly)/m )*(size(windowLUT[1])-1));
-          size_t idx2L_x = std::floor(idx2_x);
-          size_t idx2H_x = std::ceil(idx2_x);
-          size_t idx2L_y = std::floor(idx2_y);
-          size_t idx2H_y = std::ceil(idx2_y);
-          fHat(k) += tmpVec(idx_x, idx_y)
-                        * (windowLUT[0](idx2L_x) + ( idx2_x-idx2L_x ) * (windowLUT[0](idx2H_x) - windowLUT[0](idx2L_x) ) )
-                        * (windowLUT[1](idx2L_y) + ( idx2_y-idx2L_y ) * (windowLUT[1](idx2H_y) - windowLUT[1](idx2L_y) ) );
+          auto tmp = tmpVec[idx];
+          for(int d=0; d<2; d++)
+          {
+            T idx2 = abs(((x(k,d)*n[d] - l[d])/m )*(size(windowLUT[d])-1));
+            size_t idx2L = std::floor(idx2);
+            size_t idx2H = std::ceil(idx2);
+            tmp *= (windowLUT[d](idx2L) + ( idx2-idx2L ) * (windowLUT[d](idx2H) - windowLUT[d](idx2L) ) );
+          }
+
+          fHat(k) += tmp;
         }
       }
     }
@@ -265,33 +271,38 @@ public:
     return f;
   }
 
-  Matrix< std::complex<T> > adjoint2(const Vector<std::complex<T>>& fHat)
+  Matrix< std::complex<T> > adjoint2D(const Vector<std::complex<T>>& fHat)
   {
     tmpVec = 0;
 
     // convolution
     auto t = tic();
+    std::array<ptrdiff_t,2> l;
+    std::array<size_t, 2> idx;
+    std::array<T, 2> c;
     for(size_t k=0; k<M; k++) // loop over nonequispaced nodes
     {
-      auto cx = std::floor(x(k,0)*n[0]);
-      auto cy = std::floor(x(k,1)*n[1]);
-      for(ptrdiff_t lx=(cx-m); lx<(cx+m+1); lx++) // loop over nonzero elements
+      for(int d=0; d<2; d++)
+        c[d] = std::floor(x(k,d)*n[d]);
+
+      for(l[0]=(c[0]-m); l[0]<(c[0]+m+1); l[0]++) // loop over nonzero elements
       {
-        ptrdiff_t idx_x = (lx+n[0]/2) % n[0];
-        for(ptrdiff_t ly=(cy-m); ly<(cy+m+1); ly++) // loop over nonzero elements
+        idx[0] = (l[0]+n[0]/2) % n[0];
+        for(l[1]=(c[1]-m); l[1]<(c[1]+m+1); l[1]++)
         {
-          ptrdiff_t idx_y = (ly+n[1]/2) % n[1];
+          idx[1] = (l[1]+n[1]/2) % n[1];
 
           // Use linear interpolation and a LUT
-          T idx2_x = abs(((x(k,0)*n[0] - lx)/m )*(size(windowLUT[0])-1));
-          T idx2_y = abs(((x(k,1)*n[1] - ly)/m )*(size(windowLUT[1])-1));
-          size_t idx2L_x = std::floor(idx2_x);
-          size_t idx2H_x = std::ceil(idx2_x);
-          size_t idx2L_y = std::floor(idx2_y);
-          size_t idx2H_y = std::ceil(idx2_y);
-          tmpVec(idx_x, idx_y) += fHat(k)
-                        * (windowLUT[0](idx2L_x) + ( idx2_x-idx2L_x ) * (windowLUT[0](idx2H_x) - windowLUT[0](idx2L_x) ) )
-                        * (windowLUT[1](idx2L_y) + ( idx2_y-idx2L_y ) * (windowLUT[1](idx2H_y) - windowLUT[1](idx2L_y) ) );
+          auto tmp = fHat(k);
+          for(int d=0; d<2; d++)
+          {
+            T idx2 = abs(((x(k,d)*n[d] - l[d])/m )*(size(windowLUT[d])-1));
+            size_t idx2L = std::floor(idx2);
+            size_t idx2H = std::ceil(idx2);
+            tmp *= (windowLUT[d](idx2L) + ( idx2-idx2L ) * (windowLUT[d](idx2H) - windowLUT[d](idx2L) ) );
+          }
+
+          tmpVec[idx] += tmp;
         }
       }
     }
@@ -318,8 +329,76 @@ public:
     return f;
   }
 
-private:
+  Array< std::complex<T>, D > adjointND(const Vector<std::complex<T>>& fHat)
+  {
+    tmpVec = 0;
 
+    // convolution
+    auto t = tic();
+    std::array<ptrdiff_t,D> l;
+    std::array<size_t, D> idx, P;
+    std::array<T, D> c;
+    for(size_t k=0; k<M; k++) // loop over nonequispaced nodes
+    {
+      for(int d=0; d<D; d++)
+      {
+        c[d] = std::floor(x(k,d)*n[d]);
+        P[d] = 2*m + 1;
+      }
+
+      Iterator<D> it(P);
+      for(size_t j=0; j<prod(P); j++, it++)
+      {
+          for(int d=0; d<D; d++)
+          {
+            l[d] = c[d]-m+(*it)[d];
+            idx[d] = (l[d]+n[d]/2) % n[d];
+          }
+
+          // Use linear interpolation and a LUT
+          auto tmp = fHat(k);
+          for(int d=0; d<D; d++)
+          {
+            T idx2 = abs(((x(k,d)*n[d] - l[d])/m )*(size(windowLUT[d])-1));
+            size_t idx2L = std::floor(idx2);
+            size_t idx2H = std::ceil(idx2);
+            tmp *= (windowLUT[d](idx2L) + ( idx2-idx2L ) * (windowLUT[d](idx2H) - windowLUT[d](idx2L) ) );
+          }
+
+          tmpVec[idx] += tmp;
+      }
+    }
+    toc(t);
+
+    // fft
+    t = tic();
+    tmpVec = fftshift(ifft(fftshift(tmpVec))) * prod(n);
+    toc(t);
+
+    // apodization
+    t = tic();
+    Array< std::complex<T>, D > f = zeros<D>(N);
+    Iterator<D> it(N);
+
+    for(size_t j=0; j<prod(N); j++, it++)
+    {
+      T windowHatInvLUTProd = 1;
+      for(int d=0; d<D; d++)
+      {
+        idx[d] = (*it)[d] + (n[d] - N[d]) / 2;
+        windowHatInvLUTProd *= windowHatInvLUT[d]((*it)[d]);
+      }
+      f[*it] = tmpVec[idx] * windowHatInvLUTProd;
+
+    }
+
+    toc(t);
+
+    return f;
+  }
+
+
+private:
   std::array<size_t,D> N;
   double sigma;
   std::array<size_t,D> n;
@@ -355,6 +434,7 @@ Vector<std::complex<T> > nfftAdjoint(const Vector<std::complex<T>>& fHat, const 
 {
   NFFTPlan<T,1> p(x, N, m, sigma);
   return p.adjoint(fHat);
+  //return p.adjointND(fHat);
 }
 
 template<class T>
@@ -362,9 +442,17 @@ Matrix<std::complex<T> > nfftAdjoint(const Vector<std::complex<T>>& fHat, const 
                                      size_t m=2, T sigma=2.0 )
 {
   NFFTPlan<T,2> p(x, N, m, sigma);
-  return p.adjoint2(fHat);
+  return p.adjoint2D(fHat);
+  //return p.adjointND(fHat);
 }
 
+template<size_t D, class T>
+Array<std::complex<T>,D > nfftAdjoint(const Vector<std::complex<T>>& fHat, const Matrix<T>& x, std::array<size_t,D> N,
+                                     size_t m=2, T sigma=2.0 )
+{
+  NFFTPlan<T,D> p(x, N, m, sigma);
+  return p.adjointND(fHat);
+}
 
 }
 

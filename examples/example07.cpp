@@ -16,7 +16,6 @@ int main()
 
   std::cout << "Error(nfft,adjoint,1D) = " << nrmsd(f, fApprox) << std::endl;
 
-
   auto f2 = ndft(fHat, x);
   auto f2Approx = nfft(fHat, x, m, sigma);
 
@@ -52,6 +51,17 @@ int main()
     toc(t);
   }
 
+  {
+    size_t N = 1600;
+    size_t M = N*N;
+
+    Matrix<double> x = reshape(linspace(-0.5,0.5,2*M),M,2);
+    Vector<cdouble> fHat = reshape(range(0,N*N),N*N);
+
+    auto t=tic();
+    auto fApprox2 = nfftAdjoint(fHat,x,{N,N},m,sigma);
+    toc(t);
+  }
 
 }
 
