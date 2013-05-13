@@ -1,6 +1,7 @@
 #ifndef NUMCPP_FFTW_H
 #define NUMCPP_FFTW_H
 
+#include <utility>
 #include <fftw3.h>
 #include "../core.h"
 
@@ -310,17 +311,80 @@ are swapped.
 template<class T, int D>
 Array<T,D> fftshift(const Array<T,D>& x);
 
+/*!
+Perform an inplace fftshift on the array \a x.
+
+For a 1D array, an fftshifft essentially swaps the first and the second half of the array.
+In 2D the upper left and the lower right quarter as well as the upper right and lower left quarter
+are swapped.
+*/
+template<class T, int D>
+Array<T,D>& fftshift_(Array<T,D>& x);
+
+template<class T>
+Vector<T>& fftshift_(Vector<T>& x)
+{
+  size_t N = x.size();
+  if(N % 2 == 0)
+  {
+    for(size_t n=0; n<N/2; n++)
+    {
+      swap(x(n),x(N/2+n));
+    }
+  }
+  else
+  {
+    T tmpC = x(N/2);
+    for(size_t n=0; n<N/2; n++)
+    {
+      x(n+N/2) = x(n);
+      x(n) = x(n+N/2+1);
+    }
+    x(N-1) = tmpC;
+  }
+
+  return x;
+}
+
+template<class T>
+Vector<T>& ifftshift_(Vector<T>& x)
+{
+  size_t N = x.size();
+  if(N % 2 == 0)
+  {
+    for(size_t n=0; n<N/2; n++)
+    {
+      swap(x(n),x(N/2+n));
+    }
+  }
+  else
+  {
+    T tmpC = x(N/2);
+    for(size_t n=0; n<N/2; n++)
+    {
+      x(N/2-n) = x(N-1-n);
+      x(N-1-n) = x(N/2-1-n);
+    }
+    x(0) = tmpC;
+  }
+
+  return x;
+}
+
 template<class T>
 Vector<T> fftshift(const Vector<T>& x)
 {
-  size_t N = x.size();
-  Vector<T> y(N);
-  auto k = slice(0,N/2);
-  auto l = slice(N/2,N);
-  y(l) = x(k);
-  y(k) = x(l);
-  return y;
+  auto y = copy(x);
+  return fftshift_(y);
 }
+
+template<class T>
+Vector<T> ifftshift(const Vector<T>& x)
+{
+  auto y = copy(x);
+  return ifftshift_(y);
+}
+
 
 template<class T>
 Matrix<T> fftshift(const Matrix<T>& x)

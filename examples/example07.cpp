@@ -40,7 +40,7 @@ int main()
   }
 
   {
-    size_t N = pow(2,16);
+    size_t N = pow(2,19);
     size_t M = N;
 
     Vector<double> x = linspace(-0.5, 0.5, M);

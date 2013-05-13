@@ -101,7 +101,7 @@ public:
     // initialization of LUTs
     for(int d=0; d<D; d++)
     {
-      windowLUT[d] = zeros(10000);
+      windowLUT[d] = zeros(6000);
       #ifdef _OPENMP
       #pragma omp parallel for
       #endif
@@ -146,12 +146,14 @@ public:
 
     // fft
     t = tic();
-    tmpVec = fftshift(fft(fftshift(tmpVec)));
+    fftshift_(tmpVec);
+    fft_(tmpVec);
+    fftshift_(tmpVec);
     toc(t);
 
     // convolution
-    t = tic();
     Vector< std::complex<T> > fHat = zeros(M);
+    t = tic();
     #ifdef _OPENMP
     #pragma omp parallel for
     #endif
@@ -334,7 +336,11 @@ public:
 
     // fft
     t = tic();
-    tmpVec = fftshift(ifft(fftshift(tmpVec))) * n[0];
+    //tmpVec = fftshift_(ifft_(fftshift_(tmpVec))) * n[0];
+    fftshift_(tmpVec);
+    ifft_(tmpVec);
+    fftshift_(tmpVec);
+    tmpVec *= n[0];
     toc(t);
 
     // apodization
