@@ -40,20 +40,30 @@ int main()
   }
 
   {
-    size_t N = 160000;
+    size_t N = pow(2,16);
     size_t M = N;
 
     Vector<double> x = linspace(-0.5, 0.5, M);
     Vector<cdouble> fHat = range(0,M);
 
+    std::cout << "Performance test 1D:" << std::endl;
+
     auto t=tic();
     auto fApprox = nfftAdjoint(fHat, x, N, m, sigma);
+    toc(t);
+
+    std::cout << "trafo:" << std::endl;
+
+    t=tic();
+    auto fApprox2 = nfft(fHat, x, m, sigma);
     toc(t);
   }
 
   {
     size_t N = 1600;
     size_t M = N*N;
+
+    std::cout << "Performance test 2D:" << std::endl;
 
     Matrix<double> x = reshape(linspace(-0.5,0.5,2*M),M,2);
     Vector<cdouble> fHat = reshape(range(0,N*N),N*N);

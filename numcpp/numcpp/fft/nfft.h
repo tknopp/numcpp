@@ -102,6 +102,9 @@ public:
     for(int d=0; d<D; d++)
     {
       windowLUT[d] = zeros(10000);
+      #ifdef _OPENMP
+      #pragma omp parallel for
+      #endif
       for(size_t l=0; l<size(windowLUT[d]); l++)
       {
         T y = (l / static_cast<T>(size(windowLUT[d])-1) ) * m/static_cast<T>(n[d]) ;
@@ -112,6 +115,9 @@ public:
     for(int d=0; d<D; d++)
     {
       windowHatInvLUT[d] = zeros(N[d]);
+      #ifdef _OPENMP
+      #pragma omp parallel for
+      #endif
       for(size_t k=0; k<N[0]; k++)
       {
         windowHatInvLUT[d](k) = 1. / nfft_window_hat(k-N[d]/2.0, n[d], m, sigma);
@@ -146,6 +152,9 @@ public:
     // convolution
     t = tic();
     Vector< std::complex<T> > fHat = zeros(M);
+    #ifdef _OPENMP
+    #pragma omp parallel for
+    #endif
     for(size_t k=0; k<M; k++) // loop over nonequispaced nodes
     {
       auto c = std::floor(x(k,0)*n[0]);
@@ -227,12 +236,83 @@ public:
     return fHat;
   }
 
+  Vector<std::complex<T>> trafoND(const Array< std::complex<T>, D>& f)
+  {
+    tmpVec = 0;
+    std::array<ptrdiff_t,D> l;
+    std::array<size_t, D> idx, P;
+    std::array<T, D> c;
+
+    // apodization
+    auto t = tic();
+    Iterator<D> it(N);
+
+    for(size_t j=0; j<prod(N); j++, it++)
+    {
+      T windowHatInvLUTProd = 1;
+      for(int d=0; d<D; d++)
+      {
+        idx[d] = (*it)[d] + (n[d] - N[d]) / 2;
+        windowHatInvLUTProd *= windowHatInvLUT[d]((*it)[d]);
+      }
+      tmpVec[idx] = f[*it] * windowHatInvLUTProd;
+
+    }
+    toc(t);
+
+    // fft
+    t = tic();
+    tmpVec = fftshift(fft(fftshift(tmpVec)));
+    toc(t);
+
+    // convolution
+    t = tic();
+    Vector< std::complex<T> > fHat = zeros(M);
+
+    for(size_t k=0; k<M; k++) // loop over nonequispaced nodes
+    {
+      for(int d=0; d<D; d++)
+      {
+        c[d] = std::floor(x(k,d)*n[d]);
+        P[d] = 2*m + 1;
+      }
+
+      Iterator<D> it(P);
+      for(size_t j=0; j<prod(P); j++, it++)
+      {
+          for(int d=0; d<D; d++)
+          {
+            l[d] = c[d]-m+(*it)[d];
+            idx[d] = (l[d]+n[d]/2) % n[d];
+          }
+
+          // Use linear interpolation and a LUT
+          auto tmp = tmpVec[idx];
+          for(int d=0; d<D; d++)
+          {
+            T idx2 = abs(((x(k,d)*n[d] - l[d])/m )*(size(windowLUT[d])-1));
+            size_t idx2L = std::floor(idx2);
+            size_t idx2H = std::ceil(idx2);
+            tmp *= (windowLUT[d](idx2L) + ( idx2-idx2L ) * (windowLUT[d](idx2H) - windowLUT[d](idx2L) ) );
+          }
+
+          fHat(k) += tmp;
+      }
+    }
+    toc(t);
+
+    return fHat;
+  }
+
   Vector<std::complex<T> > adjoint(const Vector<std::complex<T>>& fHat )
   {
     tmpVec = 0;
 
     // convolution
     auto t = tic();
+    #ifdef _OPENMP
+    #pragma omp parallel for
+    #endif
     for(size_t k=0; k<M; k++) // loop over nonequispaced nodes
     {
       auto c = std::floor(x(k,0)*n[0]);
@@ -265,6 +345,13 @@ public:
     {
       f(l) = tmpVec(l + (n[0] - N[0]) / 2) * windowHatInvLUT[0](l);
     }
+
+/*    for(size_t l=0; l<N[0]/2; l++)
+    {
+      f(l) = tmpVec(l + (n[0] - N[0] / 2)) * windowHatInvLUT[0](l+N[0]/2);
+      f(l+N[0]/2) = tmpVec(l) * windowHatInvLUT[0](l);
+    }*/
+
 
     toc(t);
 
@@ -347,18 +434,14 @@ public:
       }
 
       Iterator<D> it(P);
-      for(size_t j=0; j<prod(P); j++, it++)
+      for(size_t j=0; j<prod(P); j++, it++) // loop over nonzero elements
       {
-          for(int d=0; d<D; d++)
-          {
-            l[d] = c[d]-m+(*it)[d];
-            idx[d] = (l[d]+n[d]/2) % n[d];
-          }
-
           // Use linear interpolation and a LUT
           auto tmp = fHat(k);
           for(int d=0; d<D; d++)
           {
+            l[d] = c[d]-m+(*it)[d];
+            idx[d] = (l[d]+n[d]/2) % n[d];
             T idx2 = abs(((x(k,d)*n[d] - l[d])/m )*(size(windowLUT[d])-1));
             size_t idx2L = std::floor(idx2);
             size_t idx2H = std::ceil(idx2);
@@ -427,6 +510,13 @@ Vector<std::complex<T> > nfft(const Matrix<std::complex<T>>& f, const Matrix<T>&
 {
   NFFTPlan<T,2> p(x, f.shape(), m, sigma);
   return p.trafo(f);
+}
+
+template<class T, int D>
+Vector<std::complex<T> > nfft(const Array<std::complex<T>,D>& f, const Matrix<T>& x, size_t m=2, T sigma=2.0 )
+{
+  NFFTPlan<T,D> p(x, f.shape(), m, sigma);
+  return p.trafoND(f);
 }
 
 template<class T>

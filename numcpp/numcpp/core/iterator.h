@@ -20,13 +20,14 @@ public:
 
   void operator++(int)
   {
-    for(size_t i=0; i<D; i++)
+    //for(size_t i=0; i<D; i++)
+    for(long i=D-1; i>=0; i--)
     {
       counter[i]++;
-      if(counter[i] >= shape[i])
-        counter[i] = 0;
-      else
+      if(counter[i] < shape[i])
         break;
+      else
+        counter[i] = 0;
     }
   }
 
