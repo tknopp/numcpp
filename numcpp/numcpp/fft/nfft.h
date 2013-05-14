@@ -100,7 +100,7 @@ public:
     // initialization of LUTs
     for(int d=0; d<D; d++)
     {
-      windowLUT[d] = zeros(6000);
+      windowLUT[d] = zeros(10000);
       #ifdef _OPENMP
       #pragma omp parallel for
       #endif
