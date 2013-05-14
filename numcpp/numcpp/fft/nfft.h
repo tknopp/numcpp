@@ -100,13 +100,13 @@ public:
     // initialization of LUTs
     for(int d=0; d<D; d++)
     {
-      windowLUT[d] = zeros(10000);
+      windowLUT[d] = zeros(3*K/2);
       #ifdef _OPENMP
       #pragma omp parallel for
       #endif
       for(size_t l=0; l<size(windowLUT[d]); l++)
       {
-        T y = (l / static_cast<T>(size(windowLUT[d])-1) ) * m/static_cast<T>(n[d]) ;
+        T y = (l / static_cast<T>(K-1) ) * m/static_cast<T>(n[d]) ;
         windowLUT[d](l) = nfft_window(y, n[d], m, sigma);
       }
     }
@@ -137,21 +137,19 @@ public:
 
     // apodization
     auto t = tic();
-    apodization<trafo>(f, tmpVec);
+    apodization<Forward>(const_cast<Array< std::complex<T>, D>&>(f), tmpVec);
     toc(t);
 
     // fft
     t = tic();
-    //tmpVec = fftshift(fft(fftshift(tmpVec)));
-    fftshift_(tmpVec);
-    fft_(tmpVec);
-    fftshift_(tmpVec);
+    // fftshifts are implicitely done in convolution and apodization
+    fft_(tmpVec, -1);
     toc(t);
 
     // convolution
     t = tic();
     Vector< std::complex<T> > fHat = zeros(M);
-	convolution<trafo>(tmpVec, fHat);
+    convolution<Forward>(tmpVec, fHat);
     toc(t);
 
     return fHat;
@@ -163,22 +161,19 @@ public:
 
     // convolution
     auto t = tic();
-    convolution<adjoint>(tmpVec, fHat);
+    convolution<Adjoint>(tmpVec, const_cast<Vector<std::complex<T>>&>(fHat));
     toc(t);
 
     // fft
     t = tic();
-    //tmpVec = fftshift(ifft(fftshift(tmpVec))) * prod(n);
-    fftshift_(tmpVec);
-    ifft_(tmpVec);
-    fftshift_(tmpVec);
-    tmpVec *= prod(n);
+    // fftshifts are implicitely done in convolution and apodization
+    fft_(tmpVec, 1);
     toc(t);
 
     // apodization
     t = tic();
     Array< std::complex<T>, D > f = zeros<D>(N);
-    apodization<adjoint>(f, tmpVec);
+    apodization<Adjoint>(f, tmpVec);
     toc(t);
 
     return f;
@@ -188,121 +183,136 @@ public:
 private:
 
   template<int Z>
-  void apodization(Array< std::complex<T>,D>& f, Array< std::complex<T>,D>& g)
+  void apodization(Vector< std::complex<T>>& f, Vector< std::complex<T>>& g)
   {
-    if(D == 1)
-	{
       for(size_t l=0; l<N[0]; l++)
       {
-		if(Z == trafo)
-          g(l + (n[0] - N[0]) / 2) = f(l) * windowHatInvLUT[0](l);
-		else
-		  f(l) = g(l + (n[0] - N[0]) / 2) * windowHatInvLUT[0](l);
+        if(Z == Forward)
+          g( (l + n[0] - N[0] / 2) % n[0] ) = f(l) * windowHatInvLUT[0](l);
+        else
+          f(l) = g( (l + n[0] - N[0] / 2) % n[0] ) * windowHatInvLUT[0](l);
       }
-	}
-	else if(D == 2)
-	{
+  }
+
+  template<int Z>
+  void apodization(Matrix< std::complex<T>>& f, Matrix< std::complex<T>>& g)
+  {
       for(size_t lx=0; lx<N[0]; lx++)
       {
         for(size_t ly=0; ly<N[1]; ly++)
         {
-		  if(Z == trafo)
-           g(lx + (n[0] - N[0]) / 2, ly + (n[1] - N[1]) / 2) = f(lx,ly) * windowHatInvLUT[0](lx) * windowHatInvLUT[1](ly);
-		  else
-           f(lx,ly) = g(lx + (n[0] - N[0]) / 2, ly + (n[1] - N[1]) / 2) * windowHatInvLUT[0](lx) * windowHatInvLUT[1](ly);
+          if(Z == Forward)
+           g( (lx + n[0] - N[0] / 2) % n[0] , (ly + n[1] - N[1] / 2) % n[1] ) =
+             f(lx,ly) * windowHatInvLUT[0](lx) * windowHatInvLUT[1](ly);
+          else
+           f(lx,ly) = g( (lx + n[0] - N[0] / 2) % n[0] , (ly + n[1] - N[1] / 2) % n[1] )
+              * windowHatInvLUT[0](lx) * windowHatInvLUT[1](ly);
         }
       }
-	}
-	else
-	{
-      std::array<size_t, D> idx;
-      Iterator<D> it(N);
+  }
+
+
+  template<int Z, int O>
+  void apodization(Array< std::complex<T>,O>& f, Array< std::complex<T>,O>& g)
+  {
+      std::array<size_t, O> idx;
+      Iterator<O> it(N);
 
       for(size_t j=0; j<prod(N); j++, it++)
       {
         T windowHatInvLUTProd = 1;
-        for(int d=0; d<D; d++)
+        for(int d=0; d<O; d++)
         {
-          idx[d] = (*it)[d] + (n[d] - N[d]) / 2;
+          idx[d] = ( (*it)[d] + n[d] - N[d] / 2 ) % n[d];
           windowHatInvLUTProd *= windowHatInvLUT[d]((*it)[d]);
         }
-		if(Z == trafo)
+        if(Z == Forward)
           g[idx] = f[*it] * windowHatInvLUTProd;
-		else
-	      f[*it] = g[idx] * windowHatInvLUTProd;
+        else
+          f[*it] = g[idx] * windowHatInvLUTProd;
       }
-	}
   }
 
   template<int Z>
-  void convolution(Array< std::complex<T>,D>& g, Vector< std::complex<T> >& fHat)
+  void convolution(Vector<std::complex<T>>& g, Vector< std::complex<T> >& fHat)
   {
-    if(D == 1)
-	{
-      for(size_t k=0; k<M; k++) // loop over nonequispaced nodes
+    #ifdef _OPENMP
+    #pragma omp parallel for
+    #endif
+    for(size_t k=0; k<M; k++) // loop over nonequispaced nodes
+    {
+      auto c = std::floor(x(k,0)*n[0]);
+      for(ptrdiff_t l=(c-m); l<(c+m+1); l++) // loop over nonzero elements
       {
-        auto c = std::floor(x(k,0)*n[0]);
-        for(ptrdiff_t l=(c-m); l<(c+m+1); l++) // loop over nonzero elements
-        {
-          ptrdiff_t idx = (l+n[0]/2) % n[0];
+        ptrdiff_t idx = (l+n[0]) % n[0];
 
-          // Direct evaluation of window:
-          //tmpVec(idx) += fHat(k) * nfft_window(x(k) - l/static_cast<T>(n), n, m, sigma);
+        // Direct evaluation of window:
+        //tmpVec(idx) += fHat(k) * nfft_window(x(k) - l/static_cast<T>(n), n, m, sigma);
 
-          // Use linear interpolation and a LUT
-          T idx2 = abs(((x(k,0)*n[0] - l)/m )*(size(windowLUT[0])-1));
-          size_t idx2L = std::floor(idx2);
-          size_t idx2H = std::ceil(idx2);
-		  if(Z == trafo) // Dead code will be eliminated
-            fHat(k) += g(idx) * (windowLUT[0](idx2L) + ( idx2-idx2L ) * (windowLUT[0](idx2H) - windowLUT[0](idx2L) ) );
-		  else
-            g(idx) += fHat(k) * (windowLUT[0](idx2L) + ( idx2-idx2L ) * (windowLUT[0](idx2H) - windowLUT[0](idx2L) ) );
-        }
+        // Use linear interpolation and a LUT
+        T idx2 = abs(((x(k,0)*n[0] - l)/m )*(K-1));
+        size_t idx2L = idx2;
+
+        if(Z == Forward) // Dead code will be eliminated
+          fHat(k) += g(idx) * (windowLUT[0](idx2L) + ( idx2-idx2L ) * (windowLUT[0](idx2L+1) - windowLUT[0](idx2L) ) );
+        else
+          g(idx) += fHat(k) * (windowLUT[0](idx2L) + ( idx2-idx2L ) * (windowLUT[0](idx2L+1) - windowLUT[0](idx2L) ) );
       }
-	}
-	else if(D == 2)
-	{
-      std::array<ptrdiff_t,2> l;
-      std::array<size_t, 2> idx;
-      std::array<T, 2> c;
+    }
+  }
+
+  template<int Z>
+  void convolution(Matrix<std::complex<T>>& g, Vector< std::complex<T> >& fHat)
+  {
+      T scale = 1.0 / m*(K-1);
+
+      #ifdef _OPENMP
+      #pragma omp parallel for
+      #endif
       for(size_t k=0; k<M; k++) // loop over nonequispaced nodes
       {
-        for(int d=0; d<2; d++)
-          c[d] = std::floor(x(k,d)*n[d]);
+        std::complex<T> tmp, tmpWin;
 
-        for(l[0]=(c[0]-m); l[0]<(c[0]+m+1); l[0]++) // loop over nonzero elements
+        T c0 = std::floor(x(k,0)*n[0]);
+        T c1 = std::floor(x(k,1)*n[1]);
+
+        for(ptrdiff_t l0=(c0-m); l0<(c0+m+1); l0++) // loop over nonzero elements
         {
-          idx[0] = (l[0]+n[0]/2) % n[0];
-          for(l[1]=(c[1]-m); l[1]<(c[1]+m+1); l[1]++)
+          size_t idx0 = (l0+n[0]) % n[0];
+
+          T idx2 = abs((x(k,0)*n[0] - l0)*scale);
+          size_t idx2L = idx2;
+          tmpWin = (windowLUT[0](idx2L) + ( idx2-idx2L ) * (windowLUT[0](idx2L+1) - windowLUT[0](idx2L) ) );
+
+          for(ptrdiff_t l1=(c1-m); l1<(c1+m+1); l1++)
           {
-            idx[1] = (l[1]+n[1]/2) % n[1];
+            size_t idx1 = (l1+n[1]) % n[1];
 
             // Use linear interpolation and a LUT
-			std::complex<T> tmp;
-            if(Z == trafo) tmp = g[idx];
-			else tmp = fHat(k);
 
-            for(int d=0; d<2; d++)
-            {
-              T idx2 = abs(((x(k,d)*n[d] - l[d])/m )*(size(windowLUT[d])-1));
-              size_t idx2L = std::floor(idx2);
-              size_t idx2H = std::ceil(idx2);
-              tmp *= (windowLUT[d](idx2L) + ( idx2-idx2L ) * (windowLUT[d](idx2H) - windowLUT[d](idx2L) ) );
-            }
+            if(Z == Forward) tmp = g(idx0,idx1);
+            else tmp = fHat(k);
 
-            if(Z == trafo) fHat(k) += tmp;
-			else g[idx] += tmp;
+            idx2 = abs((x(k,1)*n[1] - l1)*scale);
+            idx2L = idx2;
+            tmp *= tmpWin * (windowLUT[1](idx2L) + ( idx2-idx2L ) * (windowLUT[1](idx2L+1) - windowLUT[1](idx2L) ) );
+
+            if(Z == Forward) fHat(k) += tmp;
+            else g(idx0,idx1) += tmp;
           }
         }
-	}
-	else
-	{
-      std::array<ptrdiff_t,D> l;
-      std::array<size_t, D> idx, P;
-      std::array<T, D> c;
+      }
+    }
+
+  template<int Z, int O>
+  void convolution(Array< std::complex<T>,O>& g, Vector< std::complex<T> >& fHat)
+  {
+      std::array<ptrdiff_t,O> l;
+      std::array<size_t, O> idx, P;
+      std::array<T, O> c;
       for(size_t k=0; k<M; k++) // loop over nonequispaced nodes
       {
-        for(int d=0; d<D; d++)
+        for(int d=0; d<O; d++)
         {
           c[d] = std::floor(x(k,d)*n[d]);
           P[d] = 2*m + 1;
@@ -312,30 +322,27 @@ private:
         for(size_t j=0; j<prod(P); j++, it++) // loop over nonzero elements
         {
           // Use linear interpolation and a LUT
-
-          for(int d=0; d<D; d++)
+          for(int d=0; d<O; d++)
           {
             l[d] = c[d]-m+(*it)[d];
-            idx[d] = (l[d]+n[d]/2) % n[d];
-		  }
-
-	      std::complex<T> tmp;
-          if(Z == trafo) tmp = g[idx];
-		  else tmp = fHat(k);
-
-          for(int d=0; d<D; d++)
-          {
-            T idx2 = abs(((x(k,d)*n[d] - l[d])/m )*(size(windowLUT[d])-1));
-            size_t idx2L = std::floor(idx2);
-            size_t idx2H = std::ceil(idx2);
-            tmp *= (windowLUT[d](idx2L) + ( idx2-idx2L ) * (windowLUT[d](idx2H) - windowLUT[d](idx2L) ) );
+            idx[d] = (l[d]+n[d]) % n[d];
           }
 
-          if(Z == trafo) fHat(k) += tmp;
-		  else g[idx] += tmp;
+          std::complex<T> tmp;
+          if(Z == Forward) tmp = g[idx];
+          else tmp = fHat(k);
+
+          for(int d=0; d<O; d++)
+          {
+            T idx2 = abs(((x(k,d)*n[d] - l[d])/m )*(K-1));
+            size_t idx2L = idx2;
+            tmp *= (windowLUT[d](idx2L) + ( idx2-idx2L ) * (windowLUT[d](idx2L+1) - windowLUT[d](idx2L) ) );
+          }
+
+          if(Z == Forward) fHat(k) += tmp;
+          else g[idx] += tmp;
         }
       }
-	}
   }
 
   std::array<size_t,D> N;
@@ -343,14 +350,15 @@ private:
   std::array<size_t,D> n;
   size_t M;
   size_t m;
+  size_t K = 2000;
 
   const Matrix<T> x;
   std::array<Vector<T>,D> windowLUT;
   std::array<Vector<T>,D> windowHatInvLUT;
   Array< std::complex<T>, D > tmpVec;
 
-  const int trafo = 1;
-  const int adjoint = -1;
+  static const int Forward = 1;
+  static const int Adjoint = -1;
 };
 
 

@@ -29,18 +29,18 @@ TEST_CASE( "numcpp/sparse/sparseMatrix", "Sparse matrix test" )
 
     auto y = dot(A, x);
 
-    print(y);
+    //print(y);
 
     SparseMatrixCRS<double> B(A, 0.1);
 
     auto z = dot(B, x);
 
-    print(z);
+    //print(z);
 
     REQUIRE( norm(y - z) < 1e-6 );
 
 
-    std::cout << "norm(x,y) = " << norm( B(1,full) ) << std::endl;
+    //std::cout << "norm(x,y) = " << norm( B(1,full) ) << std::endl;
 
   }
 
@@ -57,7 +57,7 @@ TEST_CASE( "numcpp/sparse/sparseVector", "Sparse vector test" )
 
     Vector<double> y = 2*ones(5);
 
-    std::cout << "dot(x,y) = " << dot(x, y) << std::endl;
-    std::cout << "norm(x,y) = " << norm(x) << std::endl;
+    //std::cout << "dot(x,y) = " << dot(x, y) << std::endl;
+    //std::cout << "norm(x,y) = " << norm(x) << std::endl;
   }
 }

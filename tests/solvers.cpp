@@ -34,7 +34,7 @@ TEST_CASE( "numcpp/solvers/cgnr", "CGNR test" )
     auto y = dot(A,x);
     auto r = cgnr(A, y, 3);
 
-    print(r);
+    //print(r);
 
     REQUIRE( norm( r - x ) < 1e-6  );
   }
@@ -50,8 +50,8 @@ TEST_CASE( "numcpp/solvers/cgnr", "CGNR test" )
     auto y = dot(A,x);
     auto r = cgnr(A, y, 3);
 
-    print(y);
-    print(r);
+    //print(y);
+    //print(r);
 
     REQUIRE( norm( r - x ) < 1e-6  );
   }

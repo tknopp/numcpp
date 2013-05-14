@@ -3,6 +3,12 @@ using namespace numcpp;
 
 int main()
 {
+
+  auto zz = randn<double>(4,4);
+  print(zz);
+  print(fftshift_(zz));
+
+
   size_t N = 16;
   size_t M = N;
   size_t m = 4;
@@ -23,7 +29,7 @@ int main()
 
 
   {
-    size_t N = 4;
+    size_t N = 8;
     size_t M = N*N;
 
     Matrix<double> x = reshape(linspace(-0.5,0.5,2*M),M,2);
@@ -60,7 +66,7 @@ int main()
   }
 
   {
-    size_t N = 1600;
+    size_t N = 1024;
     size_t M = N*N;
 
     std::cout << "Performance test 2D:" << std::endl;
@@ -70,6 +76,12 @@ int main()
 
     auto t=tic();
     auto fApprox2 = nfftAdjoint(fHat,x,{N,N},m,sigma);
+    toc(t);
+
+    std::cout << "trafo:" << std::endl;
+
+    t=tic();
+    auto fHatApprox2 = nfft(fApprox2, x, m, sigma);
     toc(t);
   }
 

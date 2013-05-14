@@ -35,9 +35,6 @@ internal_fft_ (Array< std::complex<double>, D >& x, int dir)
 
   p = fftw_plan_dft(D, shape_.data(), in, out, dir, FFTW_ESTIMATE);
 
-  if(dir == FFTW_BACKWARD)
-    x *= 1. / x.size();
-
   fftw_execute(p);
 
   fftw_destroy_plan(p);
@@ -63,9 +60,6 @@ internal_fft_ (Array< std::complex<float>, D >& x, int dir)
 
   p = fftwf_plan_dft(D, shape_.data(), in, out, dir, FFTW_ESTIMATE);
 
-  if(dir == FFTW_BACKWARD)
-    x *= 1. / x.size();
-
   fftwf_execute(p);
 
   fftwf_destroy_plan(p);
@@ -81,9 +75,9 @@ Note that for multidimensional input arrays, the respective multidimensional fft
 */
 template<class T, int D>
 Array< std::complex<T>, D >&
-fft_(Array< std::complex<T>, D >& x)
+fft_(Array< std::complex<T>, D >& x, int dir=FFTW_FORWARD)
 {
-  return internal_fft_(x, FFTW_FORWARD);
+  return internal_fft_(x, dir);
 }
 
 /*!
@@ -94,9 +88,11 @@ Note that for multidimensional input arrays, the respective multidimensional fft
 */
 template<class T, int D>
 Array< std::complex<T>, D >&
-ifft_(Array< std::complex<T>, D >& x)
+ifft_(Array< std::complex<T>, D >& x, int dir=FFTW_BACKWARD)
 {
-  return internal_fft_(x, FFTW_BACKWARD);
+  internal_fft_(x, dir);
+  x *= 1. / x.size();
+  return x;
 }
 
 /*!
@@ -318,18 +314,18 @@ For a 1D array, an fftshifft essentially swaps the first and the second half of 
 In 2D the upper left and the lower right quarter as well as the upper right and lower left quarter
 are swapped.
 */
-template<class T, int D>
-Array<T,D>& fftshift_(Array<T,D>& x);
+//template<class T, int D>
+//Array<T,D>& fftshift_(Array<T,D>& x);
 
-template<class T>
-Vector<T>& fftshift_(Vector<T>& x)
+template<class T, class R>
+AbstractStridedVector<T,R>& fftshift_(AbstractStridedVector<T,R>& x)
 {
   size_t N = x.size();
   if(N % 2 == 0)
   {
     for(size_t n=0; n<N/2; n++)
     {
-      swap(x(n),x(N/2+n));
+      std::swap(x(n),x(N/2+n));
     }
   }
   else
@@ -346,15 +342,15 @@ Vector<T>& fftshift_(Vector<T>& x)
   return x;
 }
 
-template<class T>
-Vector<T>& ifftshift_(Vector<T>& x)
+template<class T, class R>
+AbstractStridedVector<T,R>& ifftshift_(AbstractStridedVector<T,R>& x)
 {
   size_t N = x.size();
   if(N % 2 == 0)
   {
     for(size_t n=0; n<N/2; n++)
     {
-      swap(x(n),x(N/2+n));
+      std::swap(x(n),x(N/2+n));
     }
   }
   else
@@ -385,7 +381,6 @@ Vector<T> ifftshift(const Vector<T>& x)
   return ifftshift_(y);
 }
 
-
 template<class T>
 Matrix<T> fftshift(const Matrix<T>& x)
 {
@@ -404,6 +399,62 @@ Matrix<T> fftshift(const Matrix<T>& x)
   y(k,n) = x(l,m);
 
   return y;
+}
+
+template<class T>
+Matrix<T>& fftshift_(Matrix<T>& x)
+{
+  size_t N = shape(x,0);
+  size_t M = shape(x,1);
+
+  for(size_t n=0; n<N; n++)
+  {
+    auto sl = x(n,full);
+    fftshift_(sl);
+  }
+
+  for(size_t m=0; m<M; m++)
+  {
+    auto sl = x(full,m);
+    fftshift_(sl);
+  }
+
+  return x;
+}
+
+template<class T>
+Array<T,3> fftshift(const Array<T,3>& x)
+{
+  size_t N = shape(x,0);
+  size_t M = shape(x,1);
+  size_t Z = shape(x,2);
+  Array<T,3> y(N,M,Z);
+
+  auto l1 = slice(0,N/2);
+  auto u1 = slice(N/2,N);
+  auto l2 = slice(0,M/2);
+  auto u2 = slice(M/2,M);
+  auto l3 = slice(0,Z/2);
+  auto u3 = slice(Z/2,Z);
+
+  y(l1,l2,l3) = x(u1,u2,u3);
+  y(u1,u2,u3) = x(l1,l2,l3);
+
+  y(l1,l2,u3) = x(u1,u2,l3);
+  y(u1,u2,l3) = x(l1,l2,u3);
+
+  y(l1,u2,l3) = x(u1,l2,u3);
+  y(u1,l2,u3) = x(l1,u2,l3);
+
+  return y;
+}
+
+template<class T>
+Array<T,3>& fftshift_(Array<T,3>& x)
+{
+  auto y = fftshift(x);
+  x = y;
+  return x;
 }
 
 /*! @} */
