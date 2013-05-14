@@ -12,6 +12,7 @@ The aim of the NumCpp project is to develop a C++ library having a simple interf
 
 NumCpp is implemented using C++11 feature, which considerably simplifies the implementation of numcpp. Further
 NumCpp is designed to be used with C++11 features such as for instance the auto functionallity.
+For instance to 
 
 \section conceptMultidimensional Multidimensional Array
 
