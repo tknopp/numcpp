@@ -7,6 +7,13 @@
 namespace numcpp
 {
 
+/*!
+@file
+
+@addtogroup fft
+@{
+*/
+
 template<class T, int D>
 Vector< std::complex<T> > ndft(const Array<std::complex<T>,D>& f, const Matrix<T>& x)
 {
@@ -82,6 +89,9 @@ T nfft_window(T x, size_t n, size_t m, T sigma)
     return b / pi;
 }
 
+/*!
+Class for performing Nonequidistant Fast Fourier Transforms (NFFT)
+*/
 template<class T, int D>
 class NFFTPlan
 {
@@ -90,7 +100,9 @@ public:
   NFFTPlan(const Matrix<T>& x, std::array<size_t,D> N, size_t m, T sigma)
    : N(N), sigma(sigma), M(shape(x,0)), m(m), x(x)
   {
+    #ifdef NUMCPP_OUTPUT_TIMINGS
     auto t = tic();
+    #endif
 
     for(int d=0; d<D; d++)
       n[d] = (size_t)round(sigma*N[d]);
@@ -123,7 +135,10 @@ public:
       }
     }
 
+    #ifdef NUMCPP_OUTPUT_TIMINGS
+    std::cout << "Init: ";
     toc(t);
+    #endif
   }
 
   NFFTPlan(const Vector<T>& x, size_t N, size_t m, T sigma)
@@ -136,26 +151,42 @@ public:
     tmpVec = 0;
 
     // apodization
+    #ifdef NUMCPP_OUTPUT_TIMINGS
     auto t1 = tic();
+    #endif
+
     apodization<Forward>(const_cast<Array< std::complex<T>, D>&>(f), tmpVec);
-    std::cout << "Apo: ";
+
+    #ifdef NUMCPP_OUTPUT_TIMINGS
+    std::cout << "Apo:  ";
     toc(t1);
+    #endif
 
     // fft
+    #ifdef NUMCPP_OUTPUT_TIMINGS
     auto t2 = tic();
+    #endif
+
     // fftshifts are implicitely done in convolution and apodization
     fft_(tmpVec, -1);
-    std::cout << "FFT: ";
+
+    #ifdef NUMCPP_OUTPUT_TIMINGS
+    std::cout << "FFT:  ";
     toc(t2);
+    #endif
 
     // convolution
     Vector< std::complex<T> > fHat = zeros(M);
+    #ifdef NUMCPP_OUTPUT_TIMINGS
     auto t3 = tic();
+    #endif
+
     convolution<Forward>(tmpVec, fHat);
-    std::cout << "Con: ";
+
+    #ifdef NUMCPP_OUTPUT_TIMINGS
+    std::cout << "Conv: ";
     toc(t3);
-    std::cout << "All: ";
-    toc(t1);
+    #endif
 
     return fHat;
   }
@@ -165,26 +196,42 @@ public:
     tmpVec = 0;
 
     // convolution
+    #ifdef NUMCPP_OUTPUT_TIMINGS
     auto t1 = tic();
+    #endif
+
     convolution<Adjoint>(tmpVec, const_cast<Vector<std::complex<T>>&>(fHat));
-    std::cout << "Con: ";
+
+    #ifdef NUMCPP_OUTPUT_TIMINGS
+    std::cout << "Conv: ";
     toc(t1);
+    #endif
 
     // fft
+    #ifdef NUMCPP_OUTPUT_TIMINGS
     auto t2 = tic();
+    #endif
+
     // fftshifts are implicitely done in convolution and apodization
     fft_(tmpVec, 1);
-    std::cout << "FFT: ";
+
+    #ifdef NUMCPP_OUTPUT_TIMINGS
+    std::cout << "FFT:  ";
     toc(t2);
+    #endif
 
     // apodization
+    #ifdef NUMCPP_OUTPUT_TIMINGS
     auto t3 = tic();
+    #endif
+
     Array< std::complex<T>, D > f = zeros<D>(N);
     apodization<Adjoint>(f, tmpVec);
-    std::cout << "Apo: ";
+
+    #ifdef NUMCPP_OUTPUT_TIMINGS
+    std::cout << "Apo:  ";
     toc(t3);
-    std::cout << "All: ";
-    toc(t1);
+    #endif
 
     return f;
   }
@@ -424,6 +471,8 @@ Array<std::complex<T>,D > nfftAdjoint(const Vector<std::complex<T>>& fHat, const
   NFFTPlan<T,D> p(x, N, m, sigma);
   return p.adjoint(fHat);
 }
+
+/*! @} */
 
 }
 

@@ -39,6 +39,42 @@ Array<T,sizeof...(A)> randn(A...args)
   return x;
 }
 
+template<class T, class...A>
+auto rand(A...args)
+    -> typename std::enable_if< std::is_floating_point< T >::value,
+       Array<T,sizeof...(A)>       >::type
+{
+  Array<T,sizeof...(A)> x(args...);
+
+  std::random_device rd;
+  std::mt19937 gen(rd());
+
+  std::uniform_real_distribution<T> d(0.0,1.0);
+
+  for(size_t i=0; i<x.size(); i++)
+    x[i] = d(gen);
+
+  return x;
+}
+
+template<class T, class...A>
+auto rand(T max, A...args)
+    -> typename std::enable_if< std::numeric_limits<T>::is_integer,
+       Array<T,sizeof...(A)>       >::type
+{
+  Array<T,sizeof...(A)> x(args...);
+
+  std::random_device rd;
+  std::mt19937 gen(rd());
+
+  std::uniform_int_distribution<T> d(0,max);
+
+  for(size_t i=0; i<x.size(); i++)
+    x[i] = d(gen);
+
+  return x;
+}
+
 /*!
 Shuffle the array \a x inplace.
 @see numcpp::shuffle
