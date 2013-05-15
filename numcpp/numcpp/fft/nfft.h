@@ -136,21 +136,26 @@ public:
     tmpVec = 0;
 
     // apodization
-    auto t = tic();
+    auto t1 = tic();
     apodization<Forward>(const_cast<Array< std::complex<T>, D>&>(f), tmpVec);
-    toc(t);
+    std::cout << "Apo: ";
+    toc(t1);
 
     // fft
-    t = tic();
+    auto t2 = tic();
     // fftshifts are implicitely done in convolution and apodization
     fft_(tmpVec, -1);
-    toc(t);
+    std::cout << "FFT: ";
+    toc(t2);
 
     // convolution
-    t = tic();
+    auto t3 = tic();
     Vector< std::complex<T> > fHat = zeros(M);
     convolution<Forward>(tmpVec, fHat);
-    toc(t);
+    std::cout << "Con: ";
+    toc(t3);
+    std::cout << "All: ";
+    toc(t1);
 
     return fHat;
   }
@@ -160,21 +165,26 @@ public:
     tmpVec = 0;
 
     // convolution
-    auto t = tic();
+    auto t1 = tic();
     convolution<Adjoint>(tmpVec, const_cast<Vector<std::complex<T>>&>(fHat));
-    toc(t);
+    std::cout << "Con: ";
+    toc(t1);
 
     // fft
-    t = tic();
+    auto t2 = tic();
     // fftshifts are implicitely done in convolution and apodization
     fft_(tmpVec, 1);
-    toc(t);
+    std::cout << "FFT: ";
+    toc(t2);
 
     // apodization
-    t = tic();
+    auto t3 = tic();
     Array< std::complex<T>, D > f = zeros<D>(N);
     apodization<Adjoint>(f, tmpVec);
-    toc(t);
+    std::cout << "Apo: ";
+    toc(t3);
+    std::cout << "All: ";
+    toc(t1);
 
     return f;
   }
