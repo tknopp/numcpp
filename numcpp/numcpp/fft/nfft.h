@@ -149,8 +149,8 @@ public:
     toc(t2);
 
     // convolution
-    auto t3 = tic();
     Vector< std::complex<T> > fHat = zeros(M);
+    auto t3 = tic();
     convolution<Forward>(tmpVec, fHat);
     std::cout << "Con: ";
     toc(t3);
@@ -281,8 +281,6 @@ private:
       #endif
       for(size_t k=0; k<M; k++) // loop over nonequispaced nodes
       {
-        std::complex<T> tmp, tmpWin;
-
         T c0 = std::floor(x(k,0)*n[0]);
         T c1 = std::floor(x(k,1)*n[1]);
 
@@ -292,24 +290,32 @@ private:
 
           T idx2 = abs((x(k,0)*n[0] - l0)*scale);
           size_t idx2L = idx2;
-          tmpWin = (windowLUT[0](idx2L) + ( idx2-idx2L ) * (windowLUT[0](idx2L+1) - windowLUT[0](idx2L) ) );
 
-          for(ptrdiff_t l1=(c1-m); l1<(c1+m+1); l1++)
+          if(Z == Forward)
           {
-            size_t idx1 = (l1+n[1]) % n[1];
+            auto tmpWin = (windowLUT[0](idx2L) + ( idx2-idx2L ) * (windowLUT[0](idx2L+1) - windowLUT[0](idx2L) ) );
 
-            // Use linear interpolation and a LUT
+            for(ptrdiff_t l1=(c1-m); l1<(c1+m+1); l1++)
+            {
+              size_t idx1 = (l1+n[1]) % n[1];
+              idx2 = abs((x(k,1)*n[1] - l1)*scale);
+              idx2L = idx2;
+              fHat(k) += g(idx0,idx1) * tmpWin * (windowLUT[1](idx2L) + ( idx2-idx2L ) * (windowLUT[1](idx2L+1) - windowLUT[1](idx2L) ) );
+            }
+          } else
+          {
 
-            if(Z == Forward) tmp = g(idx0,idx1);
-            else tmp = fHat(k);
+            auto tmp = fHat(k) * (windowLUT[0](idx2L) + ( idx2-idx2L ) * (windowLUT[0](idx2L+1) - windowLUT[0](idx2L) ) );
 
-            idx2 = abs((x(k,1)*n[1] - l1)*scale);
-            idx2L = idx2;
-            tmp *= tmpWin * (windowLUT[1](idx2L) + ( idx2-idx2L ) * (windowLUT[1](idx2L+1) - windowLUT[1](idx2L) ) );
-
-            if(Z == Forward) fHat(k) += tmp;
-            else g(idx0,idx1) += tmp;
+            for(ptrdiff_t l1=(c1-m); l1<(c1+m+1); l1++)
+            {
+              size_t idx1 = (l1+n[1]) % n[1];
+              idx2 = abs((x(k,1)*n[1] - l1)*scale);
+              idx2L = idx2;
+              g(idx0,idx1) += tmp * (windowLUT[1](idx2L) + ( idx2-idx2L ) * (windowLUT[1](idx2L+1) - windowLUT[1](idx2L) ) );
+            }
           }
+
         }
       }
     }
