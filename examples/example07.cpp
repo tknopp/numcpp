@@ -6,15 +6,16 @@ int main()
 
   size_t N = 16;
   Vector<double> x = linspace(-0.5, 0.5, N);
-  Vector<double> h = { 1 / sqrt(2), 1 / sqrt(2) };
-  Vector<double> g = { 1 / sqrt(2), -1 / sqrt(2) };
 
-  dwtStep_(x, g, h);
+  dwtStep_(x, wavelets::Haar);
 
   print(x);
 
-  auto p = phantom(256);
-  dwt_(p, g, h);
-  export_image(p, "wavelet.pdf");
+  auto p = phantom(255); p +=1;
+  auto y = dwt(p, wavelets::Daubechies4, 2);
+  export_image(y, "wavelet.png", colormaps::gray);
+
+  auto z = idwt(y, wavelets::Daubechies4, 2);
+  export_image(z, "waveletI.png", colormaps::gray);
 }
 

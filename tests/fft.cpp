@@ -87,7 +87,7 @@ TEST_CASE( "numcpp/fft/nfft", "NFFT test" )
     auto f = ndftAdjoint<2>(fHat, x, {N,N});
     auto fApprox = nfftAdjoint(fHat, x, {N,N}, m, sigma);
 
-    //REQUIRE( nrmsd(f, fApprox) < 1e-6 );
+    REQUIRE( nrmsd(f, fApprox) < 1e-6 );
 
     auto g = ndft(f, x);
     auto gApprox = nfft(f, x, m, sigma);
@@ -113,8 +113,69 @@ TEST_CASE( "numcpp/fft/nfft", "NFFT test" )
 
     REQUIRE( nrmsd(g, gApprox) < 1e-6 );
   }
+}
 
+TEST_CASE( "numcpp/fft/wavelet", "Wavelet test" )
+{
 
+  {
+    size_t N = 8;
+    auto x = randn<double>(N);
+
+    auto y = dwt(x, wavelets::Haar,1);
+    auto z = idwt(y, wavelets::Haar,1);
+
+    REQUIRE( norm(x - z) < 1e-6 );
+  }
+
+  {
+    size_t N = 8;
+    auto x = randn<double>(N);
+
+    auto y = dwt(x, wavelets::Daubechies4);
+    auto z = idwt(y, wavelets::Daubechies4);
+
+    REQUIRE( norm(x - z) < 1e-6 );
+  }
+
+  {
+    size_t N = 8;
+    auto x = randn<double>(N,N);
+
+    auto y = dwt(x, wavelets::Haar);
+    auto z = idwt(y, wavelets::Haar);
+
+    REQUIRE( norm(x - z) < 1e-6 );
+  }
+
+  {
+    size_t N = 8;
+    auto x = randn<double>(N,N);
+
+    auto y = dwt(x, wavelets::Daubechies4);
+    auto z = idwt(y, wavelets::Daubechies4);
+
+    REQUIRE( norm(x - z) < 1e-6 );
+  }
+
+  {
+    auto x = randn<double>(33,17);
+
+    auto y = dwt(x, wavelets::Haar);
+    auto z = idwt(y, wavelets::Haar);
+
+    REQUIRE( norm(x - z) < 1e-6 );
+  }
+
+  {
+    size_t N = 8;
+    auto x = randn<double>(33,17);
+
+    auto y = dwt(x, wavelets::Daubechies4);
+    auto z = idwt(y, wavelets::Daubechies4);
+
+    REQUIRE( norm(x - z) < 1e-6 );
+  }
 
 }
 
