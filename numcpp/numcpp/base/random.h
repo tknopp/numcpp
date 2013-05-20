@@ -21,7 +21,7 @@ namespace numcpp
 /*!
 Create a D dimensional random array of normally distributed values.
 
-D is the number of parameters that specify the shape of the array.
+D is the number of parameters that specifies the shape of the array.
 */
 template<class T, class...A>
 Array<T,sizeof...(A)> randn(A...args)
@@ -39,6 +39,11 @@ Array<T,sizeof...(A)> randn(A...args)
   return x;
 }
 
+/*!
+Create a D dimensional random array of uniformly distributed values in the range [0,1).
+
+D is the number of parameters that specifies the shape of the array.
+*/
 template<class T, class...A>
 auto rand(A...args)
     -> typename std::enable_if< std::is_floating_point< T >::value,
@@ -57,6 +62,9 @@ auto rand(A...args)
   return x;
 }
 
+/*!
+Create a D dimensional random integer array of uniformly distributed values between 0 and max.
+*/
 template<class T, class...A>
 auto rand(T max, A...args)
     -> typename std::enable_if< std::numeric_limits<T>::is_integer,

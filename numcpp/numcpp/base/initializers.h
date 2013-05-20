@@ -215,11 +215,30 @@ inline Matrix<double> phantom(size_t N)
     return I;
 }
 
-/*!
-Create a vector of type T that ...
 
-bbb
+
+/*!
+The array function creates an Array object from an std::vector and in turn
+an std::initializer list. For multidimensional arrays, the shape has to be
+specified. For 1D arrays, the shape parameter can be omitted.
+
+Example:
+\code
+auto x = array({1,2,3});         // x = [1, 1, 3]      Type: Array<double,1>
+auto y = array({1,2,3,4},2,2);   // y = [1, 2; 3, 4]   Type: Array<double,2>
+auto z = array<int>({1,2,3});    // z = [1, 2, 3]      Type: Array<int,1>
+\endcode
 */
+template<class T=double, int O=ROW_MAJOR_ORDER, class...A>
+Array<T, sizeof...(A), O> array(std::vector<T> x, A...shape)
+{
+  Array<T, sizeof...(shape), O> y(((size_t)shape)...);
+
+  std::copy(x.begin(), x.end(), y.data());
+
+  return y;
+}
+
 template<class T=double>
 Vector<T> array(std::vector<T> x)
 {
@@ -227,16 +246,6 @@ Vector<T> array(std::vector<T> x)
 
   for(size_t i=0; i<x.size(); i++)
     y[i] = x[i];
-
-  return y;
-}
-
-template<class T=double, int O=ROW_MAJOR_ORDER, class...A>
-Array<T, sizeof...(A), O> array(std::vector<T> x, A...shape)
-{
-  Array<T, sizeof...(shape), O> y(((size_t)shape)...);
-
-  std::copy(x.begin(), x.end(), y.data());
 
   return y;
 }

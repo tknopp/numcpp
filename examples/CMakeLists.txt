@@ -22,6 +22,12 @@ target_link_libraries (example06 ${NUMCPP_LIBS})
 add_executable (example07 example07.cpp)
 target_link_libraries (example07 ${NUMCPP_LIBS})
 
+add_executable (example08 example08.cpp)
+target_link_libraries (example08 ${NUMCPP_LIBS})
+
+add_executable (example09 example09.cpp)
+target_link_libraries (example09 ${NUMCPP_LIBS})
+
 #INSTALL(TARGETS example01
 #        RUNTIME
 #        DESTINATION bin

@@ -19,6 +19,7 @@ namespace wavelets
   /// Haar Wavelet
   const Matrix<double> Haar(  { 1 / sqrt(2), 1 / sqrt(2),
                                 1 / sqrt(2), -1 / sqrt(2) }, 2, 2);
+  /// Daubechies4 Wavelet
   const Matrix<double> Daubechies4({ (1 + sqrt(3)) / (4 * sqrt(2)), (3 + sqrt(3)) / (4 * sqrt(2)), (3 - sqrt(3)) / (4 * sqrt(2)), (1 - sqrt(3)) / (4 * sqrt(2)),
                                      (1 - sqrt(3)) / (4 * sqrt(2)), -(3 - sqrt(3)) / (4 * sqrt(2)), (3 + sqrt(3)) / (4 * sqrt(2)), -(1 + sqrt(3)) / (4 * sqrt(2))}, 2, 4);
 
@@ -234,6 +235,20 @@ AbstractStridedMatrix<T,R>& idwt_(AbstractStridedMatrix<T,R>& x, const Matrix<U>
   return x;
 }
 
+/*!
+Calculate the Discrete Wavelet Transform (DWT) of the array x.
+The dimensionality of the transform corresponds to the dimension of x.
+The wavelet coefficients to be used can be optionally specified as a 2xL matrix,
+where the first row contains the wavelet coefficients h and the second row contains the
+coefficients g. The number of wavelet steps can be optionally given. By default, the full wavelets
+transform is carried out.
+
+The shape of the array x does not need to a power of two, i.e. the function dwt can carry out non-dyadic
+wavelet transformations. In the non-dyadic case, the idwt will however only be the inverse of dwt, if the
+input array x is periodic.
+
+\sa ::idwt
+*/
 template<class T, int D, class R, class U>
 Array<T,D> dwt(const AbstractArray<T,D,R>& x, const Matrix<U>& wavelet=wavelets::Haar, int steps=-1)
 {
@@ -242,6 +257,11 @@ Array<T,D> dwt(const AbstractArray<T,D,R>& x, const Matrix<U>& wavelet=wavelets:
   return y;
 }
 
+/*!
+Calculate the inverse Discrete Wavelet Transform (iDWT) of the array x.
+
+\sa ::dwt
+*/
 template<class T, int D, class R, class U>
 Array<T,D> idwt(const AbstractArray<T,D,R>& x, const Matrix<U>& wavelet=wavelets::Haar, int steps=-1)
 {

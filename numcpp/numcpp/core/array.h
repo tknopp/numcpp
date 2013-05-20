@@ -42,7 +42,7 @@ The core of the numcpp library is a multidimensional array object named Array.
 @tparam T type of each array element
 @tparam D dimension / rank of the array
 */
-template<class T, int D, int O=DEFAULT_MAJOR_ORDER>
+template<class T=double, int D=1, int O=DEFAULT_MAJOR_ORDER>
 class Array : public AbstractStridedArray<T,D,Array<T,D,O> >
 {
 public:
@@ -289,8 +289,9 @@ public:
 
     std::array<size_t, D> strides = strides_;
 
-    size_t j=0;
-    for(size_t i=0; i<D; i++)
+    int j=countSlices< A... >::value-1;
+
+    for(int i=D-1; i>=0; i--)
     {
       // calculate offset
       x.offset_ += slices[i].start*strides_[i];
@@ -308,7 +309,7 @@ public:
           slices[i].end += shape()[i]+1;
         x.shape_[j] = ceil((slices[i].end - slices[i].start)
                       / ((double) slices[i].step ));
-        j++;
+        j = j-1;
       }
     }
 
@@ -347,8 +348,6 @@ public:
             j++;
         }
     }
-
-    std::cout << "hallo " <<   D - countInts< A... >::value << std::endl;
 
     return NonRegularArray<T, D - countInts< A... >::value> (indices, strides, offset, this->mem);
   }

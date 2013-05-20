@@ -48,32 +48,24 @@ TEST_CASE( "numcpp/core/array/nonregularindices", "Non-regular indexing test" ) 
 
   {
     auto x = eval ( range(0,10) );
+    auto idx = V{0, 2, 7};
 
-    auto y = x(V{0, 2, 7});
+    auto y = x(idx);
 
-    print(y);
-
-    REQUIRE( y(0) == x(0) );
-    REQUIRE( y(1) == x(2) );
-    REQUIRE( y(2) == x(7) );
+    REQUIRE( y(0) == x(idx[0]) );
+    REQUIRE( y(1) == x(idx[1]) );
+    REQUIRE( y(2) == x(idx[2]) );
   }
 
   {
     auto x = reshape( range(0,25), 5, 5 );
 
-    //print(x);
-
     auto y = x(V{0, 2, 3}, 0);
-
-    //print(y);
 
     auto z = x(V{0, 2, 3}, S{0,4});
 
-    //print(z);
-
     auto u = x(V{0, 2, 3}, full);
 
-    //print(u);
 
     //REQUIRE( y(0) == x(0) );
     //REQUIRE( y(1) == x(2) );

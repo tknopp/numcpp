@@ -3,19 +3,40 @@ using namespace numcpp;
 
 int main()
 {
+  size_t N = 256;
 
-  size_t N = 16;
-  Vector<double> x = linspace(-0.5, 0.5, N);
+  auto p = phantom(N);
+  export_image(p, "phantom.png");
 
-  dwtStep_(x, wavelets::Haar);
+  auto x = dwt(p, wavelets::Haar);
+  export_image(x, "waveletHaar.png");
 
-  print(x);
+  auto y = dwt(p, wavelets::Daubechies4);
+  export_image(y, "waveletDaubechies4.png");
 
-  auto p = phantom(255); p +=1;
-  auto y = dwt(p, wavelets::Daubechies4, 2);
-  export_image(y, "wavelet.png", colormaps::gray);
-
-  auto z = idwt(y, wavelets::Daubechies4, 2);
-  export_image(z, "waveletI.png", colormaps::gray);
+  auto z = idwt(y, wavelets::Daubechies4);
+  export_image(z, "reco.png");
 }
+/*!
+@page example06 Wavelet Transformation Example
+
+@code
+int main()
+{
+  size_t N = 256;
+
+  auto p = phantom(N);
+  export_image(p, "phantom.png");
+
+  auto y = dwt(p, wavelets::Haar);
+  export_image(y, "waveletHaar.png");
+
+  auto y = dwt(p, wavelets::Daubechies4);
+  export_image(y, "waveletDaubechies4.png");
+
+  auto z = idwt(y, wavelets::Daubechies4);
+  export_image(z, "reco.png");
+}
+@endcode
+*/
 

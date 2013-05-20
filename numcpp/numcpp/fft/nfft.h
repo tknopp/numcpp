@@ -426,6 +426,20 @@ private:
 
 
 
+/*!
+Calculate the Nonequidistant Fast Fourier Transforms (NFFT) of the array f. The nonequidistant nodes
+are given as a MxD matrix, where M is the number of nodes and D the dimensionality of the transform.
+
+The accuracy of the transform depends on the oversampling factor sigma and the cut-off parameter m.
+
+\sa nfftAdjoint
+*/
+template<class T, int D>
+Vector<std::complex<T> > nfft(const Array<std::complex<T>,D>& f, const Matrix<T>& x, size_t m=2, T sigma=2.0 )
+{
+  NFFTPlan<T,D> p(x, f.shape(), m, sigma);
+  return p.trafo(f);
+}
 
 
 template<class T>
@@ -442,11 +456,17 @@ Vector<std::complex<T> > nfft(const Matrix<std::complex<T>>& f, const Matrix<T>&
   return p.trafo(f);
 }
 
-template<class T, int D>
-Vector<std::complex<T> > nfft(const Array<std::complex<T>,D>& f, const Matrix<T>& x, size_t m=2, T sigma=2.0 )
+/*!
+Calculate the adjoint Nonequidistant Fast Fourier Transforms (NFFT) of the array f.
+
+\sa nfft
+*/
+template<size_t D, class T>
+Array<std::complex<T>,D > nfftAdjoint(const Vector<std::complex<T>>& fHat, const Matrix<T>& x, std::array<size_t,D> N,
+                                     size_t m=2, T sigma=2.0 )
 {
-  NFFTPlan<T,D> p(x, f.shape(), m, sigma);
-  return p.trafo(f);
+  NFFTPlan<T,D> p(x, N, m, sigma);
+  return p.adjoint(fHat);
 }
 
 template<class T>
@@ -461,14 +481,6 @@ Matrix<std::complex<T> > nfftAdjoint(const Vector<std::complex<T>>& fHat, const 
                                      size_t m=2, T sigma=2.0 )
 {
   NFFTPlan<T,2> p(x, N, m, sigma);
-  return p.adjoint(fHat);
-}
-
-template<size_t D, class T>
-Array<std::complex<T>,D > nfftAdjoint(const Vector<std::complex<T>>& fHat, const Matrix<T>& x, std::array<size_t,D> N,
-                                     size_t m=2, T sigma=2.0 )
-{
-  NFFTPlan<T,D> p(x, N, m, sigma);
   return p.adjoint(fHat);
 }
 

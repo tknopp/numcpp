@@ -41,7 +41,7 @@ template<int D>
 std::array<size_t,D> multiIndex(const size_t& index, const std::array<size_t,D>& shape)
 {
   std::array<size_t,D> multIdx;
-  long remaining = index;
+  std::ptrdiff_t remaining = index;
 
   for(int i=D-1; i>=0; i--)
   {

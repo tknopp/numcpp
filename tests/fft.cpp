@@ -159,7 +159,7 @@ TEST_CASE( "numcpp/fft/wavelet", "Wavelet test" )
   }
 
   {
-    auto x = randn<double>(33,17);
+    auto x = randn<double>(32,16);
 
     auto y = dwt(x, wavelets::Haar);
     auto z = idwt(y, wavelets::Haar);
@@ -168,8 +168,7 @@ TEST_CASE( "numcpp/fft/wavelet", "Wavelet test" )
   }
 
   {
-    size_t N = 8;
-    auto x = randn<double>(33,17);
+    auto x = randn<double>(32,16);
 
     auto y = dwt(x, wavelets::Daubechies4);
     auto z = idwt(y, wavelets::Daubechies4);

@@ -68,12 +68,12 @@ public:
     cairo_surface_t *image;
 
     image = cairo_image_surface_create_for_data((unsigned char*) y.data(),
-                                              CAIRO_FORMAT_ARGB32, shape(y,0), shape(y,1), shape(y,0) * sizeof(int32_t));
+                                              CAIRO_FORMAT_ARGB32, shape(y,1), shape(y,0), shape(y,1) * sizeof(int32_t));
 
     cairo_scale(cr, width, height);
 
     cairo_translate(cr, 0.05, 0.05);
-    cairo_scale(cr, 0.9 / shape(y,0), 0.9 / shape(y,1));
+    cairo_scale(cr, 0.9 / shape(y,1), 0.9 / shape(y,0));
 
     cairo_set_source_surface (cr, image, 0, 0);
     cairo_paint (cr);
