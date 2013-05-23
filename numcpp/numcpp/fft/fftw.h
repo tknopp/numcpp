@@ -268,8 +268,6 @@ template<class T, size_t D>
 class FFTMatrix : public AbstractMatrix<T,FFTMatrix<T,D> >
 {
 public:
-  typedef T value_type;
-
   template<class...A>
   FFTMatrix(A...args)
    : fftShape_({((size_t)args)...})
@@ -296,6 +294,57 @@ Vector<T> solve(const FFTMatrix<T,D>& A, const Vector<T>& x )
 {
   return  reshape(ifft(reshape(x,A.fftShape() )), x.size());
 }
+
+
+
+template<class T, int D>
+class SparseFFTMatrix //: public AbstractMatrix<T,SparseFFTMatrix<T,D> >
+{
+public:
+  template<class...A>
+  SparseFFTMatrix(Vector<size_t>& indices, A...args)
+   : fftShape_({((size_t)args)...})
+   , indices(indices)
+   , bufferA(prod(fftShape_))
+   , bufferB(indices.size())
+  {
+  }
+
+  const std::array<size_t,D>& fftShape() const
+  {
+    return fftShape_;
+  }
+
+  Vector<size_t>& indices;
+  Vector<T> bufferA, bufferB;
+private:
+  std::array<size_t, D> fftShape_;
+};
+
+template<class T, int D>
+Vector<T> dot(SparseFFTMatrix<T,D>& A, const Vector<T>& x )
+{
+  A.bufferA = x;
+  auto tmp = reshape(A.bufferA,A.fftShape());
+  fft_(tmp);
+  A.bufferB = A.bufferA(A.indices);
+  A.bufferB *= 1. / sqrt(prod(A.fftShape()));
+  return A.bufferB;
+}
+
+template<class T, int D>
+Vector<T> solve(SparseFFTMatrix<T,D>& A, const Vector<T>& x )
+{
+  A.bufferA = 0;
+  A.bufferA(A.indices) = x;
+  ifft_(reshape(A.bufferA,A.fftShape()));
+  A.bufferA *= sqrt(prod(A.fftShape()));
+
+  return  A.bufferA;
+}
+
+
+
 
 /*!
 Perform an fftshift on the array \a x.

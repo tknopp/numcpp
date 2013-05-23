@@ -18,7 +18,7 @@ int main()
   export_image(z, "reco.png");
 }
 /*!
-@page example06 Wavelet Transformation Example
+@page example07 Wavelet Transformation Example
 
 @code
 int main()
