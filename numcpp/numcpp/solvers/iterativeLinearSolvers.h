@@ -116,11 +116,11 @@ auto cgnr(const Matrix& A, const Vector<U>& b, int iterations, double lambda = 0
 SL0 algorithm for solving a sparse linear system of equations of the form \a A \a x = \b.
 */
 template<class Matrix, class U >
-auto SL0(const Matrix& A, const Vector<U>& b, int iterations, int innerIterations=3, double lambda=1e-3,
+auto SL0(Matrix& A, const Vector<U>& b, int iterations, int innerIterations=3, double lambda=2,//1e-3,
       double lambdDecreaseFactor=0.5, double mu0=2)
-  -> Vector< COMMON_TYPE_ARRAY(A, b) >
+  -> Vector< U > //COMMON_TYPE_ARRAY(A, b) >
 {
-  using returnType = COMMON_TYPE_ARRAY(A, b);
+  using returnType = U;// TODO COMMON_TYPE_ARRAY(A, b);
   size_t M = shape(A,0);
 
   Vector< returnType > x = solve(A,b);
@@ -130,7 +130,7 @@ auto SL0(const Matrix& A, const Vector<U>& b, int iterations, int innerIteration
 
   for (int l=0; l<iterations; l++) {
     for (int u=0; u<innerIterations; u++) {
-      x -= mu0 * x*exp(-pow(abs(x),2) / pow(lambda,2));
+      x -= mu0 * x*exp(0-pow(abs(x),2) / pow(lambda,2));
       residual = dot(A,x) - b;
       x -= solve(A,residual);
     }
@@ -140,6 +140,42 @@ auto SL0(const Matrix& A, const Vector<U>& b, int iterations, int innerIteration
 
   return x;
 }
+
+/*
+
+def softThreshold(x, lambd):
+  soft = x.copy()
+  idx = abs(x) > lambd
+  soft[np.logical_not(idx)] = 0
+  soft[idx] *= (abs(x[idx]) - lambd) / abs(x[idx])
+  return soft
+
+def fista(A, b, sparsityTrafo = None, iterations=10, innerIterations=3, \
+        lambd = 1e-5, lambdDecreaseFactor = 1.0/1.5, t = 1.0, rho = 1.0 ):
+
+  lambd *= np.linalg.norm(x,np.inf) / (lambdDecreaseFactor**(iterations-1) )
+
+  for l in xrange(iterations):
+    for u in xrange(innerIterations):
+      xGrad[:] = res
+      xGrad -= rho*A.rmatvec(A.matvec(res) - b)
+
+      xOld[:] = x
+      x[:] = softThreshold(xGrad, 2*rho*lambd)
+
+      beta = t - 1.
+      t = (1. + np.sqrt(1.+4.*t**2)) / 2.
+      beta = beta / np.double(t);
+
+      xOld[:] = x - rho * xOld
+      res[:] = x + beta * xOld
+
+    logging.info("fista: iteration=%d, lambd=%e " % (l, lambd))
+    lambd *= lambdDecreaseFactor
+
+  return x
+
+*/
 
 /*! @} */
 

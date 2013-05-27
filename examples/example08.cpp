@@ -5,14 +5,46 @@ int main()
 {
   size_t n = 256;
   size_t N = n*n;
-  size_t M = N / 4;
+  size_t M = N / 256;
 
-  Vector<cdouble> p = reshape(phantom(n),N);
-  auto indices = rand<size_t>(N, M);
+  Vector<cdouble> a = {1,2,3,4};
+  Vector<size_t> idx = {0,1,2,3};
+
+  SparseFFTMatrix<cdouble,1> F2(idx,4);
+
+  print(dot(F2,a));
+  print(solve(F2,a));
+
+  //Vector<cdouble> p = reshape(phantom(n),N);
+  Vector<cdouble> p = zeros(N);
+  p(n*n/2 + n/4) = 1;
+
+  auto tmp2 = eval(abs(reshape(p,n,n)));
+  export_image( tmp2, "CSIm.png");
+
+  //auto indices = eval(range(0,N-1));
+  auto indices = rand<size_t>(N-1, M);
 
   SparseFFTMatrix<cdouble,2> F(indices,n,n);
 
   auto y = dot(F,p);
+  auto noise = randn<double>(M);
+  noise *= max(abs(y))*0.5;
+  y += noise;
+
+  auto f = solve(F, y);
+  auto tmp3 = eval(abs(reshape(f,n,n)));
+  export_image( tmp3, "CSNaiv.png");
+  std::cout << "error naiv: " << nrmsd(p, f) << " max " <<  max(abs(f)) << std::endl;
+  std::cout << f.getMem() <<std::endl;
+
+  auto z = SL0(F, y, 30, 3, 2);
+  auto tmp = eval(abs(reshape(z,n,n)));
+  export_image( tmp, "CS.png");
+
+  std::cout << "error CS: " << nrmsd(p, z) << " max " <<  max(abs(z)) << std::endl;
+  std::cout << z.getMem() <<std::endl;
+
 
 }
 

@@ -47,10 +47,14 @@ Array<T,D> transpose(const AbstractArray<T,D,R>& x)
 template<class T, int D, size_t DNew>
 Array<T,DNew> reshape(const Array<T,D>& x, const std::array<size_t,DNew>& shape)
 {
-  Array<T,DNew> y(x.getMem());
-  std::copy(std::begin(shape), std::end(shape), begin(y.shape_));
-  y.initContiguousStrides();
+  Array<T,DNew> y(x.getMem(), shape);
+  return y;
+}
 
+template<class T, int D>
+Vector<T> flatten(const Array<T,D>& x)
+{
+  Vector<T> y(x.getMem(), prod(x.shape()));
   return y;
 }
 

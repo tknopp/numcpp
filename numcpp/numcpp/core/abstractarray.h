@@ -191,6 +191,20 @@ public:
   }
 
   template <class U, class V>
+  AbstractStridedArray& operator-= (const AbstractArray<U,D,V>& rhs)
+  {
+    size_t count = size();
+
+    #ifdef _OPENMP
+    #pragma omp parallel for
+    #endif
+    for (size_t i = 0; i < count; ++i)
+      operator[](i) -= rhs[i];
+
+    return *this;
+  }
+
+  template <class U, class V>
   AbstractStridedArray& operator= (const AbstractArray<U,D,V>& rhs)
   {
     if(D != D)

@@ -298,16 +298,16 @@ Vector<T> solve(const FFTMatrix<T,D>& A, const Vector<T>& x )
 
 
 template<class T, int D>
-class SparseFFTMatrix //: public AbstractMatrix<T,SparseFFTMatrix<T,D> >
+class SparseFFTMatrix : public AbstractMatrix<T,SparseFFTMatrix<T,D> >
 {
 public:
   template<class...A>
-  SparseFFTMatrix(Vector<size_t>& indices, A...args)
-   : fftShape_({((size_t)args)...})
-   , indices(indices)
-   , bufferA(prod(fftShape_))
-   , bufferB(indices.size())
+  SparseFFTMatrix(Vector<size_t> indices_, A...args)
+   : indices(indices_)
+   , fftShape_({((size_t)args)...})
   {
+    shape_[0] = indices.size();
+    shape_[1] = prod(fftShape_);
   }
 
   const std::array<size_t,D>& fftShape() const
@@ -315,32 +315,40 @@ public:
     return fftShape_;
   }
 
-  Vector<size_t>& indices;
-  Vector<T> bufferA, bufferB;
+  const std::array<size_t,2>& shape() const
+  {
+    return shape_;
+  }
+
+  Vector<size_t> indices;
 private:
   std::array<size_t, D> fftShape_;
+  std::array<size_t, 2> shape_;
 };
 
 template<class T, int D>
 Vector<T> dot(SparseFFTMatrix<T,D>& A, const Vector<T>& x )
 {
-  A.bufferA = x;
-  auto tmp = reshape(A.bufferA,A.fftShape());
+  auto y = copy(x);
+  auto tmp = reshape(y,A.fftShape());
   fft_(tmp);
-  A.bufferB = A.bufferA(A.indices);
-  A.bufferB *= 1. / sqrt(prod(A.fftShape()));
-  return A.bufferB;
+  Vector<T> z(A.indices.size());
+  for(size_t i=0; i<A.indices.size(); i++)
+    z(i) = y(A.indices(i))  / sqrt(prod(A.fftShape())) ;
+  return z;
 }
 
 template<class T, int D>
 Vector<T> solve(SparseFFTMatrix<T,D>& A, const Vector<T>& x )
 {
-  A.bufferA = 0;
-  A.bufferA(A.indices) = x;
-  ifft_(reshape(A.bufferA,A.fftShape()));
-  A.bufferA *= sqrt(prod(A.fftShape()));
+  Vector<T> y = zeros(shape(A,1));
+  for(size_t i=0; i<A.indices.size(); i++)
+    y(A.indices(i)) = x(i);
+  auto tmp = reshape(y, A.fftShape());
+  ifft_(tmp);
+  y *= sqrt(prod(A.fftShape()));
 
-  return  A.bufferA;
+  return  y;
 }
 
 

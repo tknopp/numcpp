@@ -54,6 +54,7 @@ public:
   using AbstractStridedArray<T,D,Array<T,D,O> >::operator[];
   using AbstractStridedArray<T,D,Array<T,D,O> >::operator();
   using AbstractStridedArray<T,D,Array<T,D,O> >::operator+=;
+  using AbstractStridedArray<T,D,Array<T,D,O> >::operator-=;
   //using AbstractStridedArray<T,D,Array<T,D,O> >::operator=;
   using AbstractStridedArray<T,D,Array<T,D,O> >::operator*=;
 
@@ -165,6 +166,14 @@ public:
   Array(const MemoryBlock& mem)
     : mem(mem)
   {
+  }
+
+  template<class Int>
+  Array(const MemoryBlock& mem, const std::array<Int,D>& shape)
+    : mem(mem)
+  {
+    std::copy(std::begin(shape),std::end(shape),std::begin(shape_));
+    initContiguousStrides();
   }
 
   template <class U, class V>
@@ -414,7 +423,6 @@ private:
   MemoryBlock mem;
 
   template<class U, int F, int Or> friend class Array;
-  template<class U, int F, size_t DNew> friend Array<U,DNew> reshape(const Array<U,F>& x, const std::array<size_t,DNew>& shape);
 };
 
 
