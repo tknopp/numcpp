@@ -90,7 +90,7 @@ Calculate the difference between elements of \a x.
 The order can be specified by the parameter \a order.
 */
 template<class T, class R>
-Vector<T> diff(const AbstractVector<T,R>& x, int order=1)
+Vector<T> diff(const AbstractStridedVector<T,R>& x, int order=1)
 {
   Vector<T> y = x(slice(1,end)) - x(slice(0,end-1));
   if(order == 1)
@@ -105,7 +105,7 @@ Calculate the difference between elements of \a x along axis \a axis
 The order can be specified by the parameter \a order.
 */
 template<class T, class R>
-Matrix<T> diff(const AbstractMatrix<T,R>& x, int order=1, int axis=1)
+Matrix<T> diff(const AbstractStridedMatrix<T,R>& x, int order=1, int axis=1)
 {
   if(axis == 1)
   {

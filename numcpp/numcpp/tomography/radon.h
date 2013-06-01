@@ -68,7 +68,7 @@ Filter backprojection (FBP) algorithm for reconstructing an image from its Radon
 \a A is the sinogram, \a gamma is the angle vector, and \a N is the number of image pixels.
 */
 template<class T, class R>
-Matrix<T> fbp(const AbstractMatrix<T,R>& A, const Vector<T>& gamma, size_t N)
+Matrix<T> fbp(const AbstractStridedMatrix<T,R>& A, const Vector<T>& gamma, size_t N)
 {
   Matrix<T> I = zeros(N,N);
 

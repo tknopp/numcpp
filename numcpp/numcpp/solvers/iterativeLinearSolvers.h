@@ -26,7 +26,7 @@ Vector<double> rowEnergy(Matrix<T> A)
 }
 
 /*!
-Kaczmarz algorithm for solving a linear system of equations of the form \a A \a x = \b.
+Kaczmarz algorithm for solving a linear system of equations of the form \a A \a x = \a b.
 */
 template<class T, class U >
 auto kaczmarz(Matrix<T> A, Vector<U> b, int iterations, double lambda = 0,
@@ -72,7 +72,7 @@ auto kaczmarz(Matrix<T> A, Vector<U> b, int iterations, double lambda = 0,
 
 // CGNR
 /*!
-CGNR algorithm (Conjugate Residual Normal Equation) for solving a linear system of equations of the form \a A \a x = \b.
+CGNR algorithm (Conjugate Residual Normal Equation) for solving a linear system of equations of the form \a A \a x = \a b.
 */
 template<class Matrix, class U >
 auto cgnr(const Matrix& A, const Vector<U>& b, int iterations, double lambda = 0)
@@ -113,7 +113,7 @@ auto cgnr(const Matrix& A, const Vector<U>& b, int iterations, double lambda = 0
 
 // Compressed Sensing
 /*!
-SL0 algorithm for solving a sparse linear system of equations of the form \a A \a x = \b.
+SL0 algorithm for solving a sparse linear system of equations of the form \a A \a x = \a b.
 */
 template<class Matrix, class U >
 auto SL0(Matrix& A, const Vector<U>& b, int iterations, int innerIterations=3, double lambda=2,//1e-3,
@@ -141,41 +141,64 @@ auto SL0(Matrix& A, const Vector<U>& b, int iterations, int innerIterations=3, d
   return x;
 }
 
-/*
+template<class T, class U>
+Vector<T> softThreshold(const Vector<T>& x, U lambda)
+{
+  auto y = copy(x);
 
-def softThreshold(x, lambd):
-  soft = x.copy()
-  idx = abs(x) > lambd
-  soft[np.logical_not(idx)] = 0
-  soft[idx] *= (abs(x[idx]) - lambd) / abs(x[idx])
-  return soft
+  for(size_t n=0; n<size(y); n++)
+  {
+    if(abs(y(n)) > 0)
+      y(n) *= (abs(y(n)) - lambda) / abs(y(n));
+    else
+      y(n) = 0;
+  }
 
-def fista(A, b, sparsityTrafo = None, iterations=10, innerIterations=3, \
-        lambd = 1e-5, lambdDecreaseFactor = 1.0/1.5, t = 1.0, rho = 1.0 ):
+  return y;
+}
 
-  lambd *= np.linalg.norm(x,np.inf) / (lambdDecreaseFactor**(iterations-1) )
-
-  for l in xrange(iterations):
-    for u in xrange(innerIterations):
-      xGrad[:] = res
-      xGrad -= rho*A.rmatvec(A.matvec(res) - b)
-
-      xOld[:] = x
-      x[:] = softThreshold(xGrad, 2*rho*lambd)
-
-      beta = t - 1.
-      t = (1. + np.sqrt(1.+4.*t**2)) / 2.
-      beta = beta / np.double(t);
-
-      xOld[:] = x - rho * xOld
-      res[:] = x + beta * xOld
-
-    logging.info("fista: iteration=%d, lambd=%e " % (l, lambd))
-    lambd *= lambdDecreaseFactor
-
-  return x
-
+/*!
+FISTA algorithm for solving a sparse linear system of equations of the form \a A \a x = \a b.
 */
+template<class Matrix, class U >
+auto fista(Matrix& A, const Vector<U>& b, int iterations, int innerIterations=3, double lambda=1e-5,
+      double lambdDecreaseFactor=1.0/1.5, double t = 1.0, double rho = 1.0)
+  -> Vector< U > //COMMON_TYPE_ARRAY(A, b) >
+{
+  using returnType = U;// TODO COMMON_TYPE_ARRAY(A, b);
+  size_t M = shape(A,0);
+
+  Vector< returnType > x = solve(A,b);
+  Vector< returnType > residual = zeros(M);
+
+  auto res = copy(x);
+  auto xGrad = copy(x);
+  auto xOld = copy(x);
+
+  lambda *= norm(x, INFINITY) / pow(lambdDecreaseFactor, iterations-1);
+
+  for (int l=0; l<iterations; l++) {
+    for (int u=0; u<innerIterations; u++) {
+      residual = dot(A,res) - b;
+      xGrad = res;
+      xGrad -= rho*solve(A, residual);
+
+      xOld = x;
+      x = softThreshold(xGrad, 2*rho*lambda);
+
+      auto beta = t - 1.;
+      t = (1. + sqrt(1.+4.*pow(t,2))) / 2.;
+      beta /= t;
+
+      xOld = x - rho * xOld;
+      res = x + beta * xOld;
+    }
+    lambda *= lambdDecreaseFactor;
+  }
+
+  return x;
+}
+
 
 /*! @} */
 

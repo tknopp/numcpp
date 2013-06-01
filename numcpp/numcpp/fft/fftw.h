@@ -295,12 +295,24 @@ Vector<T> solve(const FFTMatrix<T,D>& A, const Vector<T>& x )
   return  reshape(ifft(reshape(x,A.fftShape() )), x.size());
 }
 
-
-
-template<class T, int D>
-class SparseFFTMatrix : public AbstractMatrix<T,SparseFFTMatrix<T,D> >
+template<int D>
+class ShapeMixin
 {
 public:
+  const std::array<size_t, D>& shape() const
+  {
+    return shape_;
+  }
+protected:
+  std::array<size_t, D> shape_;
+};
+
+template<class T, int D>
+class SparseFFTMatrix : public ShapeMixin<2>, public AbstractMatrix<T,SparseFFTMatrix<T,D> >
+{
+public:
+  using ShapeMixin<2>::shape;
+
   template<class...A>
   SparseFFTMatrix(Vector<size_t> indices_, A...args)
    : indices(indices_)
@@ -315,15 +327,9 @@ public:
     return fftShape_;
   }
 
-  const std::array<size_t,2>& shape() const
-  {
-    return shape_;
-  }
-
   Vector<size_t> indices;
 private:
   std::array<size_t, D> fftShape_;
-  std::array<size_t, 2> shape_;
 };
 
 template<class T, int D>

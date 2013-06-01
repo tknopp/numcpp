@@ -176,6 +176,19 @@ public:
     initContiguousStrides();
   }
 
+  template <class V>
+  Array(const AbstractArray<T,D,V>& rhs)
+    : Array(rhs.shape())
+  {
+    size_t count = size();
+
+    #ifdef _OPENMP
+    #pragma omp parallel for
+    #endif
+    for (size_t i = 0; i < count; ++i)
+      operator[](i) = rhs[i];
+  }
+
   template <class U, class V>
   Array(const AbstractArray<U,D,V>& rhs)
     : Array(rhs.shape())

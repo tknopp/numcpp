@@ -59,7 +59,7 @@ template<class T, class U, class V>
 
 template<class T, class U, class R, class V>
   Matrix< COMMON_TYPE(T,U) >
-  dot(const AbstractMatrix<T,R>& A, const AbstractMatrix<U,V>& B)
+  dot(const AbstractStridedMatrix<T,R>& A, const AbstractStridedMatrix<U,V>& B)
 {
   auto M = shape(A,0);
   auto N = shape(A,1);

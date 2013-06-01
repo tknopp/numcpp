@@ -5,7 +5,7 @@ int main()
 {
   size_t n = 256;
   size_t N = n*n;
-  size_t M = N / 256;
+  size_t M = N / 4;
 
   Vector<cdouble> a = {1,2,3,4};
   Vector<size_t> idx = {0,1,2,3};
@@ -32,19 +32,26 @@ int main()
   noise *= max(abs(y))*0.5;
   y += noise;
 
-  auto f = solve(F, y);
-  auto tmp3 = eval(abs(reshape(f,n,n)));
-  export_image( tmp3, "CSNaiv.png");
-  std::cout << "error naiv: " << nrmsd(p, f) << " max " <<  max(abs(f)) << std::endl;
-  std::cout << f.getMem() <<std::endl;
+  {
+    auto z = solve(F, y);
+    export_image( abs(reshape(z,n,n)), "CSNaiv.png");
+    std::cout << "error naiv: " << nrmsd(p, z) << " max " <<  max(abs(z)) << std::endl;
+    std::cout << z.getMem() <<std::endl;
+  }
 
-  auto z = SL0(F, y, 30, 3, 2);
-  auto tmp = eval(abs(reshape(z,n,n)));
-  export_image( tmp, "CS.png");
+  {
+    auto z = SL0(F, y, 30, 3, 2);
+    export_image( abs(reshape(z,n,n)), "CSSL0.png");
+    std::cout << "error SL0: " << nrmsd(p, z) << " max " <<  max(abs(z)) << std::endl;
+    std::cout << z.getMem() <<std::endl;
+  }
 
-  std::cout << "error CS: " << nrmsd(p, z) << " max " <<  max(abs(z)) << std::endl;
-  std::cout << z.getMem() <<std::endl;
-
+  {
+    auto z = fista(F, y, 30, 3, 1e-8);
+    export_image( abs(reshape(z,n,n)), "CSFista.png");
+    std::cout << "error Fista: " << nrmsd(p, z) << " max " <<  max(abs(z)) << std::endl;
+    std::cout << z.getMem() <<std::endl;
+  }
 
 }
 

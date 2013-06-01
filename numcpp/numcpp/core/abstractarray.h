@@ -66,19 +66,9 @@ public:
     return getSelf()(args...);
   }
 
-  template<class...A>
-  auto operator()(A...args) const
-    -> typename std::enable_if< isSlicedArray< A... >::value ,
-        StridedArray<T,countSlices< A... >::value>
-        >::type
-  {
-    return getSelf()(args...);
-  }
-
 protected:
   Derived & getSelf() { return *static_cast<Derived *>(this); }
   Derived const & getSelf() const { return *static_cast<Derived const *>(this); }
-
 };
 
 template <class T, class Derived>
@@ -129,16 +119,6 @@ public:
   {
     return data()[flatIndex(index)];
   }
-
-
-  /*template<class...A>
-  typename std::enable_if< !isSlicedArray< A... >::value,
-        T &
-        >::type
-  operator()(A...args) const
-  {
-    return getSelf()(args...);
-  }*/
 
   template<class...A>
   typename std::enable_if< isElementAccess< A... >::value,

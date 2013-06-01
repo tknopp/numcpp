@@ -6,10 +6,15 @@
 namespace numcpp
 {
 
-VECTORIZE(std::round, round)
-VECTORIZE(std::ceil, ceil)
-VECTORIZE(std::floor, floor)
-VECTORIZE(std::trunc, trunc)
+using std::round;
+using std::ceil;
+using std::floor;
+using std::trunc;
+
+VECTORIZE(round, round)
+VECTORIZE(ceil, ceil)
+VECTORIZE(floor, floor)
+VECTORIZE(trunc, trunc)
 
 }
 
