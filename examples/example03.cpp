@@ -3,7 +3,7 @@ using namespace numcpp;
 
 int main()
 {
-  // create Shepp Logan phantom (type Matrix<double>)
+  // create Shepp Logan phantom (type Array<double>)
   auto x = phantom(256);
 
   // calculate the absolute value of the FFT of x
@@ -36,7 +36,7 @@ using namespace numcpp;
 
 int main()
 {
-  // create Shepp Logan phantom (type Matrix<double>)
+  // create Shepp Logan phantom (type Array<double>)
   auto x = phantom(256);
 
   // calculate the absolute value of the FFT of x

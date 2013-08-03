@@ -1,7 +1,6 @@
 #ifndef NUMCPP_FILE_H
 #define NUMCPP_FILE_H
 
-//#include "../core.h"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -17,7 +16,7 @@ namespace numcpp
 */
 
 template<class T=double>
-Vector<T> fromfile(std::string filename, long count=-1, std::string sep="")
+Array<T> fromfile(std::string filename, long count=-1, std::string sep="")
 {
   if(sep.empty())
   {
@@ -35,7 +34,7 @@ Vector<T> fromfile(std::string filename, long count=-1, std::string sep="")
       size = count;
     }
 
-    Vector<T> x({size});
+    Array<T> x({size});
 
     file.seekg (0, std::ios::beg);
     file.read (x.data(), sizebytes);
@@ -46,8 +45,8 @@ Vector<T> fromfile(std::string filename, long count=-1, std::string sep="")
 }
 
 
-template<class T, int D>
-void tofile(Array<T, D> x, std::string filename, std::string sep="")
+template<class T>
+void tofile(Array<T> x, std::string filename, std::string sep="")
 {
   if(sep.empty())
   {

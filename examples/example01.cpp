@@ -3,7 +3,7 @@ using namespace numcpp;
 
 int main()
 {
-  Vector<double> x = ones(16);
+  Array<double> x = ones(16);
   auto y = fft(x);
   auto z = reshape(y,4,4);
 
@@ -19,7 +19,7 @@ to the console.
 @code
 int main()
 {
-  Vector<double> x = ones(16);
+  Array<double> x = ones(16);
   auto y = fft(x);
   auto z = reshape(y,4,4);
 

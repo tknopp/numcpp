@@ -35,14 +35,14 @@ public:
   }
 
 
-  template<class T, class R>
-  void plot(const AbstractVector<T,R>& y, color_t color = colors::black, double lw = 0.01)
+  template<class T>
+  void plot(const Array<T>& y, color_t color = colors::black, double lw = 0.01)
   {
       plot(range(0, y.size()), y, color, lw);
   }
 
-  template<class T, class R, class U, class Y>
-  void plot(const AbstractVector<T,R>& x, const AbstractVector<U,Y>& y,
+  template<class T, class U>
+  void plot(const Array<T>& x, const Array<U>& y,
             color_t color = colors::black, double lw = 0.01)
   {
       cairo_save(cr);
@@ -56,8 +56,8 @@ public:
       cairo_restore(cr);
   }
 
-  template<class T, class R>
-  void imshow(const AbstractMatrix<T,R>& x, double winMin, double winMax, const colormap& cm = colormaps::gray)
+  template<class T>
+  void imshow(const Array<T>& x, double winMin, double winMax, const colormap& cm = colormaps::gray)
   {
     cairo_save(cr);
 
@@ -81,8 +81,8 @@ public:
     cairo_restore(cr);
   }
 
-  template<class T, class R>
-  void imshow(const AbstractMatrix<T,R>& x, const colormap& cm = colormaps::gray)
+  template<class T>
+  void imshow(const Array<T>& x, const colormap& cm = colormaps::gray)
   {
     imshow(x, min(x), max(x), cm);
   }
@@ -113,11 +113,11 @@ private:
   double width;
   double height;
 
-  std::vector<Matrix<uint32_t>> coloredImages;
+  std::vector<Array<uint32_t>> coloredImages;
 
 
-  template<class T, class R, class U, class Y>
-  void draw_data(cairo_t* cr, const AbstractVector<T,R>& x, const AbstractVector<U,Y>& y,
+  template<class T, class U>
+  void draw_data(cairo_t* cr, const Array<T>& x, const Array<U>& y,
                  color_t color = colors::black, double lw = 0.01)
   {
       double maxX = max(x);

@@ -22,8 +22,8 @@ Export the matrix \a x as pdf.
 For converting of floating point values onto a colormap, one has to give the window parameters(\a winMin, \a winMax) and the colormap \a cm.
 The default colormap is colormaps::gray.
 */
-template<class T, class R>
-void export_image(const AbstractMatrix<T,R>& x, std::string filename, double winMin, double winMax, const colormap& cm = colormaps::gray)
+template<class Array>
+void export_image(const Array& x, std::string filename, double winMin, double winMax, const colormap& cm = colormaps::gray)
 {
   auto y = colorize(eval(x), winMin, winMax, cm);
 
@@ -35,9 +35,9 @@ void export_image(const AbstractMatrix<T,R>& x, std::string filename, double win
     png = true;
 
   if(png)
-    surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24, shape(y,1), shape(x,0));
+    surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24, y.shape(1), y.shape(0));
   else
-    surface = cairo_pdf_surface_create(filename.c_str(), shape(y,1), shape(x,0));
+    surface = cairo_pdf_surface_create(filename.c_str(), y.shape(1), y.shape(0));
 
   cr = cairo_create(surface);
 
@@ -74,20 +74,20 @@ For converting of floating point values onto a colormap, one has to give the win
 In this overload of the function export_pdf, the parameters winMin and winMax are the minimum and maximum value of \a x. The default colormap is colormaps::gray.
 @overload
 */
-template<class T, class R>
-void export_image(const AbstractMatrix<T,R>& x, std::string filename, const colormap& cm = colormaps::gray)
+template<class Array>
+void export_image(const Array& x, std::string filename, const colormap& cm = colormaps::gray)
 {
   export_image(x, filename, min(x), max(x), cm);
 }
 
 /*template<class T, class R>
-void export_pdf(const AbstractMatrix<T,R>& x, std::string filename, double winMin, double winMax, const colormap& cm = colormaps::gray)
+void export_pdf(const AbstractArray<T,R>& x, std::string filename, double winMin, double winMax, const colormap& cm = colormaps::gray)
 {
   export_pdf<T>(x, filename, winMin, winMax, cm);
 }
 
 template<class T, class R>
-void export_pdf(const AbstractMatrix<T,R>& x, std::string filename, const colormap& cm = colormaps::gray)
+void export_pdf(const AbstractArray<T,R>& x, std::string filename, const colormap& cm = colormaps::gray)
 {
   export_pdf<T>(x, filename, min(x), max(x), cm);
 }*/

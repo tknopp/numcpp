@@ -1,18 +1,16 @@
-#ifndef ITERATOR_H
-#define ITERATOR_H
-
-#include <array>
-#include <cstdlib>
+#ifndef NUMCPP_ITERATOR_H
+#define NUMCPP_ITERATOR_H
 
 namespace numcpp
 {
 
-template<int D>
 class Iterator
 {
 public:
-  Iterator(std::array<size_t,D> shape)
+  Iterator(std::vector<size_t> shape)
     : shape(shape)
+    , D(shape.size())
+    , counter(D)
   {
     for(int i=0; i<D; i++)
       counter[i] = 0;
@@ -31,16 +29,14 @@ public:
     }
   }
 
-  std::array<size_t,D>& operator*()
-  {
-    return counter;
-  }
+  std::vector<size_t>& operator*() { return counter; }
 
 private:
-    std::array<size_t,D> counter;
-    std::array<size_t,D> shape;
+    int D;
+    std::vector<size_t> counter;
+    std::vector<size_t> shape;
 };
 
 }
 
-#endif // ITERATOR_H
+#endif

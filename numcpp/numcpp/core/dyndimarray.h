@@ -1,0 +1,4 @@
+#ifndef NUMCPP_BASEARRAY_H
+#define NUMCPP_BASEARRAY_H
+
+#endif // BASEARRAY_H

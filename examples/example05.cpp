@@ -1,4 +1,5 @@
 #include <numcpp.h>
+#include <numcpp/linalg.h>
 using namespace numcpp;
 
 int main()
@@ -9,7 +10,7 @@ int main()
                           1, 0, 4}, M, N);
 
 
-  auto x = (ones(N));
+  auto x = eval(ones(N));
   auto y = dot(A,x);
 
   print(A);

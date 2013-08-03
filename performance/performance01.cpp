@@ -14,7 +14,7 @@ int main()
 
   for(int l=0;l<10;l++)
   {
-    Array<cdouble,1> x = zeros(N);
+    Array<cdouble> x = zeros(N);
     for(auto i=0; i<M; i++)
       x += ones(N);
 

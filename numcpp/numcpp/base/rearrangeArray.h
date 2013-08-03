@@ -17,80 +17,61 @@ namespace numcpp
 Transpose the array \a x inplace.
 The transposition will internally only swap the strides of the array and is therefore a cheap operation.
 */
-template<class T, int D>
-StridedArray<T,D> transpose(StridedArray<T,D>& x)
+template<class Array>
+Array& transpose_(Array& x)
 {
   std::reverse(x.strides().begin(), x.strides().end());
   return x;
 }
 
-template<class T, int D>
-StridedArray<T,D> transpose(const Array<T,D>& x)
-{
-  StridedArray<T,D> y = x;
-  std::reverse(y.strides().begin(), y.strides().end());
-  return y;
-}
 
 /*!
 Return the transpose of the array \a x.
 Note that this function will create a copy of the array \a x.
 */
-template<class T, int D, class R>
-Array<T,D> transpose(const AbstractArray<T,D,R>& x)
-{
-  auto y = copy(x);
-  return transpose(y);
-}
 
-
-template<class T, int D, size_t DNew>
-Array<T,DNew> reshape(const Array<T,D>& x, const std::array<size_t,DNew>& shape)
+template<class Array>
+Array transpose(const Array& x)
 {
-  Array<T,DNew> y(x.getMem(), shape);
+  Array y = copy(x);
+  std::reverse(y.strides().begin(), y.strides().end());
   return y;
 }
 
-template<class T, int D>
-Vector<T> flatten(const Array<T,D>& x)
+template<class T>
+Array<T> reshape(const Array<T>& x, const std::vector<size_t>& shape)
 {
-  Vector<T> y(x.getMem(), prod(x.shape()));
+  Array<T> y( x.getMem(), shape );
   return y;
 }
 
 /*!
 Reshape array \a x.
 */
-template<class T, int D, class...A>
-Array<T,sizeof...(A)> reshape(const Array<T,D>& x, A...args)
+template<class T, class...A>
+Array<T> reshape(const Array<T>& x, A...args)
 {
-  std::array<size_t,sizeof...(A)> shape = {((size_t) args)...};
+  std::vector<size_t> shape = {((size_t) args)...};
   return reshape(x, shape);
 }
 
-/*!
-Reshape array \a x.
-*/
-template<class T, int D, class R, class...A>
-Array<T,sizeof...(A)> reshape(const AbstractArray<T,D,R>& x, A...args)
+template<class T>
+Array<T> flatten(const Array<T>& x)
 {
-  Array<T,sizeof...(A)> y(args...);
-  for(size_t i=0; i<y.size(); i++)
-    y[i] = x[i];
-
+  Array<T> y( x.getMem(), {prod(x.shape())} );
   return y;
 }
 
 /*!
 Rotate matrix by -90 degree.
 */
-template<class T, class R>
-Matrix<T> rotl90(const AbstractMatrix<T,R>& A)
+template<class T>
+Array<T> rotl90(const Array<T>& A)
 {
     auto M = shape(A,0);
     auto N = shape(A,1);
 
-    auto B = Matrix<T>(M,N);
+    auto B = Array<T>(M,N);
     for(size_t m=0; m<M; m++)
       for(size_t n=0; n<N; n++)
         B(N-n-1,m) = A(m,n);
@@ -101,13 +82,13 @@ Matrix<T> rotl90(const AbstractMatrix<T,R>& A)
 /*!
 Rotate matrix by +90 degree.
 */
-template<class T, class R>
-Matrix<T> rotr90(const AbstractMatrix<T,R>& A)
+template<class T>
+Array<T> rotr90(const Array<T>& A)
 {
     auto M = shape(A,0);
     auto N = shape(A,1);
 
-    auto B = Matrix<T>(M,N);
+    auto B = Array<T>(M,N);
     for(size_t m=0; m<M; m++)
       for(size_t n=0; n<N; n++)
         B(n,M-m-1) = A(m,n);
@@ -118,13 +99,13 @@ Matrix<T> rotr90(const AbstractMatrix<T,R>& A)
 /*!
 Rotate matrix by 180 degree.
 */
-template<class T, class R>
-Matrix<T> rot180(const AbstractMatrix<T,R>& A)
+template<class T>
+Array<T> rot180(const Array<T>& A)
 {
     auto M = shape(A,0);
     auto N = shape(A,1);
 
-    auto B = Matrix<T>(M,N);
+    auto B = Array<T>(M,N);
     for(size_t m=0; m<M; m++)
       for(size_t n=0; n<N; n++)
         B(M-m-1,N-n-1) = A(m,n);
@@ -136,7 +117,7 @@ Matrix<T> rot180(const AbstractMatrix<T,R>& A)
 Reverse a vector inplace.
 */
 template<class T>
-Vector<T> reverse_(Vector<T>& x)
+Array<T> reverse_(Array<T>& x)
 {
     size_t N = shape(x,0);
     size_t j = N-1;
@@ -153,8 +134,8 @@ Vector<T> reverse_(Vector<T>& x)
 /*!
 Reverse a vector.
 */
-template<class T, class R>
-Vector<T> reverse(const AbstractVector<T,R>& x)
+template<class T>
+Array<T> reverse(const Array<T>& x)
 {
   return reverse_(copy(x));
 }
@@ -162,20 +143,20 @@ Vector<T> reverse(const AbstractVector<T,R>& x)
 /*!
 Reverse the elements of an array x along axis \a d (inplace).
 */
-template<class T, int D>
-Array<T,D> flipdim_(Array<T,D>& x, size_t axis)
+template<class T>
+Array<T> flipdim_(Array<T>& x, size_t axis)
 {
   T tmp;
-  std::array<size_t,D-1> shape_;
+  std::vector<size_t> shape_;
 
-  copyShapeToSubArray<D>(x.shape(), shape_, axis);
+  copyShapeToSubArray(x.shape(), shape_, axis);
 
-  std::array<size_t,D> index1, index2;
-  Iterator<D-1> it(shape_);
+  std::vector<size_t> index1, index2;
+  Iterator it(shape_);
 
   for(size_t k=0; k<prod(shape_); k++, it++)
   {
-    copyShapeFromSubArray<D>(*it, index1, axis);
+    copyShapeFromSubArray(*it, index1, axis);
     std::copy(index1.begin(), index1.end(), index2.begin());
 
     size_t N = shape(x,axis);
@@ -194,18 +175,11 @@ Array<T,D> flipdim_(Array<T,D>& x, size_t axis)
   return x;
 }
 
-template<class T>
-Vector<T> flipdim_(Vector<T>& x, size_t)
-{
-  return reverse_(x);
-}
-
-
 /*!
 Reverse the elements of an array x along axis \a d.
 */
-template<class T, int D, class R>
-Array<T,D> flipdim(const AbstractArray<T,D,R>& x, size_t axis)
+template<class T>
+Array<T> flipdim(const Array<T>& x, size_t axis)
 {
   auto y = copy(x);
   return flipdim_(y, axis);
@@ -214,8 +188,8 @@ Array<T,D> flipdim(const AbstractArray<T,D,R>& x, size_t axis)
 /*!
 Reverse the columns of a matrix (inplace).
 */
-template<class T, int D>
-Array<T,D> flipud_(Array<T,D>& x)
+template<class T>
+Array<T>& flipud_(Array<T>& x)
 {
   return flipdim_(x, 0);
 }
@@ -223,8 +197,8 @@ Array<T,D> flipud_(Array<T,D>& x)
 /*!
 Reverse the rows of a matrix (inplace).
 */
-template<class T, int D>
-Array<T,D> fliplr_(Array<T,D>& x)
+template<class T>
+Array<T>& fliplr_(Array<T>& x)
 {
   return flipdim_(x, 1);
 }
@@ -232,8 +206,8 @@ Array<T,D> fliplr_(Array<T,D>& x)
 /*!
 Reverse the columns of a matrix.
 */
-template<class T, int D, class R>
-Array<T,D> flipud(AbstractArray<T,D,R>& x)
+template<class T>
+Array<T> flipud(Array<T>& x)
 {
   return flipdim(x, 0);
 }
@@ -241,8 +215,8 @@ Array<T,D> flipud(AbstractArray<T,D,R>& x)
 /*!
 Reverse the rows of a matrix.
 */
-template<class T, int D, class R>
-Array<T,D> fliplr(AbstractArray<T,D,R>& x)
+template<class T>
+Array<T> fliplr(Array<T>& x)
 {
   return flipdim(x, 1);
 }

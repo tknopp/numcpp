@@ -14,10 +14,10 @@ namespace numcpp
 */
 
 template<class T>
-Vector<double> rowEnergy(Matrix<T> A)
+Array<double> rowEnergy(Array<T> A)
 {
   size_t M = shape(A,1);
-  Vector<double> energy = zeros(M);
+  Array<double> energy = zeros(M);
 
   for(size_t m=0; m<M; m++)
       energy[m] = norm(A(m,full));
@@ -28,17 +28,17 @@ Vector<double> rowEnergy(Matrix<T> A)
 /*!
 Kaczmarz algorithm for solving a linear system of equations of the form \a A \a x = \a b.
 */
-template<class T, class U >
-auto kaczmarz(Matrix<T> A, Vector<U> b, int iterations, double lambda = 0,
+template<class Matrix, class U >
+auto kaczmarz(Matrix A, Array<U> b, int iterations, double lambda = 0,
            bool enforceReal = false, bool enforcePositive = false)
-  -> Vector< COMMON_TYPE_ARRAY(A, b) >
+  -> Array< COMMON_TYPE_ARRAY(A, b) >
 {
   using returnType = COMMON_TYPE_ARRAY(A, b);
-  size_t M = shape(A,0);
-  size_t N = shape(A,1);
+  size_t M = A.shape()[0];
+  size_t N = A.shape()[1];
 
-  Vector< returnType > x = zeros(N);
-  Vector< returnType > residual = zeros(M);
+  Array< returnType > x = zeros(N);
+  Array< returnType > residual = zeros(M);
 
   auto energy = rowEnergy(A);
 
@@ -53,7 +53,7 @@ auto kaczmarz(Matrix<T> A, Vector<U> b, int iterations, double lambda = 0,
       auto k = rowIndexCycle[m];
       if(energy[k] > 0)
       {
-        auto beta = (b[k] - dot(conj(A(k,full)), x) - sqrt(lambdIter)*residual[k]) / (energy[k]*energy[k] + lambda);
+        auto beta = (b[k] - sum(conj(A(k,full)) * x) - sqrt(lambdIter)*residual[k]) / (energy[k]*energy[k] + lambda);
         x += beta*conj(A(k,full));
         residual[k] = residual[k] + beta*sqrt(lambdIter);
       }
@@ -75,15 +75,15 @@ auto kaczmarz(Matrix<T> A, Vector<U> b, int iterations, double lambda = 0,
 CGNR algorithm (Conjugate Residual Normal Equation) for solving a linear system of equations of the form \a A \a x = \a b.
 */
 template<class Matrix, class U >
-auto cgnr(const Matrix& A, const Vector<U>& b, int iterations, double lambda = 0)
-  -> Vector< COMMON_TYPE_ARRAY(A, b) >
+auto cgnr(const Matrix& A, const Array<U>& b, int iterations, double lambda = 0)
+  -> Array< COMMON_TYPE_ARRAY(A, b) >
 {
   using returnType = COMMON_TYPE_ARRAY(A, b);
-  size_t M = shape(A,0);
-  size_t N = shape(A,1);
+  size_t M = A.shape()[0];
+  size_t N = A.shape()[1];
 
-  Vector< returnType > x = zeros(N);
-  Vector< returnType > p(N), z(N), v(M), residual(M);
+  Array< returnType > x = zeros(N);
+  Array< returnType > p(N), z(N), v(M), residual(M);
 
   /* initialize */
 
@@ -96,14 +96,14 @@ auto cgnr(const Matrix& A, const Vector<U>& b, int iterations, double lambda = 0
   {
     v = dot(A, p);
 
-    auto alpha_tmp = vdot(z,z);
-    auto alpha = alpha_tmp / ( vdot(v,v) + lambda*vdot(p,p)  );
+    auto alpha_tmp = sum(conj(z)*z);
+    auto alpha = alpha_tmp / ( sum(conj(v)*v) + lambda*sum(conj(p)*p)  );
 
     x += alpha*p;
     residual += (-alpha)*v;
     z = hdot(A, residual) -lambda*x;
 
-    auto beta = vdot(z,z);
+    auto beta = sum(conj(z)*z);
     beta /= alpha_tmp;
 
     p = z + beta*p;
@@ -116,15 +116,15 @@ auto cgnr(const Matrix& A, const Vector<U>& b, int iterations, double lambda = 0
 SL0 algorithm for solving a sparse linear system of equations of the form \a A \a x = \a b.
 */
 template<class Matrix, class U >
-auto SL0(Matrix& A, const Vector<U>& b, int iterations, int innerIterations=3, double lambda=2,//1e-3,
+auto SL0(Matrix& A, const Array<U>& b, int iterations, int innerIterations=3, double lambda=2,//1e-3,
       double lambdDecreaseFactor=0.5, double mu0=2)
-  -> Vector< U > //COMMON_TYPE_ARRAY(A, b) >
+  -> Array< U > //COMMON_TYPE_ARRAY(A, b) >
 {
   using returnType = U;// TODO COMMON_TYPE_ARRAY(A, b);
-  size_t M = shape(A,0);
+  size_t M = A.shape()[0];
 
-  Vector< returnType > x = solve(A,b);
-  Vector< returnType > residual = zeros(M);
+  Array< returnType > x = solve(A,b);
+  Array< returnType > residual = zeros(M);
 
   lambda *= norm(x, INFINITY) / pow(lambdDecreaseFactor, iterations-1);
 
@@ -141,8 +141,8 @@ auto SL0(Matrix& A, const Vector<U>& b, int iterations, int innerIterations=3, d
   return x;
 }
 
-template<class T, class U>
-Vector<T> softThreshold(const Vector<T>& x, U lambda)
+template<class Array, class U>
+Array softThreshold(const Array& x, U lambda)
 {
   auto y = copy(x);
 
@@ -161,15 +161,15 @@ Vector<T> softThreshold(const Vector<T>& x, U lambda)
 FISTA algorithm for solving a sparse linear system of equations of the form \a A \a x = \a b.
 */
 template<class Matrix, class U >
-auto fista(Matrix& A, const Vector<U>& b, int iterations, int innerIterations=3, double lambda=1e-5,
+auto fista(Matrix& A, const Array<U>& b, int iterations, int innerIterations=3, double lambda=1e-5,
       double lambdDecreaseFactor=1.0/1.5, double t = 1.0, double rho = 1.0)
-  -> Vector< U > //COMMON_TYPE_ARRAY(A, b) >
+  -> Array< U > //COMMON_TYPE_ARRAY(A, b) >
 {
   using returnType = U;// TODO COMMON_TYPE_ARRAY(A, b);
-  size_t M = shape(A,0);
+  size_t M = A.shape()[0];
 
-  Vector< returnType > x = solve(A,b);
-  Vector< returnType > residual = zeros(M);
+  Array< returnType > x = solve(A,b);
+  Array< returnType > residual = zeros(M);
 
   auto res = copy(x);
   auto xGrad = copy(x);

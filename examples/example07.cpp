@@ -1,9 +1,10 @@
 #include <numcpp.h>
+#include <numcpp/wavelet.h>
 using namespace numcpp;
 
 int main()
 {
-  size_t N = 256;
+  int N = 256;
 
   auto p = phantom(N);
   export_image(p, "phantom.png");
@@ -23,7 +24,7 @@ int main()
 @code
 int main()
 {
-  size_t N = 256;
+  int N = 256;
 
   auto p = phantom(N);
   export_image(p, "phantom.png");

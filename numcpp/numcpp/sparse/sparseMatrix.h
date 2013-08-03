@@ -18,7 +18,7 @@ namespace numcpp
 Sparse matrix class
 */
 template<class T>
-class SparseMatrixCRS : public AbstractArray<T,2,SparseMatrixCRS<T>>
+class SparseMatrixCRS : public AbstractArrayExpression<T,SparseMatrixCRS<T>>
 {
 public:
 
@@ -30,8 +30,8 @@ public:
   {
   }
 
-  SparseMatrixCRS(const Vector<T>& data, const Vector<size_t>& index,
-                  const Vector<size_t>& ptr, size_t M, size_t N)
+  SparseMatrixCRS(const Array<T>& data, const Array<size_t>& index,
+                  const Array<size_t>& ptr, size_t M, size_t N)
     : shape_({M,N})
     , data_(data)
     , index_(index)
@@ -40,10 +40,9 @@ public:
 
   }
 
-  template<class R>
-  SparseMatrixCRS(const AbstractMatrix<T,R>& A, double threshold)
+  SparseMatrixCRS(const Array<T>& A, double threshold)
     : shape_(A.shape())
-    , ptr_(shape_[0]+1)
+    , ptr_(A.shape()[0]+1)
   {
     auto absThresh = max(abs(A)) * threshold;
     size_t M = A.shape()[0];
@@ -79,7 +78,7 @@ public:
 
   }
 
-  const std::array<size_t,2>& shape() const
+  const std::vector<size_t>& shape() const
   {
     return shape_;
   }
@@ -109,29 +108,29 @@ public:
   {
     if((col.end != full.end) || (col.start != full.start) || (col.step != full.step))
       throw std::exception();
-    Vector<T> rowData = data_( S{ptr_(m), ptr_(m+1)} );
-    Vector<size_t> rowIdx = index_( S{ptr_(m), ptr_(m+1)} );
+    Array<T> rowData = data_( S{ptr_(m), ptr_(m+1)} );
+    Array<size_t> rowIdx = index_( S{ptr_(m), ptr_(m+1)} );
     return SparseVector<T>(rowData, rowIdx, NCols(m));
   }
 
 private:
-  std::array<size_t,2> shape_;
-  Vector<T> data_;
-  Vector<size_t> index_;
-  Vector<size_t> ptr_;
+  std::vector<size_t> shape_;
+  Array<T> data_;
+  Array<size_t> index_;
+  Array<size_t> ptr_;
 };
 
 
 /*!
-Matrix vector product between the sparse matrix \a A and the abstract vector \a x.
+Array vector product between the sparse matrix \a A and the abstract vector \a x.
 */
-template<class T, class U, class V>
-  Vector< COMMON_TYPE(T,U) >
-  dot(const SparseMatrixCRS<T>& A, const AbstractVector<U,V>& x)
+template<class T, class U>
+  Array< COMMON_TYPE(T,U) >
+  dot(const SparseMatrixCRS<T>& A, const Array<U>& x)
 {
-  auto M = shape(A,0);
-  auto N = shape(A,1);
-  Vector< COMMON_TYPE(T,U) > y = zeros(M);
+  auto M = A.shape()[0];
+  auto N = A.shape()[1];
+  Array< COMMON_TYPE(T,U) > y = zeros(M);
 
   for(size_t m=0; m<M; m++)
   {
@@ -146,15 +145,15 @@ template<class T, class U, class V>
 }
 
 /*!
-Matrix vector product between the adjoint of the sparse matrix \a A and the abstract vector \a x.
+Array vector product between the adjoint of the sparse matrix \a A and the abstract vector \a x.
 */
-template<class T, class U, class V>
-  Vector< COMMON_TYPE(T,U) >
-  hdot(const SparseMatrixCRS<T>& A, const AbstractVector<U,V>& x)
+template<class T, class U>
+  Array< COMMON_TYPE(T,U) >
+  hdot(const SparseMatrixCRS<T>& A, const Array<U>& x)
 {
-  auto M = shape(A,0);
-  auto N = shape(A,1);
-  Vector< COMMON_TYPE(T,U) > y = zeros(N);
+  auto M = A.shape()[0];
+  auto N = A.shape()[1];
+  Array< COMMON_TYPE(T,U) > y = zeros(N);
 
   for(size_t m=0; m<M; m++)
   {

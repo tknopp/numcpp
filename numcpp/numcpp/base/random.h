@@ -24,9 +24,9 @@ Create a D dimensional random array of normally distributed values.
 D is the number of parameters that specifies the shape of the array.
 */
 template<class T, class...A>
-Array<T,sizeof...(A)> randn(A...args)
+Array<T> randn(A...args)
 {
-  Array<T,sizeof...(A)> x(args...);
+  Array<T> x(args...);
 
   std::random_device rd;
   std::mt19937 gen(rd());
@@ -47,9 +47,9 @@ D is the number of parameters that specifies the shape of the array.
 template<class T, class...A>
 auto rand(A...args)
     -> typename std::enable_if< std::is_floating_point< T >::value,
-       Array<T,sizeof...(A)>       >::type
+       Array<T>       >::type
 {
-  Array<T,sizeof...(A)> x(args...);
+  Array<T> x(args...);
 
   std::random_device rd;
   std::mt19937 gen(rd());
@@ -68,9 +68,9 @@ Create a D dimensional random integer array of uniformly distributed values betw
 template<class T, class...A>
 auto rand(T max, A...args)
     -> typename std::enable_if< std::numeric_limits<T>::is_integer,
-       Array<T,sizeof...(A)>       >::type
+       Array<T>       >::type
 {
-  Array<T,sizeof...(A)> x(args...);
+  Array<T> x(args...);
 
   std::random_device rd;
   std::mt19937 gen(rd());
@@ -87,8 +87,8 @@ auto rand(T max, A...args)
 Shuffle the array \a x inplace.
 @see numcpp::shuffle
 */
-template<class T, int D>
-Array<T,D>& shuffle_(Array<T,D>& x)
+template<class T>
+Array<T>& shuffle_(Array<T>& x)
 {
   // obtain a time-based seed:
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -103,8 +103,8 @@ Array<T,D>& shuffle_(Array<T,D>& x)
 Shuffle the array \a x inplace.
 @see numcpp::shuffle_
 */
-template<class T, int D, class R>
-Array<T,D> shuffle(const AbstractArray<T,D,R>& x)
+template<class T>
+Array<T> shuffle(const Array<T>& x)
 {
  auto y = copy(x);
  return shuffle_(y);

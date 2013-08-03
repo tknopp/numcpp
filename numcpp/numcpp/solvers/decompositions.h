@@ -9,19 +9,19 @@ namespace numcpp
 {
 
 /*template<class T>
-Vector<T> solve(const Matrix<T>& A, const Vector<T>& b)
+Array<T> solve(const Array<T>& A, const Array<T>& b)
 {
   size_t M = A.shape(0);
   size_t N = A.shape(1);
 
-  Eigen::Map<Eigen::Matrix<T,Eigen::Dynamic, Eigen::Dynamic>, 0,
+  Eigen::Map<Eigen::Array<T,Eigen::Dynamic, Eigen::Dynamic>, 0,
              Eigen::Stride<Eigen::Dynamic,Eigen::Dynamic> >
              A_(A.data(), M, N, Eigen::Stride<Eigen::Dynamic,Eigen::Dynamic>(A.strides()[1],A.strides()[0]));
-  Eigen::Map<Eigen::Matrix<T,Eigen::Dynamic, 1>> b_(b.data(), M, 1);
+  Eigen::Map<Eigen::Array<T,Eigen::Dynamic, 1>> b_(b.data(), M, 1);
 
-  Vector<T> x(N);
+  Array<T> x(N);
 
-  Eigen::Map<Eigen::Matrix<T,Eigen::Dynamic, 1>> x_(x.data(), N, 1);
+  Eigen::Map<Eigen::Array<T,Eigen::Dynamic, 1>> x_(x.data(), N, 1);
 
   x_ = A_.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(b_);
 
@@ -29,7 +29,7 @@ Vector<T> solve(const Matrix<T>& A, const Vector<T>& b)
   std::cout << "b:" << b_ << std::endl;
   std::cout << "x:" << x_ << std::endl;
 
-  Eigen::Matrix<T,Eigen::Dynamic, 1> x2 = A_.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(b_);
+  Eigen::Array<T,Eigen::Dynamic, 1> x2 = A_.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(b_);
 
 std::cout << "x2:" << x2 << std::endl;
 
@@ -40,11 +40,11 @@ std::cout << "x2:" << x2 << std::endl;
 class SvdData
 {
 public:
-  SvdData(const Matrix<T>& A)
+  SvdData(const Array<T>& A)
     : M_(A.shape(0))
     , N_(A.shape(1))
     , P_(std::min(M_, N_))
-    , svd_( Eigen::Map<Eigen::Matrix<T,Eigen::Dynamic, Eigen::Dynamic>, 0,
+    , svd_( Eigen::Map<Eigen::Array<T,Eigen::Dynamic, Eigen::Dynamic>, 0,
              Eigen::Stride<Eigen::Dynamic,Eigen::Dynamic> >
                (A.data(),
                 M_,
@@ -60,15 +60,15 @@ public:
 
 private:
   size_t M_,N_,P_;
-  Eigen::JacobiSVD<Eigen::Matrix<T,Eigen::Dynamic,Eigen::Dynamic> > svd_;
+  Eigen::JacobiSVD<Eigen::Array<T,Eigen::Dynamic,Eigen::Dynamic> > svd_;
 public:
-  Matrix<T> U;
-  Vector<T> S;
-  Matrix<T> V;
+  Array<T> U;
+  Array<T> S;
+  Array<T> V;
 };
 
 template<class T>
-SvdData<T> svd(const Matrix<T>& A)
+SvdData<T> svd(const Array<T>& A)
 {
   return SvdData<T>(A);
 }*/

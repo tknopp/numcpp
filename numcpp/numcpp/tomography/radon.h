@@ -13,8 +13,8 @@ namespace numcpp
 @{
 */
 
-template<class T, class R>
-T _interp2d(const AbstractMatrix<T,R>& A, T x, T y )
+template<class T>
+inline T _interp2d(const Array<T>& A, T x, T y )
 {
   T value;
 
@@ -36,17 +36,17 @@ T _interp2d(const AbstractMatrix<T,R>& A, T x, T y )
 Calculates the Radon transformation of the matrix \a A at angles \a gamma and detector elements
 \a xi.
 */
-template<class T, class R>
-Matrix<T> radon(const AbstractMatrix<T,R>& A, const Vector<T>& xi, const Vector<T>& gamma)
+template<class T>
+Array<T> radon(const Array<T>& A, const Array<T>& xi, const Array<T>& gamma)
 {
   size_t L = 256;
 
   size_t M = size(xi);
   size_t D = size(gamma);
 
-  Matrix<T> B = zeros(M, D);
+  Array<T> B = zeros(M, D);
 
-  Vector<T> eta = linspace(-0.5,0.5,L)*sqrt(2);
+  Array<T> eta = linspace(-0.5,0.5,L)*sqrt(2);
 
   for(size_t m=0; m<M; m++)
      for(size_t d=0; d<D; d++)
@@ -67,18 +67,18 @@ Matrix<T> radon(const AbstractMatrix<T,R>& A, const Vector<T>& xi, const Vector<
 Filter backprojection (FBP) algorithm for reconstructing an image from its Radon transform.
 \a A is the sinogram, \a gamma is the angle vector, and \a N is the number of image pixels.
 */
-template<class T, class R>
-Matrix<T> fbp(const AbstractStridedMatrix<T,R>& A, const Vector<T>& gamma, size_t N)
+template<class T>
+Array<T> fbp(const Array<T>& A, const Array<T>& gamma, size_t N)
 {
-  Matrix<T> I = zeros(N,N);
+  Array<T> I = zeros(N,N);
 
-  Vector<T> x = linspace(-0.5,0.5,N);
-  Vector<T> y = linspace(-0.5,0.5,N);
+  Array<T> x = linspace(-0.5,0.5,N);
+  Array<T> y = linspace(-0.5,0.5,N);
 
   size_t nrDetPix = shape(A,0);
   size_t nrAngles = shape(A,1);
 
-  Vector<T> filter = abs( range(-nrDetPix/2, nrDetPix/2) ); //abs(linspace(-nrDetPix/2, nrDetPix/2,nrDetPix))';
+  Array<T> filter = abs( range(-nrDetPix/2, nrDetPix/2) ); //abs(linspace(-nrDetPix/2, nrDetPix/2,nrDetPix))';
 
   for(size_t t=0; t<size(gamma); t++)
   {

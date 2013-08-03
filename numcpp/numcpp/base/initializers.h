@@ -2,6 +2,7 @@
 #define NUMCPP_INITIALIZERS_H
 
 #include "../core.h"
+#include "../expressions.h"
 
 namespace numcpp
 {
@@ -15,67 +16,47 @@ namespace numcpp
 @{
 */
 
-template<class T, int D>
-class ConstantArray : public AbstractArray<T,D,ConstantArray<T,D> >
+template<class T>
+class ConstantArray : public AbstractArrayExpression<T,ConstantArray<T> >
 {
 public:
-  typedef int value_type;
-  static const int dim = D;
 
   template<class Int=size_t>
-  ConstantArray(T value, std::array<Int,D> shape)
+  ConstantArray(T value, const std::vector<Int>& shape)
    : shape_(shape)
    , value_(value)
   {
   }
-
-  /*template<class...A>
-  ConstantArray(T value, A...args)
-   : shape_({args...})
-   , value_(value)
-  {
-  }*/
 
   size_t size() const
   {
     return prod(shape_);
   }
 
-  const std::array<size_t,D>& shape() const
+  const std::vector<size_t>& shape() const
   {
     return shape_;
   }
 
-  value_type operator[](size_t /* index */) const
-  {
-    return value_;
-  }
-
-  template<class...A>
-  typename std::enable_if< !isSlicedArray< A... >::value,
-        T
-        >::type
-  operator()(A...args) const
+  T operator[](size_t /* index */) const
   {
     return value_;
   }
 
 protected:
-  std::array<size_t,D> shape_;
+  std::vector<size_t> shape_;
   T value_;
 };
 
 template<class T>
-class LinearVector : public AbstractVector<T,LinearVector<T> >
+class LinearArray : public AbstractArrayExpression<T,LinearArray<T> >
 {
 public:
-  typedef T value_type;
-  static const int dim = 1;
-
-  LinearVector(T start, T end, T step)
+  LinearArray(T start, T end, T step)
    : start_(start)
    , end_(end)
    , step_(step)
+   , shape_(1)
   {
     shape_[0] = round((end-start) / step );
   }
@@ -85,23 +66,18 @@ public:
     return shape_[0];
   }
 
-  const std::array<size_t,1>& shape() const
+  const std::vector<size_t>& shape() const
   {
     return shape_;
   }
 
-  value_type operator[](size_t index) const
-  {
-    return operator()(index);
-  }
-
-  value_type operator()(size_t index) const
+  T operator[](size_t index) const
   {
     return start_ + index*step_;
   }
 
 protected:
-  std::array<size_t,1> shape_;
+  std::vector<size_t> shape_;
   T start_;
   T end_;
   T step_;
@@ -110,44 +86,43 @@ protected:
 
 /// Return an constant array containing only zero values.
 /// Note that this function returns an expression template.
-template<int D>
-ConstantArray<int,D> zeros(const std::array<size_t,D>& shape)
+inline ConstantArray<int> zeros(const std::vector<size_t>& shape)
 {
-  return ConstantArray<int,D> (0, shape);
+  return ConstantArray<int> (0, shape);
 }
 
 /// \overload
 template<class...A>
-ConstantArray<int,sizeof...(A)> zeros(A...args)
+ConstantArray<int> zeros(A...args)
 {
-  return ConstantArray<int,sizeof...(A)> (0, {((size_t)args)...});
+  return ConstantArray<int> (0, {((size_t)args)...});
 }
 
 /// Return an constant array containing only ones as values.
 /// Note that this function returns an expression template.
-template<int D, class Int=size_t>
-ConstantArray<int,D> ones(std::array<Int,D> shape)
+template<class Int=size_t>
+ConstantArray<int> ones(std::vector<Int> shape)
 {
-  return ConstantArray<int,D> (1, shape);
+  return ConstantArray<int> (1, shape);
 }
 
 /// \overload
 template<class...A>
-ConstantArray<int,sizeof...(A)> ones(A...args)
+ConstantArray<int> ones(A...args)
 {
-  return ConstantArray<int,sizeof...(A)> (1, {((size_t)args)...});
+  return ConstantArray<int> (1, {((size_t)args)...});
 }
 
 /// Return a vector containing linear spaced values.
-inline LinearVector<double> linspace(double start, double end, size_t size)
+inline LinearArray<double> linspace(double start, double end, size_t size)
 {
-  return LinearVector<double>(start, end + (end-start) / (size-1), (end-start) / (size-1));
+  return LinearArray<double>(start, end + (end-start) / (size-1), (end-start) / (size-1));
 }
 
 /// Return a vector containing linear spaced values.
-inline LinearVector<int> range(size_t start, size_t end, size_t step=1)
+inline LinearArray<int> range(size_t start, size_t end, size_t step=1)
 {
-  return LinearVector<int>(start, end, step);
+  return LinearArray<int>(start, end, step);
 }
 
 /*!
@@ -161,13 +136,14 @@ auto xx = cc.first;        // xx = [0, 1, 2; 0, 1, 2; 0, 1, 2]
 auto yy = cc.second;       // yy = [0, 0, 0; 1, 1, 1; 2, 2, 2]
 \endcode
 */
-template<class T, class R1, class U, class R2>
-std::pair< Matrix<T>, Matrix<U> >
-meshgrid(const AbstractVector<T,R1>& x, const AbstractVector<U,R2>& y)
+template<class T, class U>
+std::pair< Array<U>, Array<T> >
+meshgrid(const Array<U>& x, const Array<T>& y)
 {
   auto N = shape(x,0);
   auto M = shape(y,0);
-  Matrix<T> xx(M,N), yy(M,N);
+  Array<U> xx(M,N);
+  Array<T> yy(M,N);
 
   for(size_t n=0; n<N; n++)
   {
@@ -188,11 +164,11 @@ Generates the (modified) Shepp-Logan phantom of P. Toft as an NxN matrix.
 Reference: Peter Toft: "The Radon Transform - Theory and Implementation", Ph.D. thesis.
    Department of Mathematical Modelling, Technical University of Denmark, June 1996. 326 pages.
 */
-inline Matrix<double> phantom(size_t N)
+inline Array<double> phantom(size_t N)
 {
-    Matrix<double> I = zeros(N,N);
+    Array<double> I = zeros(N,N);
 
-    auto z = meshgrid( linspace(-1,1,N) , (-1)*linspace(-1,1,N) );
+    auto z = meshgrid<double,double>( linspace(-1,1,N) , (-1)*linspace(-1,1,N) );
     auto x = z.first;
     auto y = z.second;
 
@@ -229,10 +205,10 @@ auto y = array({1,2,3,4},2,2);   // y = [1, 2; 3, 4]   Type: Array<double,2>
 auto z = array<int>({1,2,3});    // z = [1, 2, 3]      Type: Array<int,1>
 \endcode
 */
-template<class T=double, int O=ROW_MAJOR_ORDER, class...A>
-Array<T, sizeof...(A), O> array(std::vector<T> x, A...shape)
+template<class T=double, class...A>
+Array<T> array(std::vector<T> x, A...shape)
 {
-  Array<T, sizeof...(shape), O> y(((size_t)shape)...);
+  Array<T> y(((size_t)shape)...);
 
   std::copy(x.begin(), x.end(), y.data());
 
@@ -240,9 +216,9 @@ Array<T, sizeof...(A), O> array(std::vector<T> x, A...shape)
 }
 
 template<class T=double>
-Vector<T> array(std::vector<T> x)
+Array<T> array(std::vector<T> x)
 {
-  Vector<T> y(x.size());
+  Array<T> y(x.size());
 
   for(size_t i=0; i<x.size(); i++)
     y[i] = x[i];

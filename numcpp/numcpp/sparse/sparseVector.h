@@ -17,7 +17,7 @@ namespace numcpp
 Sparse vector class
 */
 template<class T>
-class SparseVector : public AbstractArray<T,1,SparseVector<T>>
+class SparseVector : public AbstractArrayExpression<T,SparseVector<T>>
 {
 public:
 
@@ -28,7 +28,7 @@ public:
   {
   }
 
-  SparseVector(const Vector<T>& data, const Vector<size_t>& index, size_t N)
+  SparseVector(const Array<T>& data, const Array<size_t>& index, size_t N)
     : shape_({N})
     , data_(data)
     , index_(index)
@@ -55,20 +55,20 @@ public:
     return data_(n);
   }
 
-  Vector<T>& data()
+  Array<T>& data()
   {
     return data_;
   }
 
-  Vector<T> data() const
+  Array<T> data() const
   {
     return data_;
   }
 
 private:
   std::array<size_t,1> shape_;
-  Vector<T> data_;
-  Vector<size_t> index_;
+  Array<T> data_;
+  Array<size_t> index_;
 };
 
 
@@ -82,7 +82,7 @@ template<class T, class U>
 
 template<class T, class U, class V>
   COMMON_TYPE(T,U)
-  dot(const SparseVector<T>& x, const AbstractVector<U,V>& y)
+  dot(const SparseVector<T>& x, const AbstractArrayExpression<U,V>& y)
 {
   T res = 0;
   for(size_t n=0; n<x.data().size(); n++)
@@ -94,7 +94,7 @@ template<class T, class U, class V>
 
 template<class T, class U, class R>
   COMMON_TYPE(T,U)
-  dot(const AbstractVector<T,R>& x, const SparseVector<U>& y)
+  dot(const AbstractArrayExpression<T,R>& x, const SparseVector<U>& y)
 {
   return dot(y,x);
 }

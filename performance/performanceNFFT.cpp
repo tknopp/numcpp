@@ -11,13 +11,13 @@ int main()
     size_t N = pow(2,19);
     size_t M = N;
 
-    Vector<double> x = rand<double>(M) - 0.5;
-    Vector<cdouble> fHat = rand<double>(M);
+    Array<double> x = rand<double>(M) - 0.5;
+    Array<cdouble> fHat = rand<double>(M);
 
     std::cout << "NFFT Performance Test 1D:" << std::endl;
 
     auto t=tic();
-    NFFTPlan<double,1> plan(x,N,m,sigma);
+    NFFTPlan<double> plan(x,{N},m,sigma);
     std::cout << "initialization: ";
     toc(t);
 
@@ -38,11 +38,11 @@ int main()
 
     std::cout << "NFFT Performance Test 2D:" << std::endl;
 
-    Matrix<double> x = rand<double>(M,2) - 0.5;
-    Vector<cdouble> fHat = rand<double>(M);
+    Array<double> x = rand<double>(M,2) - 0.5;
+    Array<cdouble> fHat = rand<double>(M);
 
     auto t=tic();
-    NFFTPlan<double,2> plan(x,{N,N},m,sigma);
+    NFFTPlan<double> plan(x,{N,N},m,sigma);
     std::cout << "initialization: ";
     toc(t);
 

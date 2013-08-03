@@ -164,20 +164,20 @@ void testFile()
 
 void testNewArray()
 {
-  Vector<double> x(10);
+  DynDimArray<double> x(10);
 
   for(size_t i=0; i<10; i++)
     x[i] = i+1.1;
 
-  Vector<double> y = tan((x*x + x - x*x) / x);
+  DynDimArray<double> y = tan((x*x + x - x*x) / x);
 
   print(x);
   print(y);
 
-  Vector<cdouble> u = zeros(10);
+  DynDimArray<cdouble> u = zeros(10);
   u = 1+I;
 
-  Vector<cdouble> o = y+u;
+  DynDimArray<cdouble> o = y+u;
 
   print(o);
   print(u);

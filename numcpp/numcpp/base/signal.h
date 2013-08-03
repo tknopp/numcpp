@@ -10,7 +10,7 @@ enum class convType { full };//, same, valid };
 
 template<class T, class U, class R, class V>
   Array<COMMON_TYPE(T,U)>
-  conv(const AbstractVector<T,R>& x, const AbstractVector<U,V>& y, convType t )
+  conv(const AbstractArray<T,R>& x, const AbstractArray<U,V>& y, convType t )
 {
   size_t N = x.size();
   size_t M = y.size();

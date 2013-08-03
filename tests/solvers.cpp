@@ -1,5 +1,7 @@
 #include "catch.hpp"
 #include <numcpp.h>
+#include <numcpp/solvers.h>
+
 using namespace numcpp;
 
 TEST_CASE( "numcpp/solvers/kaczmarz", "Kaczmarz test" )
@@ -26,11 +28,11 @@ TEST_CASE( "numcpp/solvers/cgnr", "CGNR test" )
   {
     size_t M = 3;
     size_t N = 3;
-    auto A = Matrix<double>({1, 7, 3,
+    auto A = array<double>({1, 7, 3,
                              9, 9, 4,
                              1, 0, 4}, M, N);
 
-    Vector<double> x = ones(N);
+    Array<double> x = ones(N);
     auto y = dot(A,x);
     auto r = cgnr(A, y, 3);
 
@@ -42,11 +44,11 @@ TEST_CASE( "numcpp/solvers/cgnr", "CGNR test" )
   {
     size_t M = 3;
     size_t N = 3;
-    auto A = Matrix<cdouble>({1, 7, 3+I,
+    auto A = array<cdouble>({1, 7, 3+I,
                               9, 9, 4,
                               1, 0, 4}, M, N);
 
-    Vector<cdouble> x = ones(N)*I;
+    Array<cdouble> x = ones(N)*I;
     auto y = dot(A,x);
     auto r = cgnr(A, y, 3);
 

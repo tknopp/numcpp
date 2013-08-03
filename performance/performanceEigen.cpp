@@ -31,14 +31,14 @@ size_t performance01Eigen(size_t N, size_t M)
 
 size_t performance02Eigen(size_t N, size_t M)
 {
-    Eigen::VectorXf x = Eigen::VectorXf::Random(N);
-    Eigen::MatrixXf A = Eigen::MatrixXf::Random(N,N);
-    Eigen::VectorXf y(N);
+    Eigen::ArrayXf x = Eigen::ArrayXf::Random(N);
+    Eigen::ArrayXf A = Eigen::ArrayXf::Random(N,N);
+    Eigen::ArrayXf y(N);
 
     auto t = tic();
     for(auto i=0; i<M; i++)
     {
-      y += A*x*i  + A*x*(1.0/(i+1)); //; + A*Eigen::VectorXf::Ones(N)*i;
+      y += A*x*i  + A*x*(1.0/(i+1)); //; + A*Eigen::ArrayXf::Ones(N)*i;
     }
 
     return toc(t,false);
@@ -47,14 +47,14 @@ size_t performance02Eigen(size_t N, size_t M)
 
 size_t performance03Eigen(size_t N, size_t M)
 {
-    Eigen::MatrixXf B = Eigen::MatrixXf::Random(N,N);
-    Eigen::MatrixXf A = Eigen::MatrixXf::Random(N,N);
-    Eigen::MatrixXf C(N,N);
+    Eigen::ArrayXf B = Eigen::ArrayXf::Random(N,N);
+    Eigen::ArrayXf A = Eigen::ArrayXf::Random(N,N);
+    Eigen::ArrayXf C(N,N);
 
     auto t = tic();
     for(auto i=0; i<M; i++)
     {
-      C += A*B*i; //; + A*Eigen::VectorXf::Ones(N)*i;
+      C += A*B*i; //; + A*Eigen::ArrayXf::Ones(N)*i;
     }
 
    return toc(t, false);

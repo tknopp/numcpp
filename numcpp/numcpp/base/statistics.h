@@ -19,29 +19,18 @@ namespace numcpp
 /*!
 Return the mean value of the array \a x.
 */
-template<class T, int D, class R>
-double mean(const AbstractArray<T,D,R>& x)
+template<class Array>
+DOUBLE_TYPE(typename Array::value_type) mean(const Array& x)
 {
-  double y = sum(x);
-  return y / x.size();
-}
-
-/*!
-Return the mean value of the array \a x.
-This is an overload of the mean function for complex numbers
-*/
-template<class T, int D, class R>
-std::complex<double> mean(const AbstractArray<std::complex<T>,D,R>& x)
-{
-  std::complex<double> y = sum(x);
+  DOUBLE_TYPE(typename Array::value_type) y = sum(x);
   return y / x.size();
 }
 
 /*!
 Return the standard deviation of \a x.
 */
-template<class T, int D, class R>
-double stdDev(const AbstractArray<T,D,R>& x)
+template<class Array>
+DOUBLE_TYPE(typename Array::value_type) stdDev(const Array& x)
 {
   return sqrt( mean( pow( abs( x - mean(x) ), 2) ) );
 }

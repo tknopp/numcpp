@@ -21,10 +21,10 @@ namespace numcpp
 /*!
 Sum over all elements of \a x.
 */
-template<class T, int D, class R>
-T sum(const AbstractArray<T,D,R>& x)
+template<class Array>
+typename Array::value_type sum(const Array& x)
 {
-  T y = x[0];
+  auto y = x[0];
   for(size_t i=1; i<x.size(); i++)
     y += x[i];
   return y;
@@ -35,23 +35,23 @@ Sum of \a x along a specific axis \a axis.
 
 Reduces the dimensionality of the array by one.
 */
-template<class T, int D, class Int>
-Array<T, D-1> sum(const Array<T,D>& x, Int axis) // TODO AbstractArray
+template<class T, class Int>
+Array<T> sum(const Array<T>& x, Int axis) // TODO AbstractArray
 {
-  static_assert(D > 1, "sum(x,axis) is only supported for array of dimension D>1!");
+  //  static_assert(D > 1, "sum(x,axis) is only supported for array of dimension D>1!");
 
-  std::array<size_t,D-1> shape_;
+  std::vector<size_t> shape_(x.ndims()-1);
 
-  copyShapeToSubArray<D>(x.shape(), shape_, axis);
+  copyShapeToSubArray(x.shape(), shape_, axis);
 
-  Array<T, D-1> y = zeros<D-1>(shape_);
+  Array<T> y = zeros(shape_);
 
-  std::array<size_t,D> index;
-  Iterator<D-1> it(shape_);
+  std::vector<size_t> index(x.ndims());
+  Iterator it(shape_);
 
   for(size_t k=0; k<y.size(); k++, it++)
   {
-    copyShapeFromSubArray<D>(*it, index, axis);
+    copyShapeFromSubArray(*it, index, axis);
 
     for(size_t i=0; i<shape(x,axis); i++)
     {
@@ -64,11 +64,11 @@ Array<T, D-1> sum(const Array<T,D>& x, Int axis) // TODO AbstractArray
 }
 
 /*template<class T>
-Vector<T> sum(const Matrix<T>& x, int axis) // TODO AbstractArray
+Array<T> sum(const Array<T>& x, int axis) // TODO AbstractArray
 {
   int otherAxis = (axis == 0) ? 1 : 0;
 
-  Vector<T> y = zeros(otherAxis);
+  Array<T> y = zeros(otherAxis);
 
   std::array<size_t,2> index = {0, 0};
 
@@ -89,10 +89,10 @@ Calculate the difference between elements of \a x.
 
 The order can be specified by the parameter \a order.
 */
-template<class T, class R>
-Vector<T> diff(const AbstractStridedVector<T,R>& x, int order=1)
+template<class T>
+Array<T> diff(const Array<T>& x, int order=1)
 {
-  Vector<T> y = x(slice(1,end)) - x(slice(0,end-1));
+  Array<T> y = x(slice(1,end)) - x(slice(0,end-1));
   if(order == 1)
     return y;
   else
@@ -104,19 +104,19 @@ Calculate the difference between elements of \a x along axis \a axis
 
 The order can be specified by the parameter \a order.
 */
-template<class T, class R>
-Matrix<T> diff(const AbstractStridedMatrix<T,R>& x, int order=1, int axis=1)
+template<class T>
+Array<T> diff(const Array<T>& x, int order=1, int axis=1)
 {
   if(axis == 1)
   {
-    Matrix<T> y = x(full, slice(1,end)) - x(full, slice(0,end-1));
+    Array<T> y = x(full, slice(1,end)) - x(full, slice(0,end-1));
     if(order == 1)
       return y;
     else
       return diff(y, order -1, axis);
   } else
   {
-    Matrix<T> y = x(slice(1,end), full) - x(slice(0,end-1), full);
+    Array<T> y = x(slice(1,end), full) - x(slice(0,end-1), full);
     if(order == 1)
       return y;
     else
@@ -129,10 +129,10 @@ Matrix<T> diff(const AbstractStridedMatrix<T,R>& x, int order=1, int axis=1)
 /*!
 Calculate the cumulative sum over \a x.
 */
-template<class T, int D, class R>
-Vector<T> cumsum(const AbstractArray<T,D,R>& x)
+template<class T>
+Array<T> cumsum(const Array<T>& x)
 {
-  Vector<T> y(x.size());
+  Array<T> y(x.size());
   y[0] = x[0];
 
   for(size_t i=1; i<x.size(); i++)

@@ -1,5 +1,7 @@
 #include "catch.hpp"
 #include <numcpp.h>
+#include <numcpp/linalg.h>
+
 using namespace numcpp;
 
 TEST_CASE( "numcpp/linalg/solve", "Solve test" )

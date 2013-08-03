@@ -6,7 +6,6 @@
 #include <vector>
 #include <algorithm>
 #include <array>
-#include <iterator>
 #include <chrono>
 
 namespace numcpp
@@ -19,8 +18,8 @@ namespace numcpp
 @{
 */
 
-template<class Vector>
-typename Vector::value_type prod(Vector x)
+template<class Array>
+typename Array::value_type prod(Array x)
 {
   auto prod = x[0];
 
@@ -30,28 +29,25 @@ typename Vector::value_type prod(Vector x)
   return prod;
 }
 
-template<class Vector>
-Vector removeOnes(Vector x)
+template<class Array>
+Array removeOnes(Array x)
 {
   x.erase(std::remove(x.begin(), x.end(), 1), x.end());
   return x;
 }
 
+std::vector<size_t> multiIndex(const size_t& index, const std::vector<size_t>& shape);
+
+size_t flatIndex(const std::vector<size_t>& index, const std::vector<size_t>& strides, size_t offset);
+
 template<int D>
-std::array<size_t,D> multiIndex(const size_t& index, const std::array<size_t,D>& shape)
+size_t flatIndex(const std::array<size_t,D>& index, const std::vector<size_t>& strides, size_t offset)
 {
-  std::array<size_t,D> multIdx;
-  std::ptrdiff_t remaining = index;
+  for(size_t i=0; i<D; i++)
+    offset += strides[i]*index[i];
 
-  for(int i=D-1; i>=0; i--)
-  {
-    multIdx[i] = remaining % shape[i];
-    remaining -= multIdx[i];
-    remaining /= shape[i];
-  }
-  return multIdx;
+  return offset;
 }
-
 
 template<class T>
 void print(const T& x)
@@ -67,44 +63,13 @@ std::ostream& operator<< (std::ostream& os, const std::vector<T>& x)
   return os;
 }
 
-template<class T, int D>
-std::ostream& operator<< (std::ostream& os, const std::array<T,D>& x)
-{
-  std::copy(begin(x), end(x), std::ostream_iterator<T>(os, "\n"));
-  //for(int i=0; i<2; i++)
-  //  os << x[i] << " ";
-  return os;
-}
+void copyShapeToSubArray(const std::vector<size_t>& shapeIn, std::vector<size_t>& shapeOut, int axis);
+
+void copyShapeFromSubArray(const std::vector<size_t>& shapeIn, std::vector<size_t>& shapeOut, int axis);
 
 
-template<int D>
-void copyShapeToSubArray(const std::array<size_t,D>& shapeIn, std::array<size_t,D-1>& shapeOut, int axis)
-{
-  int j=0;
-  for(int i=0; i<D; i++)
-    if(i != axis)
-    {
-      shapeOut[j] = shapeIn[i];
-      j++;
-    }
-}
-
-template<int D>
-void copyShapeFromSubArray(const std::array<size_t,D-1>& shapeIn, std::array<size_t,D>& shapeOut, int axis)
-{
-  int j=0;
-  for(int i=0; i<D; i++)
-    if(i != axis)
-    {
-      shapeOut[i] = shapeIn[j];
-      j++;
-    }
-}
-
-
-
-template<class Vector>
-void println (const Vector& x)
+template<class Array>
+void println (const Array& x)
 {
   for(int i=0; i<x.size(); i++)
     std::cout << x[i] << " ";
@@ -124,10 +89,7 @@ toc(t);
 @endcode
 \sa toc()
 */
-inline clock::time_point tic()
-{
-  return clock::now();
-}
+clock::time_point tic();
 
 /*!
 Returns the time that is ellapsed since the time point \a t and now.
@@ -140,22 +102,7 @@ toc(t);
 @endcode
 \sa tic()
 */
-inline size_t toc(clock::time_point t, bool print=true)
-{
-  auto diff = tic() - t;
-  if(print)
-  {
-    auto hours = std::chrono::duration_cast<std::chrono::hours>(diff);
-    if(hours.count() > 0)
-      std::cout << hours.count() << "h";
-    auto min = std::chrono::duration_cast<std::chrono::hours>(diff-hours);
-    if(min.count() > 0)
-      std::cout << min.count() << "m";
-    auto sec = std::chrono::duration_cast<std::chrono::milliseconds>(diff-hours-min);
-    std::cout << sec.count() / 1000.0 << "s" << std::endl;
-  }
-  return std::chrono::duration_cast<std::chrono::milliseconds>(diff).count();
-}
+size_t toc(clock::time_point t, bool print=true);
 
 
 

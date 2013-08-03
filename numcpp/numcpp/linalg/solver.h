@@ -18,7 +18,7 @@ namespace numcpp
 Solve the linear system of equations A*x = b.
 */
 template<class T>
-Vector<T> solve(const Matrix<T>& A, const Vector<T>& b)
+Array<T> solve(const Array<T>& A, const Array<T>& b)
 {
   char trans = 'T';
   long M = shape(A,0);
@@ -33,24 +33,22 @@ Vector<T> solve(const Matrix<T>& A, const Vector<T>& b)
 
   auto B = copy(A);
 
-  Vector<T> bwork(maxNM);
+  Array<T> bwork(maxNM);
   bwork(slice(0,M)) = b;
 
   lapack_gels(&trans, &M, &N, &one, B.data(), &lda, bwork.data(), &ldb,
     &lworkcalc, &lwork, &info);
 
   lwork = (long) lworkcalc;
-  Vector<T> work(lwork);
+  Array<T> work(lwork);
 
   lapack_gels(&trans, &M, &N, &one, B.data(), &lda, bwork.data(), &ldb,
     work.data(), &lwork, &info);
 
-  Vector<T> x = bwork(slice(0,N));
+  Array<T> x = bwork(slice(0,N));
 
   return x;
 }
-
-
 
 /*! @} */
 

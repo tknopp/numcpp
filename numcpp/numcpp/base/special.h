@@ -13,7 +13,6 @@ auto sign(T x)
 
 VECTORIZE(sign, sign)
 
-
 template<class T>
 T sinc(T x)
 {

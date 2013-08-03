@@ -5,107 +5,32 @@ namespace numcpp
 {
 
 template<class T>
-struct typeStr
+std::ostream& operator<< (std::ostream& os, const Array<T>& x)
 {
-  constexpr static const char * value = "unknown_type";
-};
-
-#define DEFINE_TYPE_STR(type) \
-template<> \
-struct typeStr< type > \
-{ \
-  constexpr static const char * value = #type ; \
-};
-
-DEFINE_TYPE_STR(bool)
-DEFINE_TYPE_STR(int)
-DEFINE_TYPE_STR(long)
-DEFINE_TYPE_STR(float)
-DEFINE_TYPE_STR(double)
-DEFINE_TYPE_STR(std::complex<float>)
-DEFINE_TYPE_STR(std::complex<double>)
-
-
-template<class T, int D, class R>
-std::ostream& operator<< (std::ostream& os,const AbstractArray<T,D,R> & x)
-{
-  os << "AbstractArray<"<< typeStr<T>::value
-     << "," << D << "> {\n";
+  os << "Array<"<< typeStr(x.elemType())
+     << "," << x.ndims() << "> {\n";
   os << "  shape = ";
-  for(int i=0; i<D; i++)
-    os << shape(x,i) << " ";
-  os << "\n";
-
-  os << "  data = ";
-  size_t j = 0;
-  size_t nrRows = x.size() / shape(x,D-1);
-  for(size_t i=0; i< nrRows; i++)
-  {
-    for(size_t l=0; l< shape(x,D-1); l++,j++)
-      os << x[j] << " ";
-    os << "\n";
-  }
-  os << "}\n";
-  return os;
-}
-/*
-template<class T, int D>
-std::ostream& operator<< (std::ostream& os,const Array<T,D> & x)
-{
-  os << "Array<"<<  typeStr<T>::value
-     << "," << D << "> {\n";
-  os << "  shape = ";
-  for(int i=0; i<D; i++)
+  for(int i=0; i<x.ndims(); i++)
     os << x.shape(i) << " ";
   os << "\n";
   os << "  strides = ";
-  for(int i=0; i<D; i++)
-    os << x.strides()[i] << " ";
+  for(int i=0; i<x.ndims(); i++)
+    os << x.strides(i) << " ";
   os << "\n";
+  os << "  offset = " << x.offset() << "\n";
 
   os << "  data = ";
   size_t j = 0;
-  size_t nrRows = x.size() / x.shape(D-1);
+  size_t nrRows = x.size() / x.shape(x.ndims()-1);
   for(size_t i=0; i< nrRows; i++)
   {
-    for(size_t l=0; l< x.shape(D-1); l++,j++)
+    for(size_t l=0; l < x.shape(x.ndims()-1); l++,j++)
       os << x[j] << " ";
     os << "\n";
-    if(i<nrRows-1)
-      os << "         ";
-  }
-  os << "}\n";
-  return os;
-}*/
-
-template<class T, class R>
-std::ostream& operator<< (std::ostream& os,const AbstractStridedMatrix<T,R> & x)
-{
-  os << "Matrix<"<<  typeStr<T>::value
-     << "> {\n";
-  os << "  shape = ";
-  for(int i=0; i<2; i++)
-    os << shape(x,i) << " ";
-  os << "\n";
-  os << "  strides = ";
-  for(int i=0; i<2; i++)
-    os << x.strides()[i] << " ";
-  os << "\n";
-
-  os << "  data = ";
-  for(size_t i=0; i< shape(x,0); i++)
-  {
-    for(size_t l=0; l< shape(x,1); l++)
-      os << x(i,l) << " ";
-    os << "\n";
-    if(i<shape(x,0)-1)
-      os << "         ";
   }
   os << "}\n";
   return os;
 }
-
-
 
 }
 

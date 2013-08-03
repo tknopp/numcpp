@@ -1,4 +1,5 @@
 #include <numcpp.h>
+#include <numcpp/solvers.h>
 using namespace numcpp;
 
 int main()
@@ -7,16 +8,16 @@ int main()
   size_t N = n*n;
   size_t M = N / 4;
 
-  Vector<cdouble> a = {1,2,3,4};
-  Vector<size_t> idx = {0,1,2,3};
+  auto a = array<cdouble>({1,2,3,4});
+  auto idx = array<size_t>({0,1,2,3});
 
-  SparseFFTMatrix<cdouble,1> F2(idx,4);
+  SparseFFTArray<cdouble> F2(idx,4);
 
   print(dot(F2,a));
   print(solve(F2,a));
 
-  //Vector<cdouble> p = reshape(phantom(n),N);
-  Vector<cdouble> p = zeros(N);
+  //Array<cdouble> p = reshape(phantom(n),N);
+  Array<cdouble> p = zeros(N);
   p(n*n/2 + n/4) = 1;
 
   auto tmp2 = eval(abs(reshape(p,n,n)));
@@ -25,7 +26,7 @@ int main()
   //auto indices = eval(range(0,N-1));
   auto indices = rand<size_t>(N-1, M);
 
-  SparseFFTMatrix<cdouble,2> F(indices,n,n);
+  SparseFFTArray<cdouble> F(indices,n,n);
 
   auto y = dot(F,p);
   auto noise = randn<double>(M);

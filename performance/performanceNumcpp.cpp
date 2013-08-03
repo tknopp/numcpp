@@ -10,7 +10,7 @@ size_t performance01Numcpp(size_t N, size_t M)
 
   for(int l=0;l<10;l++)
   {
-    Array<cdouble,1> x = zeros(N);
+    Array<cdouble> x = zeros(N);
     for(auto i=0; i<M; i++)
       x += ones(N);
 
@@ -29,9 +29,9 @@ size_t performance01Numcpp(size_t N, size_t M)
 
 size_t performance02Numcpp(size_t N, size_t M)
 {
-    Vector<float> x = randn<float>(N);
-    Matrix<float> A = randn<float>(N,N);
-    Vector<float> y(N);
+    Array<float> x = randn<float>(N);
+    Array<float> A = randn<float>(N,N);
+    Array<float> y(N);
 
 
     auto t = tic();
@@ -51,9 +51,9 @@ size_t performance02Numcpp(size_t N, size_t M)
 
 size_t performance03Numcpp(size_t N, size_t M)
 {
-    Matrix<float> B = randn<float>(N,N);
-    Matrix<float> A = randn<float>(N,N);
-    Matrix<float> C(N,N);
+    Array<float> B = randn<float>(N,N);
+    Array<float> A = randn<float>(N,N);
+    Array<float> C(N,N);
 
 
     auto t = tic();

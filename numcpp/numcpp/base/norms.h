@@ -19,8 +19,8 @@ namespace numcpp
 Return the p-norm of the input array x (considered as vector).
 The parameter \a p is in the range of [0,infinity). Infinity is defined by INFINITY.
 */
-template<class T, int D, class R>
-double norm(const AbstractArray<T,D,R>& x, double p=2.0)
+template<class Array>
+double norm(const Array& x, double p=2.0)
 {
   if(p == 0)
     return ( sum( abs(x) != 0 ) );
@@ -30,8 +30,8 @@ double norm(const AbstractArray<T,D,R>& x, double p=2.0)
   return std::pow( sum( pow(abs(x),p) ), 1./p );
 }
 
-template<class T, int D, class R1, class R2>
-double nrmsd(const AbstractArray<T,D,R1>& x, const AbstractArray<T,D,R2>& y)
+template<class ArrayA, class ArrayB>
+double nrmsd(const ArrayA& x, const ArrayB& y)
 {
   return norm(x-y) / norm(x);
 }

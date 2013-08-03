@@ -1,10 +1,9 @@
-#ifndef DEFINES_H
-#define DEFINES_H
+#ifndef NUMCPP_DEFINES_H
+#define NUMCPP_DEFINES_H
 
 #include <complex>
 #include <exception>
 #include <cmath>
-
 
 namespace numcpp
 {
@@ -22,7 +21,7 @@ namespace numcpp
 
 #define VECTORIZE(func,funcName) \
 template <class Op> \
-class Array_ ## funcName : public  AbstractArray<decltype(func(std::declval< typename Op::value_type >())), Op::dim, Array_ ## funcName <Op>  > \
+class Array_ ## funcName : public AbstractArrayExpression<decltype(func(std::declval< typename Op::value_type >())), Array_ ## funcName <Op>  > \
 { \
 public: \
   typedef decltype(func(std::declval< typename Op::value_type >())) value_type; \
@@ -35,7 +34,11 @@ public: \
     return func (op_[i]); \
   } \
   \
-  const std::array<size_t,Op::dim>& shape() const\
+  size_t size() const\
+  { \
+    return op_.size(); \
+  } \
+  const std::vector<size_t>& shape() const\
   { \
     return op_.shape(); \
   } \
@@ -44,16 +47,16 @@ private: \
 }; \
 \
 template <class T, class Op> \
- Array_ ## funcName < AbstractArray<T,Op::dim, Op> > \
-   funcName ( const AbstractArray<T,Op::dim, Op>& value) \
+ Array_ ## funcName < AbstractArrayExpression<T, Op> > \
+   funcName ( const AbstractArrayExpression<T, Op>& value) \
 { \
-    return Array_ ## funcName < AbstractArray<T,Op::dim, Op> > (value); \
+    return Array_ ## funcName < AbstractArrayExpression<T, Op> > (value); \
 }
 
 
 #define VECTORIZE_ONE_ARG(func,funcName,argType) \
 template <class Op> \
-class Array_ ## funcName ## _ ## argType : public  AbstractArray<decltype(func(std::declval< typename Op::value_type >(), std::declval<argType>())), Op::dim, Array_ ## funcName ## _ ## argType <Op>  > \
+class Array_ ## funcName ## _ ## argType : public  AbstractArrayExpression<decltype(func(std::declval< typename Op::value_type >(), std::declval<argType>())), Array_ ## funcName ## _ ## argType <Op>  > \
 { \
 public: \
   typedef decltype(func(std::declval< typename Op::value_type >(),std::declval<argType>())) value_type; \
@@ -67,7 +70,12 @@ public: \
     return func (op_[i], arg_); \
   } \
   \
-  const std::array<size_t,Op::dim>& shape() const \
+  size_t size() const\
+  { \
+    return op_.size(); \
+  } \
+  \
+  const std::vector<size_t>& shape() const\
   { \
     return op_.shape(); \
   } \
@@ -77,10 +85,10 @@ private: \
 }; \
 \
 template <class T, class Op> \
- Array_ ## funcName ## _ ## argType < AbstractArray<T, Op::dim, Op> > \
-   funcName ( const AbstractArray<T, Op::dim, Op>& value, argType arg ) \
+ Array_ ## funcName ## _ ## argType < AbstractArrayExpression<T, Op> > \
+   funcName ( const AbstractArrayExpression<T, Op>& value, argType arg ) \
 { \
-    return Array_ ## funcName ## _ ## argType < AbstractArray<T, Op::dim, Op> > (value, arg); \
+    return Array_ ## funcName ## _ ## argType < AbstractArrayExpression<T, Op> > (value, arg); \
 }
 
 
@@ -104,10 +112,22 @@ struct complexBaseType
 
 #define COMPLEX_BASE_TYPE(T) typename complexBaseType<T>::type
 
-/// Alias for complex double
-typedef std::complex<double> cdouble;
-/// Alias for complex float
-typedef std::complex<float> cfloat;
+template<class T>
+struct doubleType;
+
+template<class T>
+struct doubleType<std::complex<T>>
+{
+  typedef std::complex<double> type;
+};
+
+template<class T>
+struct doubleType
+{
+  typedef double type;
+};
+
+#define DOUBLE_TYPE(T) typename doubleType<T>::type
 
 template<class T, class U>
 struct commonArithmeticType
@@ -118,11 +138,11 @@ struct commonArithmeticType
 #define COMMON_TYPE(T,U) decltype( std::declval< T >() * std::declval< U >() )
 #define COMMON_TYPE_ARRAY(x,y) decltype( x[0] * y[0] )
 
+using std::ptrdiff_t;
+
 /*! @} */
 
 }
 
 
-
-
-#endif // DEFINES_H
+#endif

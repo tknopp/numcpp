@@ -1,17 +1,20 @@
 add_custom_target(NumCppCore SOURCES
-                  abstractarray.h
-                  array.h
-                  stridedarray.h
-                  nonregulararray.h
                   defines.h
+                  type.h
+                  type.cpp
                   utils.h
-                  iterator.h
+                  utils.cpp
+                  array.h
+                  dyntypearray.h
+                  dyntypearray.cpp
                   memoryblock.h
+                  memoryblock.cpp
                   stream.h
-                  complex.h
-                  arithmetic.h
-                  relational.h
-                  slice.h
-                  constants.h
                   coreFunc.h
-                  extern.h)
+                  coreFunc.cpp
+                  abstractexpression.h
+                  constants.h
+                  iterator.h
+                  slice.h
+                  slice.cpp
+                  core.cpp )

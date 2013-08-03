@@ -5,9 +5,9 @@ using namespace numcpp;
 
 void performance03NumCpp(size_t N, size_t M)
 {
-    Vector<float> x = randn<float>(N);
-    Matrix<float> A = randn<float>(N,N);
-    Vector<float> y(N);
+    Array<float> x = randn<float>(N);
+    Array<float> A = randn<float>(N,N);
+    Array<float> y(N);
 
 
     auto t = tic();
@@ -26,14 +26,14 @@ void performance03NumCpp(size_t N, size_t M)
 
 void performance03Eigen(size_t N, size_t M)
 {
-    Eigen::VectorXf x = Eigen::VectorXf::Random(N);
-    Eigen::MatrixXf A = Eigen::MatrixXf::Random(N,N);
-    Eigen::VectorXf y(N);
+    Eigen::ArrayXf x = Eigen::ArrayXf::Random(N);
+    Eigen::ArrayXf A = Eigen::ArrayXf::Random(N,N);
+    Eigen::ArrayXf y(N);
 
     auto t = tic();
     for(auto i=0; i<M; i++)
     {
-      y += A*x*i; //; + A*Eigen::VectorXf::Ones(N)*i;
+      y += A*x*i; //; + A*Eigen::ArrayXf::Ones(N)*i;
     }
 
     toc(t);

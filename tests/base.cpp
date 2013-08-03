@@ -6,13 +6,13 @@ TEST_CASE( "numcpp/base/sum", "Sum test" )
 {
 
   {
-    auto x = Vector<double>({1,2,3,4});
+    auto x = Array<double>({1,2,3,4});
 
     REQUIRE( sum(x) == 10 );
   }
 
   {
-    auto x = Matrix<double>({1,2,3,4},2,2);
+    auto x = Array<double>({1,2,3,4},2,2);
 
     REQUIRE( sum(x) == 10 );
     REQUIRE( all( sum(x,1) == array({3, 7}) ) );

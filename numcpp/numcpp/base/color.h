@@ -120,10 +120,10 @@ namespace colormaps
 Colorize the floating point array \a x.
 The parameters \a winMin and \a winMax specify the range that is mapped on the colormap \a cm.
 */
-template<class T, int D, class R>
-Array<uint32_t,D> colorize(const AbstractArray<T,D,R>& x, const T& winMin, const T& winMax, const colormap& cm)
+template<class T>
+Array<uint32_t> colorize(const Array<T>& x, const T& winMin, const T& winMax, const colormap& cm)
 {
-  Array<uint32_t,D> coloredData(x.shape());
+  Array<uint32_t> coloredData(x.shape());
   for(size_t i=0; i<x.size(); i++)
   {
     coloredData[i] = colorize(x[i], winMin, winMax, cm);
@@ -131,16 +131,7 @@ Array<uint32_t,D> colorize(const AbstractArray<T,D,R>& x, const T& winMin, const
   return coloredData;
 }
 
-inline uint32_t rgbaToInt(const color_t& v)
-{
-  color_argb_int x;
-  x.channel.r = (uint8_t) (v.r *255)  & 0x000000FF;
-  x.channel.g = (uint8_t) (v.g *255)  & 0x000000FF;
-  x.channel.b = (uint8_t) (v.b *255)  & 0x000000FF;
-  x.channel.a = (uint8_t) (v.a *255)  & 0x000000FF;
-
-  return x.value;
-}
+uint32_t rgbaToInt(const color_t& v);
 
 /*!
 Colorize a floating point value \a x.
@@ -158,9 +149,9 @@ uint32_t colorize(const T& x, const T& winMin, const T& winMax, const colormap& 
   else
   {
     color_t v = {cm[0].r+(cm[1].r-cm[0].r)*norm,
-              cm[0].g+(cm[1].g-cm[0].g)*norm,
-              cm[0].b+(cm[1].b-cm[0].b)*norm,
-              cm[0].a+(cm[1].a-cm[0].a)*norm};
+                 cm[0].g+(cm[1].g-cm[0].g)*norm,
+                 cm[0].b+(cm[1].b-cm[0].b)*norm,
+                 cm[0].a+(cm[1].a-cm[0].a)*norm};
     return rgbaToInt(v);
   }
 

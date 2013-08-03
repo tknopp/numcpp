@@ -12,10 +12,10 @@ int main()
 
     EnableCaching();
 
-    Array<cdouble,1> x = zeros(N);
+    Array<cdouble> x = zeros(N);
     for(auto i=0; i<M; i++)
     {
-      Array<cdouble,1> y = fft(linspace(0,1,N)*i);
+      Array<cdouble> y = fft(eval(linspace(0,1,N)*i));
       x += i*exp(2*pi*I*i*y);
     }
 
@@ -29,10 +29,10 @@ int main()
   {
     auto t = tic();
 
-    Array<cdouble,1> x = zeros(N);
+    Array<cdouble> x = zeros(N);
     for(auto i=0; i<M; i++)
     {
-      Array<cdouble,1> y = fft(linspace(0,1,N)*i);
+      Array<cdouble> y = fft(eval(linspace(0,1,N)*i));
       x += i*exp(2*pi*I*i*y);
     }
 

@@ -30,8 +30,8 @@ int main()
   print(x);                               // [1 1 1; 1 2 3; 1 1 1]
 
   auto u = eval(range(0,10));             // create array u = [0 ... 9]
-  auto u1 = u(V{0, 1, 7, 5});             // non-regular indexing of u
-  print(u1);                              // u1 = [0 1 6 4]
+  //auto u1 = u(V{0, 1, 7, 5});             // non-regular indexing of u
+  //print(u1);                              // u1 = [0 1 6 4]
 }
 
 /*!

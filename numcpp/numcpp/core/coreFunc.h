@@ -1,7 +1,8 @@
 #ifndef NUMCPP_CORE_FUNC_H
 #define NUMCPP_CORE_FUNC_H
 
-#include "array.h"
+#include "defines.h"
+#include "abstractexpression.h"
 
 namespace numcpp
 {
@@ -13,79 +14,63 @@ namespace numcpp
 @{
 */
 
-using std::abs;
-using std::sqrt;
-using std::pow;
-using std::round;
-
-VECTORIZE(abs, abs)
-VECTORIZE(sqrt, sqrt)
-VECTORIZE_ONE_ARG(pow,pow,int)
-VECTORIZE_ONE_ARG(pow,pow,double)
-
 /*!
 Number of dimensions (rank) of the array \a x.
 */
-template <class T, int D, class Derived>
-int ndims(const AbstractArray<T,D,Derived>& x)
-{
-  return D;
-}
+int ndims(const DynTypeArray& x);
 
 /*!
 Number of elements (shape) of the array \a x along axis \a d.
 */
-template <class T, int D, class Derived>
-size_t shape(const AbstractArray<T,D,Derived>& x, int d)
-{
-  return x.shape()[d];
-}
+size_t shape(const DynTypeArray& x, int d);
 
 /*!
 Total number of elements of the array \a x.
 */
-template <class T, int D, class Derived>
-int size(const AbstractArray<T,D,Derived>& x)
-{
-  return x.size();
-}
+int size(const DynTypeArray& x);
 
 /*!
 Create a similar array to \a x that has the same type, dimension and shape.
 */
-template<class T, int D, class R>
-Array<T,D> similar(const AbstractArray<T,D,R>& x)
+DynTypeArray similar(const DynTypeArray& x);
+
+template<class Array>
+Array similar(const Array& x)
 {
-  return Array<T,D>(x.shape());
+  return Array(x.shape());
 }
 
 /*!
 Create a deep copy of the array \a x.
 */
-template<class T, int D, class R>
-Array<T,D> copy(const AbstractArray<T,D,R>& x)
+template<class Array>
+Array copy(const Array& x)
 {
   auto y = similar(x);
   y = x;
-  return y; //Array<T,D>(x);
+  return y;
 }
 
 /*!
 Evaluate the array expression \a x into a new array. If x is already a dense array, no
 copy will will be made but the same array will be returned (as a shallow copy).
 */
-template<class T, int D, class R>
-Array<T,D> eval(const AbstractArray<T,D,R>& x)
+template<class T, class R>
+Array<T> eval(const AbstractArrayExpression<T,R>& x)
 {
-  return Array<T,D>(x);
+  return Array<T>(x);
 }
 
-template<class T, int D>
-Array<T,D> eval(const Array<T,D>& x)
+template<class T>
+const Array<T>& eval(const Array<T>& x)
 {
   return x;
 }
 
+/*!
+Check whether the array x has the dimension dim.
+*/
+void checkDim(const DynTypeArray& x, int dim);
 
 /*! @} */
 

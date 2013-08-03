@@ -22,19 +22,10 @@ namespace numcpp
 Compute the maximum entry of \a x
 
 */
-/*template<class T, int D, class R>
-T max(const AbstractArray<T,D,R>& x)
-{
-  T y = x[0];
-  for(size_t i=1; i<x.size(); i++)
-    y = x[i] > y ? x[i] : y;
-  return y;
-}*/
-
 template<class Array>
-auto max(const Array& x) -> decltype(x[0])
+typename Array::value_type max(const Array& x)
 {
-  decltype(x[0]) y = x[0];
+  auto y = x[0];
   for(size_t i=1; i<x.size(); i++)
     y = x[i] > y ? x[i] : y;
   return y;
@@ -44,10 +35,10 @@ auto max(const Array& x) -> decltype(x[0])
 Compute the minimum entry of \a x
 
 */
-template<class T, int D, class R>
-T min(const AbstractArray<T,D,R>& x)
+template<class Array>
+typename Array::value_type min(const Array& x)
 {
-  T y = x[0];
+  auto y = x[0];
   for(size_t i=1; i<x.size(); i++)
     y = x[i] < y ? x[i] : y;
   return y;

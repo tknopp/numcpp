@@ -9,7 +9,7 @@ namespace numcpp
 
 
 template<class T, class R>
-AbstractVector<T,R>& medfilt_(AbstractVector<T,R>& x, size_t kernelSize=3)
+AbstractArray<T,R>& medfilt_(AbstractArray<T,R>& x, size_t kernelSize=3)
 {
     size_t N = x.shape(0);
 

@@ -8,87 +8,17 @@
 namespace numcpp
 {
 
+
 struct Slice
 {
-  Slice()
-    : start(0)
-    , end(-1)
-    , step(1)
-  {
-  }
-
-
-  Slice(long start, long end, long step=1)
-    : start(start)
-    , end(end)
-    , step(step)
-  {
-  }
-
-  //   template<class Int>
-  Slice(long index)
-    : start(index)
-    , end(index+1)
-    , step(0)
-  {
-
-  }
-
-  Slice(unsigned long index)
-    : start(index)
-    , end(index+1)
-    , step(0)
-  {
-
-  }
-
-  Slice(int index)
-    : start(index)
-    , end(index+1)
-    , step(0)
-  {
-
-  }
-
-  Slice(unsigned int index)
-    : start(index)
-    , end(index+1)
-    , step(0)
-  {
-
-  }
-
-  Slice(const Slice& slice)
-    : start(slice.start)
-    , end(slice.end)
-    , step(slice.step)
-  {
-
-  }
-
-  template<class Int>
-  Slice(std::initializer_list<Int> list)
-  {
-    auto it = list.begin();
-
-    if(list.size() == 1)
-    {
-      start = *it;
-      end = start+1;
-      step = 1;
-    } else if(list.size() == 2)
-    {
-      start = *it++;
-      end = *it;
-      step = 1;
-    } else
-    {
-      start = *it++;
-      end = *it++;
-      step = *it;
-    }
-
-  }
+  Slice();
+  Slice(long start, long end, long step=1);
+  Slice(long index);
+  Slice(unsigned long index);
+  Slice(int index);
+  Slice(unsigned int index);
+  Slice(const Slice& slice);
+  Slice(std::initializer_list<long> list);
 
   long start;
   long end;
@@ -101,18 +31,7 @@ using S = Slice;
 const long end = -1;
 const Slice full = {0,end,1};
 
-
-inline std::vector<Slice> convertToSliceVector(std::initializer_list<Slice> slices)
-{
-  return std::vector<Slice>(slices);
-}
-
-/*template<class... Args>
-std::array<size_t, sizeof...(Args)> toArray(Args...args)
-{
-  std::tuple
-  return std::vector<Slice>(slices);
-}*/
+std::vector<Slice> convertToSliceArray(std::initializer_list<Slice> slices);
 
 // count ints
 
@@ -161,31 +80,34 @@ struct countSlices<Slice, Args...>
 // count vectors
 
 template<typename... Args>
-struct countVectors;
+struct countArrays;
 
 template<>
-struct countVectors<> { static const int value = 0;};
+struct countArrays<> { static const int value = 0;};
 
 template<class T, typename... Args>
-struct countVectors<T, Args...>
-{ static const int value = countVectors<Args...>::value;};
+struct countArrays<T, Args...>
+{ static const int value = countArrays<Args...>::value;};
 
 template< class Int, typename... Args>
-struct countVectors<std::vector<Int>, Args...>
-{ static const int value = 1 + countVectors<Args...>::value;};
+struct countArrays<std::vector<Int>, Args...>
+{ static const int value = 1 + countArrays<Args...>::value;};
 
+/*template< class Int, typename... Args>
+struct countArrays<Array<Int>, Args...>
+{ static const int value = 1 + countArrays<Args...>::value;};*/
 
 // determine type of indexing
 
 template<typename... Args>
 struct isSlicedArray
 {
-  static const bool value = countSlices<Args...>::value != 0 && countVectors<Args...>::value == 0;
+  static const bool value = countSlices<Args...>::value != 0 && countArrays<Args...>::value == 0;
 };
 
 template<typename... Args>
 struct isNonRegArray
-{ static const bool value = countVectors<Args...>::value != 0;};
+{ static const bool value = countArrays<Args...>::value != 0;};
 
 template<typename... Args>
 struct isElementAccess
@@ -198,11 +120,7 @@ struct isElementAccess
 using V = std::vector<int>;
 
 
-
-
-
-
-inline std::vector<size_t> convertToIndexList(const std::vector<size_t> list, size_t N)
+inline std::vector<size_t> convertToIndexList(const std::vector<size_t>& list, size_t N)
 {
   return list;
 }
@@ -238,15 +156,15 @@ inline std::vector<size_t> convertToIndexList(Slice& sl, size_t N)
     return indices;
 }
 
-
-inline void convertToNonRegIndicesVector(std::vector< std::vector<size_t>>& indices, typename std::vector<size_t>::iterator it) {};
+/*
+inline void convertToNonRegIndicesArray(std::vector< std::vector<size_t>>& indices, typename std::vector<size_t>::iterator it) {};
 
 template<class T, typename... Args>
-void convertToNonRegIndicesVector(std::vector< std::vector<size_t>>& indices, typename std::vector<size_t>::iterator it, T element, Args... args)
+void convertToNonRegIndicesArray(std::vector< std::vector<size_t>>& indices, typename std::vector<size_t>::iterator it, T element, Args... args)
 {
     indices.push_back( convertToIndexList(element, *it) );
-    convertToNonRegIndicesVector(indices, ++it, args...);
-}
+    convertToNonRegIndicesArray(indices, ++it, args...);
+}*/
 
 
 }

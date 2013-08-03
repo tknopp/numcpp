@@ -6,13 +6,14 @@
   template<class T>
   void testHdf5()
   {
-      Matrix<T> A = reshape(range(0,9),3,3);
+      Array<T> A(3,3);
+      A = range(0,9);
 
       auto file = h5create("test.h5");
       h5write(A, file, "/testData");
       h5close(file);
 
-      auto B = h5read<T,2>("test.h5", "/testData");
+      auto B = h5read<T>("test.h5", "/testData");
 
       REQUIRE( all(A == B) );
   }
