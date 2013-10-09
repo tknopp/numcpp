@@ -1,6 +1,7 @@
 #ifndef NUMCPP_CONSTANTS_H
 #define NUMCPP_CONSTANTS_H
 
+#include <complex>
 
 namespace numcpp
 {

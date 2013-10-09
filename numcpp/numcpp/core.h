@@ -2,7 +2,6 @@
 #define NUMCPP_CORE_H
 
 #include "core/array.h"
-#include "core/stream.h"
 #include "core/coreFunc.h"
 #include "core/constants.h"
 #include "core/iterator.h"

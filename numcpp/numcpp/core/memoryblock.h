@@ -1,7 +1,6 @@
 #ifndef NUMCPP_MEMORYBLOCK_H
 #define NUMCPP_MEMORYBLOCK_H
 
-#include <cstdlib>
 #include <iosfwd>
 
 namespace numcpp
