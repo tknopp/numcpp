@@ -2,6 +2,7 @@
 #include "catch.hpp"
 #include <numcpp/core.h>
 #include <numcpp/base/initializers.h>
+#include <numcpp/expressions.h>
 #include <numcpp/base/rearrangeArray.h>
 
 using namespace numcpp;

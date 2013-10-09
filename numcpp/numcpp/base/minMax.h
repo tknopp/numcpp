@@ -3,8 +3,6 @@
 
 #include "../core.h"
 
-
-
 namespace numcpp
 {
 

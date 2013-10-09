@@ -1,10 +1,7 @@
 #ifndef NUMCPP_NFFT_H
 #define NUMCPP_NFFT_H
 
-#include "fftw.h"
-
-#include "../core.h"
-#include "../base.h"
+#include "../core/array.h"
 
 namespace numcpp
 {

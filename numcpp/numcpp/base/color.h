@@ -2,8 +2,6 @@
 #define NUMCPP_COLOR_H
 
 #include "../core.h"
-#include "initializers.h"
-#include "special.h"
 #include <unistd.h>
 #include <initializer_list>
 
@@ -121,15 +119,7 @@ Colorize the floating point array \a x.
 The parameters \a winMin and \a winMax specify the range that is mapped on the colormap \a cm.
 */
 template<class T>
-Array<uint32_t> colorize(const Array<T>& x, const T& winMin, const T& winMax, const colormap& cm)
-{
-  Array<uint32_t> coloredData(x.shape());
-  for(size_t i=0; i<x.size(); i++)
-  {
-    coloredData[i] = colorize(x[i], winMin, winMax, cm);
-  }
-  return coloredData;
-}
+Array<uint32_t> colorize(const Array<T>& x, const T& winMin, const T& winMax, const colormap& cm);
 
 uint32_t rgbaToInt(const color_t& v);
 
@@ -138,24 +128,7 @@ Colorize a floating point value \a x.
 The parameters \a winMin and \a winMax specify the range that is mapped on the colormap \a cm.
 */
 template<class T>
-uint32_t colorize(const T& x, const T& winMin, const T& winMax, const colormap& cm)
-{
-  T norm = (x-winMin) / (winMax-winMin);
-
-  if(norm <= 0.0)
-    return rgbaToInt(cm[0]);
-  else if (norm >= 1.0)
-    return rgbaToInt(cm[1]);
-  else
-  {
-    color_t v = {cm[0].r+(cm[1].r-cm[0].r)*norm,
-                 cm[0].g+(cm[1].g-cm[0].g)*norm,
-                 cm[0].b+(cm[1].b-cm[0].b)*norm,
-                 cm[0].a+(cm[1].a-cm[0].a)*norm};
-    return rgbaToInt(v);
-  }
-
-}
+uint32_t colorize(const T& x, const T& winMin, const T& winMax, const colormap& cm);
 
 /*! @} */
 

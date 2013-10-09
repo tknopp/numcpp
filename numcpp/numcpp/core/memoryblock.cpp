@@ -1,17 +1,45 @@
 #include "memoryblock.h"
-
-template class std::pair<char*,size_t*>;
-template class std::unordered_multimap<size_t, std::pair<char*,size_t*> >;
+#include <unordered_map>
 
 namespace numcpp
 {
 
-GlobalData &GlobalData::GetInstance()
+class GlobalData : public AbstractGlobalData
+{
+public:
+  virtual size_t getTotalAllocatedBytes()
+  {
+    return totalAllocatedBytes;
+  }
+
+  virtual bool getCachingEnabled()
+  {
+    return cachingEnabled_;
+  }
+
+  virtual void setCachingEnabled(bool caching)
+  {
+    cachingEnabled_ = caching;
+  }
+
+  size_t totalAllocatedBytes = 0;
+  size_t numAllocations = 0;
+  bool cachingEnabled_ = false;
+  std::unordered_multimap<size_t, std::pair<char*,size_t*>> cache_;
+
+  static GlobalData& GetInstance();
+};
+
+static AbstractGlobalData& GetGlobalData()
 {
    static GlobalData instance;
    return instance;
 }
 
+static GlobalData& GetGlobalDataInternal()
+{
+   return (GlobalData&) GetGlobalData();
+}
 
 MemoryBlock::MemoryBlock()
 {
@@ -19,22 +47,22 @@ MemoryBlock::MemoryBlock()
 
 MemoryBlock::MemoryBlock(size_t size)
 {
-    if(GlobalData::GetInstance().cachingEnabled_)
+    if(GetGlobalData().getCachingEnabled())
     {
         /*std::cout << "MemoryBlock CTor: size = " << size << std::endl;
       std::cout << "cachesize = " << cache_.size() << std::endl;
       for (const auto& i : cache_)
         std::cout << i.first << "; " << *(i.second.second) << std::endl;*/
 
-        auto it = GlobalData::GetInstance().cache_.find(size);
-        if(it != GlobalData::GetInstance().cache_.end())
+        auto it = GetGlobalDataInternal().cache_.find(size);
+        if(it != GetGlobalDataInternal().cache_.end())
         {
             this->size = size;
             ownData = true;
             refCount = (*it).second.second;
             data_ = (*it).second.first;
             (*refCount)++;
-            GlobalData::GetInstance().cache_.erase(it);
+            GetGlobalDataInternal().cache_.erase(it);
         } else
         {
             allocate(size);
@@ -56,7 +84,7 @@ MemoryBlock::MemoryBlock(char* data, size_t size, bool ownData)
     {
         refCount = new size_t;
         (*refCount) = 1;
-        GlobalData::GetInstance().totalAllocatedBytes += size;
+        GetGlobalDataInternal().totalAllocatedBytes += size;
     }
 }
 
@@ -94,8 +122,8 @@ void MemoryBlock::allocate(size_t size)
     data_ = new char[size]; // TODO 16 Byte aligned memory
     refCount = new size_t;
     (*refCount) = 1;
-    GlobalData::GetInstance().totalAllocatedBytes += size;
-    GlobalData::GetInstance().numAllocations++;
+    GetGlobalDataInternal().totalAllocatedBytes += size;
+    GetGlobalDataInternal().numAllocations++;
 }
 
 void MemoryBlock::free()
@@ -106,14 +134,14 @@ void MemoryBlock::free()
         (*refCount)--;
         if(*refCount == 0)
         {
-            if(GlobalData::GetInstance().cachingEnabled_)
+            if(GetGlobalDataInternal().cachingEnabled_)
             {
-                GlobalData::GetInstance().cache_.insert(std::pair< size_t, std::pair<char*,size_t*>>(size, std::pair<char*,size_t*>(data_,refCount)));
+                GetGlobalDataInternal().cache_.insert(std::pair< size_t, std::pair<char*,size_t*>>(size, std::pair<char*,size_t*>(data_,refCount)));
             } else
             {
                 delete[] data_;
                 delete refCount;
-                GlobalData::GetInstance().totalAllocatedBytes -= size;
+                GetGlobalDataInternal().totalAllocatedBytes -= size;
             }
         }
     }
@@ -121,19 +149,19 @@ void MemoryBlock::free()
 
 void MemoryBlock::EnableCaching()
   {
-    GlobalData::GetInstance().cachingEnabled_ = true;
+    GetGlobalDataInternal().cachingEnabled_ = true;
   }
 
 void MemoryBlock::DisableCaching()
   {
-    for(auto it=GlobalData::GetInstance().cache_.begin(); it!=GlobalData::GetInstance().cache_.end(); ++it)
+    for(auto it=GetGlobalDataInternal().cache_.begin(); it!=GetGlobalDataInternal().cache_.end(); ++it)
     {
       delete[] (*it).second.first;
       delete (*it).second.second;
-      GlobalData::GetInstance().totalAllocatedBytes -= (*it).first;
+      GetGlobalDataInternal().totalAllocatedBytes -= (*it).first;
     }
-    GlobalData::GetInstance().cache_.clear();
-    GlobalData::GetInstance().cachingEnabled_ = false;
+    GetGlobalDataInternal().cache_.clear();
+    GetGlobalDataInternal().cachingEnabled_ = false;
   }
 
 std::ostream& operator<< (std::ostream& os, const MemoryBlock& mem)
@@ -142,7 +170,7 @@ std::ostream& operator<< (std::ostream& os, const MemoryBlock& mem)
   os << "  size = " << mem.size << std::endl;
   os << "  refCount = " << *mem.refCount << std::endl;
   os << "  dataPtr = " << reinterpret_cast<size_t>(mem.data_) << std::endl;
-  os << "  totalAllocatedBytes = " << GlobalData::GetInstance().totalAllocatedBytes << std::endl;
+  os << "  totalAllocatedBytes = " << GetGlobalDataInternal().totalAllocatedBytes << std::endl;
 
   return os;
 }

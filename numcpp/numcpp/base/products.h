@@ -30,7 +30,7 @@ template<class T, class U>
   dot(const Array<T>& A, const Array<U>& B)
 {
 
-  if(A.ndims() == 2 && B.ndims() == 1) // Array vector multiplication
+  if(A.ndims() == 2 && B.ndims() == 1) // Matrix vector multiplication
   {
     auto M = shape(A,0);
     auto N = shape(A,1);
@@ -49,7 +49,7 @@ template<class T, class U>
     return y;
   }
 
-  if(A.ndims() == 2 && B.ndims() == 2) // Array Array multiplication
+  if(A.ndims() == 2 && B.ndims() == 2) // Matrix Matrix multiplication
   {
       auto M = shape(A,0);
       auto N = shape(A,1);

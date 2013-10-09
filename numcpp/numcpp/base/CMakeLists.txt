@@ -13,6 +13,8 @@ add_custom_target(NumCppBase SOURCES
                   norms.h
                   diag.h
                   minMax.h
-                  base.cpp)
+                  base.cpp
+                  random.cpp
+                  initializers.cpp)
 
 

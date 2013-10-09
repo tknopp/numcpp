@@ -13,6 +13,8 @@ namespace numcpp
 @{
 */
 
+void reverse(std::vector<size_t>& shape);
+
 /*!
 Transpose the array \a x inplace.
 The transposition will internally only swap the strides of the array and is therefore a cheap operation.
@@ -20,7 +22,7 @@ The transposition will internally only swap the strides of the array and is ther
 template<class Array>
 Array& transpose_(Array& x)
 {
-  std::reverse(x.strides().begin(), x.strides().end());
+  reverse(x.strides());
   return x;
 }
 
@@ -34,7 +36,7 @@ template<class Array>
 Array transpose(const Array& x)
 {
   Array y = copy(x);
-  std::reverse(y.strides().begin(), y.strides().end());
+  reverse(y.strides());
   return y;
 }
 

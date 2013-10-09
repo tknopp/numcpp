@@ -1,5 +1,6 @@
 #include <Eigen/Core>
-#include <numcpp.h>
+#include <numcpp/core/utils.h>
+#include <numcpp/core/constants.h>
 
 using namespace numcpp;
 

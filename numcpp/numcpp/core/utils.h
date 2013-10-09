@@ -4,8 +4,6 @@
 #include <iostream>
 #include <initializer_list>
 #include <vector>
-#include <algorithm>
-#include <array>
 #include <chrono>
 
 namespace numcpp
@@ -29,25 +27,25 @@ typename Array::value_type prod(Array x)
   return prod;
 }
 
-template<class Array>
+/*template<class Array>
 Array removeOnes(Array x)
 {
   x.erase(std::remove(x.begin(), x.end(), 1), x.end());
   return x;
-}
+}*/
 
 std::vector<size_t> multiIndex(const size_t& index, const std::vector<size_t>& shape);
 
 size_t flatIndex(const std::vector<size_t>& index, const std::vector<size_t>& strides, size_t offset);
 
-template<int D>
+/*template<int D>
 size_t flatIndex(const std::array<size_t,D>& index, const std::vector<size_t>& strides, size_t offset)
 {
   for(size_t i=0; i<D; i++)
     offset += strides[i]*index[i];
 
   return offset;
-}
+}*/
 
 template<class T>
 void print(const T& x)

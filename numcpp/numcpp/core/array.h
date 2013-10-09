@@ -5,6 +5,8 @@
 #include "abstractexpression.h"
 #include "slice.h"
 
+#include <array>
+
 namespace numcpp
 {
 

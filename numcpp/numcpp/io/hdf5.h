@@ -1,9 +1,9 @@
 #ifndef NUMCPP_HDF5_H
 #define NUMCPP_HDF5_H
 
-#include <fstream>
-#include <iostream>
 #include <string>
+//#include <fstream>
+//#include <iostream>
 #include <hdf5.h>
 #include "../core.h"
 

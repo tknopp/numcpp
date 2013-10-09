@@ -1,6 +1,8 @@
 #ifndef NUMCPP_STREAM_H
 #define NUMCPP_STREAM_H
 
+#include <iosfwd>
+
 namespace numcpp
 {
 

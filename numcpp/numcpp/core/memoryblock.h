@@ -3,24 +3,19 @@
 
 #include <cstdlib>
 #include <iosfwd>
-#include <unordered_map>
-
-extern template class std::pair<char*,size_t*>;
-extern template class std::unordered_multimap<size_t, std::pair<char*,size_t*> >;
 
 namespace numcpp
 {
 
-class GlobalData
+class AbstractGlobalData
 {
 public:
-  size_t totalAllocatedBytes = 0;
-  size_t numAllocations = 0;
-  bool cachingEnabled_ = false;
-  std::unordered_multimap<size_t, std::pair<char*,size_t*>> cache_;
-
-  static GlobalData& GetInstance();
+  virtual size_t getTotalAllocatedBytes() = 0;
+  virtual bool getCachingEnabled() = 0;
+  virtual void setCachingEnabled(bool caching) = 0;
 };
+
+static AbstractGlobalData& GetGlobalData();
 
 class MemoryBlock
 {
@@ -48,17 +43,7 @@ private:
   size_t size = 0;
   size_t* refCount  = nullptr;
   bool ownData = false;
-
-  /*static size_t totalAllocatedBytes;
-
-  static bool cachingEnabled_;
-  static std::unordered_multimap<size_t, std::pair<char*,size_t*>> cache_;*/
 };
-
-/*size_t MemoryBlock::numAllocations = 0;
-size_t MemoryBlock::totalAllocatedBytes = 0;
-bool MemoryBlock::cachingEnabled_ = false;
-std::unordered_multimap<size_t, std::pair<char*,size_t*>> MemoryBlock::cache_;*/
 
 
 

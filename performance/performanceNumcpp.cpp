@@ -1,5 +1,6 @@
-#include <Eigen/Core>
-#include <numcpp.h>
+#include <numcpp/core.h>
+#include <numcpp/base.h>
+#include <numcpp/expressions.h>
 
 using namespace numcpp;
 

@@ -24,7 +24,7 @@ int main()
   export_image( tmp2, "CSIm.png");
 
   //auto indices = eval(range(0,N-1));
-  auto indices = rand<size_t>(N-1, M);
+  auto indices = randi<size_t>(N-1, M);
 
   SparseFFTArray<cdouble> F(indices,n,n);
 

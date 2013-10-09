@@ -1,4 +1,7 @@
 #include "coreFunc.h"
+#include <exception>
+#include <sstream>
+#include <stdexcept>
 
 namespace numcpp
 {

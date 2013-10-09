@@ -15,7 +15,7 @@ int main()
     Array<cdouble> x = zeros(N);
     for(auto i=0; i<M; i++)
     {
-      Array<cdouble> y = fft(eval(linspace(0,1,N)*i));
+      Array<cdouble> y = eval(linspace(0,1,N));//fft(eval(linspace(0,1,N)*i));
       x += i*exp(2*pi*I*i*y);
     }
 
@@ -32,7 +32,7 @@ int main()
     Array<cdouble> x = zeros(N);
     for(auto i=0; i<M; i++)
     {
-      Array<cdouble> y = fft(eval(linspace(0,1,N)*i));
+      Array<cdouble> y = eval(linspace(0,1,N));//fft(eval(linspace(0,1,N)*i));
       x += i*exp(2*pi*I*i*y);
     }
 
