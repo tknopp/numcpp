@@ -21,4 +21,18 @@ TEST_CASE( "numcpp/linalg/solve", "Solve test" )
     REQUIRE( norm( r - x ) < 1e-6  );
   }
 
+  {
+    size_t M = 3;
+    size_t N = 3;
+    auto A = array<cdouble>({1, 7, 3+I,
+                              9, 9, 4,
+                              1, 0, 4}, M, N);
+
+    Array<cdouble> x = ones(N)*I;
+    auto y = dot(A,x);
+    auto r = solve(A, y);
+
+    REQUIRE( norm( r - x ) < 1e-6  );
+  }
+
 }

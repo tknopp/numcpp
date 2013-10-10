@@ -7,6 +7,7 @@
 #include "numcpp/fft.h"
 #include "numcpp/graphics.h"
 #include "numcpp/io.h"
+#include "numcpp/interpolation.h"
 
 
 #endif

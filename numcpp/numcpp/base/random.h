@@ -34,7 +34,7 @@ Array<T> randn(A...args)
 template<class...A>
 DynTypeArray randn(Type type, A...args)
 {
-  return randn<T>(type, {(size_t)args...});
+  return randn(type, {(size_t)args...});
 }
 
 template<class T>
@@ -55,7 +55,7 @@ Array<T> rand(A...args)
 template<class...A>
 DynTypeArray rand(Type type, A...args)
 {
-  return rand<T>(type, {(size_t)args...});
+  return rand(type, {(size_t)args...});
 }
 
 template<class T>
@@ -83,15 +83,15 @@ Shuffle the array \a x inplace.
 DynTypeArray shuffle(const DynTypeArray& x);
 
 template<class T>
-Array<T>& shuffle_(Array<T>& x) 
-{ 
-  return (Array<T>&) shuffle_((DynTypeArray&) Array); 
+Array<T>& shuffle_(Array<T>& x)
+{
+  return (Array<T>&) shuffle_((DynTypeArray&) x);
 }
 
 template<class T>
 Array<T> shuffle(const Array<T>& x)
-{ 
-  return (Array<T>) shuffle_((const DynTypeArray&) Array); 
+{
+  return (Array<T>) shuffle_((DynTypeArray&) x);
 }
 
 

@@ -140,8 +140,8 @@ struct commonArithmeticType
 
 using std::ptrdiff_t;
 
-#define CONDITIONAL_TEMPLATE_FUNC(T,func,array) if(x.elemType() == dtype< T >()) func ((Array< T >&) array );
-#define CALL_TEMPLATE_FUNC_ALL_TYPES(func,array) \
+#define CONDITIONAL_TEMPLATE_FUNC(T,func,array) if(array.elemType() == dtype< T >()) func ((Array< T >&) array );
+#define CALL_TEMPLATE_FUNC_ALL_TYPES(func,array)\
   CONDITIONAL_TEMPLATE_FUNC(bool,func,array) \
   CONDITIONAL_TEMPLATE_FUNC(int,func,array) \
   CONDITIONAL_TEMPLATE_FUNC(unsigned int,func,array) \
@@ -150,17 +150,17 @@ using std::ptrdiff_t;
   CONDITIONAL_TEMPLATE_FUNC(float,func,array) \
   CONDITIONAL_TEMPLATE_FUNC(cfloat,func,array) \
   CONDITIONAL_TEMPLATE_FUNC(double,func,array) \
-  CONDITIONAL_TEMPLATE_FUNC(cdouble,func,array) \
-  
+  CONDITIONAL_TEMPLATE_FUNC(cdouble,func,array)
+
 #define CALL_TEMPLATE_FUNC_CFLOAT_TYPES(func,array) \
   CONDITIONAL_TEMPLATE_FUNC(float,func,array) \
   CONDITIONAL_TEMPLATE_FUNC(cfloat,func,array) \
   CONDITIONAL_TEMPLATE_FUNC(double,func,array) \
-  CONDITIONAL_TEMPLATE_FUNC(cdouble,func,array) \
-  
+  CONDITIONAL_TEMPLATE_FUNC(cdouble,func,array)
+
 #define CALL_TEMPLATE_FUNC_FLOAT_TYPES(func,array) \
   CONDITIONAL_TEMPLATE_FUNC(float,func,array) \
-  CONDITIONAL_TEMPLATE_FUNC(double,func,array) \     
+  CONDITIONAL_TEMPLATE_FUNC(double,func,array)
 
 /*! @} */
 

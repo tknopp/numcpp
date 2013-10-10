@@ -38,8 +38,8 @@ Array<T> randn(std::vector<size_t> shape)
 
 DynTypeArray randn(Type type, std::vector<size_t> shape)
 {
-  if(x.elemType() == dtype< float >()) return randn<float> ( shape );
-  if(x.elemType() == dtype< double >()) return randn<double> ( shape );
+  if(type == dtype< float >()) return randn<float> ( shape );
+  if(type == dtype< double >()) return randn<double> ( shape );
   throw std::invalid_argument("numcpp::randn: datatype not supprted!");
 }
 
@@ -66,8 +66,8 @@ Array<T> rand(std::vector<size_t> shape)
 
 DynTypeArray rand(Type type, std::vector<size_t> shape)
 {
-  if(x.elemType() == dtype< float >()) return rand<float> ( shape );
-  if(x.elemType() == dtype< double >()) return rand<double> ( shape );
+  if(type == dtype< float >()) return rand<float> ( shape );
+  if(type == dtype< double >()) return rand<double> ( shape );
   throw std::invalid_argument("numcpp::rand: datatype not supprted!");
 }
 

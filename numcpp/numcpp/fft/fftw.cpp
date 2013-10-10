@@ -1,4 +1,4 @@
-#include "fftw.h"
+#include "fft.h"
 #include <fftw3.h>
 
 namespace numcpp
