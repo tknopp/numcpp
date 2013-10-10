@@ -18,6 +18,7 @@ namespace numcpp
 
 template<class T>
 Array<T> randn(std::vector<size_t> shape);
+DynTypeArray randn(Type type, std::vector<size_t> shape);
 
 /*!
 Create a D dimensional random array of normally distributed values.
@@ -30,8 +31,15 @@ Array<T> randn(A...args)
   return randn<T>({(size_t)args...});
 }
 
+template<class...A>
+DynTypeArray randn(Type type, A...args)
+{
+  return randn<T>(type, {(size_t)args...});
+}
+
 template<class T>
 Array<T> rand(std::vector<size_t> shape);
+DynTypeArray rand(Type type, std::vector<size_t> shape);
 
 /*!
 Create a D dimensional random array of uniformly distributed values in the range [0,1).
@@ -42,6 +50,12 @@ template<class T, class...A>
 Array<T> rand(A...args)
 {
   return rand<T>({(size_t)args...});
+}
+
+template<class...A>
+DynTypeArray rand(Type type, A...args)
+{
+  return rand<T>(type, {(size_t)args...});
 }
 
 template<class T>
@@ -58,17 +72,27 @@ Array<T> randi(T max, A...args)
 
 /*!
 Shuffle the array \a x inplace.
-@see numcpp::shuffle
+@see numcpp::shuffle_
 */
-template<class T>
-Array<T>& shuffle_(Array<T>& x);
+DynTypeArray& shuffle_(DynTypeArray& x);
 
 /*!
 Shuffle the array \a x inplace.
-@see numcpp::shuffle_
+@see numcpp::shuffle
 */
+DynTypeArray shuffle(const DynTypeArray& x);
+
 template<class T>
-Array<T> shuffle(const Array<T>& x);
+Array<T>& shuffle_(Array<T>& x) 
+{ 
+  return (Array<T>&) shuffle_((DynTypeArray&) Array); 
+}
+
+template<class T>
+Array<T> shuffle(const Array<T>& x)
+{ 
+  return (Array<T>) shuffle_((const DynTypeArray&) Array); 
+}
 
 
 /*! @} */

@@ -1,4 +1,4 @@
-#include "fft/fftw.h"
+#include "fft/fft.h"
 #include "fft/nfft.h"
 
 /*!

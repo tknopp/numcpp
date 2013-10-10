@@ -1,4 +1,5 @@
 #include "nfft.h"
+#include "fft.h"
 #include "../core.h"
 #include "../base.h"
 

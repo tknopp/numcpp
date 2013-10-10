@@ -36,10 +36,12 @@ Array<T> randn(std::vector<size_t> shape)
   return x;
 }
 
-template Array<double> randn(std::vector<size_t> shape);
-//template Array<cdouble> randn(std::vector<size_t> shape);
-template Array<float> randn(std::vector<size_t> shape);
-//template Array<cfloat> randn(std::vector<size_t> shape);
+DynTypeArray randn(Type type, std::vector<size_t> shape)
+{
+  if(x.elemType() == dtype< float >()) return randn<float> ( shape );
+  if(x.elemType() == dtype< double >()) return randn<double> ( shape );
+  throw std::invalid_argument("numcpp::randn: datatype not supprted!");
+}
 
 /*!
 Create a D dimensional random array of uniformly distributed values in the range [0,1).
@@ -62,10 +64,12 @@ Array<T> rand(std::vector<size_t> shape)
   return x;
 }
 
-template Array<double> rand(std::vector<size_t> shape);
-//template Array<cdouble> rand(std::vector<size_t> shape);
-template Array<float> rand(std::vector<size_t> shape);
-//template Array<cfloat> rand(std::vector<size_t> shape);
+DynTypeArray rand(Type type, std::vector<size_t> shape)
+{
+  if(x.elemType() == dtype< float >()) return rand<float> ( shape );
+  if(x.elemType() == dtype< double >()) return rand<double> ( shape );
+  throw std::invalid_argument("numcpp::rand: datatype not supprted!");
+}
 
 /*!
 Create a D dimensional random integer array of uniformly distributed values between 0 and max.
@@ -92,34 +96,23 @@ template Array<unsigned int> randi(unsigned int max, std::vector<size_t> shape);
 template Array<unsigned long> randi(unsigned long max, std::vector<size_t> shape);
 
 template<class T>
-Array<T>& shuffle_(Array<T>& x)
+Array<T>& internal_shuffle_(Array<T>& x)
 {
   // obtain a time-based seed:
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-
-  // TODO use proper iterators!!!
-  //shuffle (x.data(), x.data()+x.size(), std::default_random_engine(seed));
   std::random_shuffle ((T*)x.data(),((T*)x.data())+x.size() );
   return x;
 }
 
-template Array<float>& shuffle_(Array<float>& x);
-template Array<double>& shuffle_(Array<double>& x);
-template Array<cfloat>& shuffle_(Array<cfloat>& x);
-template Array<cdouble>& shuffle_(Array<cdouble>& x);
-template Array<int>& shuffle_(Array<int>& x);
-
-template<class T>
-Array<T> shuffle(const Array<T>& x)
+DynTypeArray& shuffle_(DynTypeArray& x)
 {
- auto y = copy(x);
- return shuffle_(y);
+  CALL_TEMPLATE_FUNC_ALL_TYPES(return internal_shuffle_,x)
 }
 
-template Array<float> shuffle(const Array<float>& x);
-template Array<double> shuffle(const Array<double>& x);
-template Array<cfloat> shuffle(const Array<cfloat>& x);
-template Array<cdouble> shuffle(const Array<cdouble>& x);
-template Array<int> shuffle(const Array<int>& x);
+DynTypeArray shuffle(const DynTypeArray& x)
+{
+  auto y = copy(x);
+  return shuffle_(y);
+}
 
 }

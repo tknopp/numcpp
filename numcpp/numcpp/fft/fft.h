@@ -1,5 +1,5 @@
-#ifndef NUMCPP_FFTW_H
-#define NUMCPP_FFTW_H
+#ifndef NUMCPP_FFT_H
+#define NUMCPP_FFT_H
 
 #include <utility>
 #include "../core.h"
