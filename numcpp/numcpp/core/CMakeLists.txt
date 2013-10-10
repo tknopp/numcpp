@@ -9,7 +9,6 @@ add_custom_target(NumCppCore SOURCES
                   dyntypearray.cpp
                   memoryblock.h
                   memoryblock.cpp
-                  stream.h
                   coreFunc.h
                   coreFunc.cpp
                   abstractexpression.h

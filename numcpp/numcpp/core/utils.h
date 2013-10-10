@@ -38,15 +38,6 @@ std::vector<size_t> multiIndex(const size_t& index, const std::vector<size_t>& s
 
 size_t flatIndex(const std::vector<size_t>& index, const std::vector<size_t>& strides, size_t offset);
 
-/*template<int D>
-size_t flatIndex(const std::array<size_t,D>& index, const std::vector<size_t>& strides, size_t offset)
-{
-  for(size_t i=0; i<D; i++)
-    offset += strides[i]*index[i];
-
-  return offset;
-}*/
-
 template<class T>
 void print(const T& x)
 {
