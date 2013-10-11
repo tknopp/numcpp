@@ -60,23 +60,23 @@ public:
   size_t sparseSize() const
   {
     return getSelf().sparseSize();
-  }    
-  
+  }
+
   size_t index(size_t n) const
   {
     return getSelf().index(n);
   }
 
-  T& data(size_t n)
+/*  T& data(size_t n)
   {
     return getSelf().data(n);
-  }
-  
+  }*/
+
   T data(size_t n) const
   {
     return getSelf().data(n);
-  }   
-  
+  }
+
 protected:
   Derived & getSelf() { return *static_cast<Derived *>(this); }
   Derived const & getSelf() const { return *static_cast<Derived const *>(this); }

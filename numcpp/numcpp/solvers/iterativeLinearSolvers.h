@@ -13,10 +13,10 @@ namespace numcpp
 @{
 */
 
-template<class T>
-Array<double> rowEnergy(Array<T> A)
+template<class Arr>
+Array<double> rowEnergy(Arr A)
 {
-  size_t M = shape(A,1);
+  size_t M = A.shape()[1];
   Array<double> energy = zeros(M);
 
   for(size_t m=0; m<M; m++)

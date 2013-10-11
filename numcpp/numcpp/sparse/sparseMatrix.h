@@ -110,7 +110,7 @@ public:
       throw std::exception();
     Array<T> rowData = data_( S{ptr_(m), ptr_(m+1)} );
     Array<size_t> rowIdx = index_( S{ptr_(m), ptr_(m+1)} );
-    return SparseVector<T>(rowData, rowIdx, NCols(m));
+    return SparseVector<T>(rowData, rowIdx, shape_[1]);
   }
 
 private:

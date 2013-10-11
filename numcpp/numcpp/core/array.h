@@ -171,9 +171,12 @@ public:
   Array& operator= (const AbstractSparseExpression<U,V>& rhs)
   {
     if(size() != rhs.size())
-      throw std::invalid_argument("Size of expressions does not fit!")
+    {
+      std::cout << "Size of expressions does not fit! " << size() << " " << rhs.size() << std::endl;
+      throw std::invalid_argument("Size of expressions does not fit!");
+    }
 
-    size_t count = size();
+    operator=(0);
 
     #ifdef _OPENMP
     #pragma omp parallel for
@@ -183,14 +186,15 @@ public:
 
     return *this;
   }
-  
+
   template <class U, class V>
   Array& operator+= (const AbstractSparseExpression<U,V>& rhs)
   {
     if(size() != rhs.size())
-      throw std::invalid_argument("Size of expressions does not fit!")
-
-    size_t count = size();
+    {
+      std::cout << "Size of expressions does not fit! " << size() << " " << rhs.size() << std::endl;
+      throw std::invalid_argument("Size of expressions does not fit!");
+    }
 
     #ifdef _OPENMP
     #pragma omp parallel for
@@ -199,9 +203,9 @@ public:
       operator[](rhs.index(i)) += rhs.data(i);
 
     return *this;
-  } 
-  
-  
+  }
+
+
   Array& operator=(const T& rhs)
   {
     size_t count = size();

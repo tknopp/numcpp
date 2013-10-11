@@ -21,8 +21,8 @@ namespace numcpp
 /*!
 Sum over all elements of \a x.
 */
-template<class Array>
-typename Array::value_type sum(const Array& x)
+template<class T, class U>
+T sum(const AbstractArrayExpression<T, U>& x)
 {
   auto y = x[0];
   for(size_t i=1; i<x.size(); i++)

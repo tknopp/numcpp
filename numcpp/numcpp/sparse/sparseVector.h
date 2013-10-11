@@ -17,24 +17,24 @@ namespace numcpp
 Sparse vector class
 */
 template<class T>
-class SparseVector : public AbstractArrayExpression<T,SparseVector<T>>
+class SparseVector : public AbstractSparseExpression<T,SparseVector<T>>
 {
 public:
 
   SparseVector(const SparseVector& rhs)
-    : shape_(rhs.shape_)
-    , data_(rhs.data_)
+    : data_(rhs.data_)
     , index_(rhs.index_)
+    , size_(rhs.size_)
   {
   }
 
   SparseVector(const Array<T>& data, const Array<size_t>& index, size_t N)
-    : shape_({N})
-    , data_(data)
+    : data_(data)
     , index_(index)
+    , size_(N)
   {
   }
-  
+
   size_t size() const
   {
     return size_;
@@ -43,7 +43,7 @@ public:
   size_t sparseSize() const
   {
     return index_.size();
-  }  
+  }
 
   size_t index(size_t n) const
   {
@@ -78,10 +78,10 @@ private:
 
 
 template<class T, class V>
-T sum(const AbstractSparseExpression<T,V>& x)
+typename AbstractSparseExpression<T,V>::value_type sum(const AbstractSparseExpression<T,V>& x)
 {
-  T res = 0;
-  for(size_t n=0; n < x.sparseSize(); n++)
+  auto res = x.data(0);
+  for(size_t n=1; n < x.sparseSize(); n++)
   {
     res += x.data(n);
   }
@@ -144,6 +144,54 @@ VECTORIZE_SPARSE(conj,conj)
 
 
 #define _DEFINE_NUMCPP_BINARY_OPERATOR(OP,OP_NAME)             \
+template <class Op1, class Op2> \
+class SparseArray_array_left ## OP_NAME : public  AbstractSparseExpression<decltype(std::declval<typename Op1::value_type>() OP std::declval< typename Op2::value_type>() ), SparseArray_array_left ## OP_NAME <Op1,Op2>   > \
+{ \
+public: \
+  typedef decltype(std::declval<typename Op1::value_type>() OP std::declval< typename Op2::value_type>() ) value_type; \
+  SparseArray_array_left ## OP_NAME (const Op1& a, const Op2& b) \
+    : op1_(a), op2_(b) { } \
+  \
+  size_t index(size_t i) const \
+  { \
+    return op2_.index(i); \
+  } \
+  \
+  value_type data(size_t i) const \
+  { \
+    return op2_.data(i) OP op1_[op2_.index(i)]; \
+  } \
+  \
+  size_t size() const\
+  { \
+    return op2_.size(); \
+  } \
+  \
+  size_t sparseSize() const\
+  { \
+    return op2_.sparseSize(); \
+  } \
+public: \
+    const Op1& op1_; \
+    const Op2& op2_; \
+}; \
+\
+template <class T, class U, class Lhs, class Rhs> \
+auto operator OP \
+    (const AbstractArrayExpression<T, Lhs>& lhs, const AbstractSparseExpression<U, Rhs>& rhs) \
+    -> SparseArray_array_left ## OP_NAME < AbstractArrayExpression<T, Lhs>, AbstractSparseExpression<U, Rhs> > \
+{ \
+    return SparseArray_array_left ## OP_NAME < AbstractArrayExpression<T, Lhs>, AbstractSparseExpression<U, Rhs> > (lhs, rhs); \
+} \
+\
+template <class T, class U, class Lhs, class Rhs> \
+auto operator OP \
+    (const AbstractSparseExpression<T, Lhs>& lhs, const AbstractArrayExpression<U, Rhs>& rhs) \
+    -> SparseArray_array_left ## OP_NAME < AbstractArrayExpression<U, Rhs>, AbstractSparseExpression<T, Lhs> > \
+{ \
+    return SparseArray_array_left ## OP_NAME < AbstractArrayExpression<U, Rhs>, AbstractSparseExpression<T, Lhs> > (rhs,lhs); \
+} \
+\
 template <class Op1, class Op2> \
 class SparseArray_scalar_left_ ## OP_NAME : public  AbstractSparseExpression<decltype(std::declval<Op1>() OP std::declval< typename Op2::value_type>() ), SparseArray_scalar_left_ ## OP_NAME <Op1,Op2>   > \
 { \
