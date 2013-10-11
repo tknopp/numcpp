@@ -59,7 +59,6 @@ auto kaczmarz(Matrix A, Array<U> b, int iterations, double lambda = 0,
       }
     }
 
-
     if(enforceReal)
       x = real(x);
 

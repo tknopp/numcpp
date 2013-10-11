@@ -91,6 +91,45 @@ template <class T, class Op> \
     return Array_ ## funcName ## _ ## argType < AbstractArrayExpression<T, Op> > (value, arg); \
 }
 
+#define VECTORIZE_SPARSE(func,funcName) \
+template <class Op> \
+class SparseArray_ ## funcName : public AbstractSparseExpression<decltype(func(std::declval< typename Op::value_type >())), SparseArray_ ## funcName <Op>  > \
+{ \
+public: \
+  typedef decltype(func(std::declval< typename Op::value_type >())) value_type; \
+  SparseArray_ ## funcName(const Op& a) \
+  : op_(a) \
+  { } \
+  \
+  size_t index(size_t i) const \
+  { \
+    return op_.index(i); \
+  } \
+  \
+  value_type data(size_t i) const \
+  { \
+    return func (op_.data(i)); \
+  } \
+  \
+  size_t size() const\
+  { \
+    return op_.size(); \
+  } \
+  \
+  size_t sparseSize() const\
+  { \
+    return op_.sparseSize(); \
+  } \
+private: \
+    const Op& op_; \
+}; \
+\
+template <class T, class Op> \
+ SparseArray_ ## funcName < AbstractSparseExpression<T, Op> > \
+   funcName ( const AbstractSparseExpression<T, Op>& value) \
+{ \
+    return SparseArray_ ## funcName < AbstractSparseExpression<T, Op> > (value); \
+}
 
 
 

@@ -57,21 +57,26 @@ public:
     return getSelf().size();
   }
 
-  const std::vector<size_t>& shape() const
+  size_t sparseSize() const
   {
-    return getSelf().shape();
+    return getSelf().sparseSize();
+  }    
+  
+  size_t index(size_t n) const
+  {
+    return getSelf().index(n);
   }
 
-  T& operator[](size_t index)
+  T& data(size_t n)
   {
-    return getSelf()[index];
+    return getSelf().data(n);
   }
-
-  T operator[](size_t index) const
+  
+  T data(size_t n) const
   {
-    return getSelf()[index];
-  }
-
+    return getSelf().data(n);
+  }   
+  
 protected:
   Derived & getSelf() { return *static_cast<Derived *>(this); }
   Derived const & getSelf() const { return *static_cast<Derived const *>(this); }
