@@ -7,3 +7,4 @@
 #include "wavelet/wavelet.cpp"
 #include "linalg/linalg.cpp"
 #include "interpolation/interpolation.cpp"
+#include "tomography/tomography.cpp"

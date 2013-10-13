@@ -205,6 +205,23 @@ public:
     return *this;
   }
 
+  template <class U, class V>
+  Array& operator-= (const AbstractSparseExpression<U,V>& rhs)
+  {
+    if(size() != rhs.size())
+    {
+      std::cout << "Size of expressions does not fit! " << size() << " " << rhs.size() << std::endl;
+      throw std::invalid_argument("Size of expressions does not fit!");
+    }
+
+    #ifdef _OPENMP
+    #pragma omp parallel for
+    #endif
+    for (size_t i = 0; i < rhs.sparseSize(); ++i)
+      operator[](rhs.index(i)) -= rhs.data(i);
+
+    return *this;
+  }
 
   Array& operator=(const T& rhs)
   {

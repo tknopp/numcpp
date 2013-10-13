@@ -53,3 +53,15 @@ TEST_CASE( "numcpp/base/shuffle", "Shuffle test" )
 
 }
 
+TEST_CASE( "numcpp/base/sort", "Sort test" )
+{
+
+  {
+    auto x = array<int>({4,2,9,3});
+    auto y = argsort(x);
+
+    print(y);
+  }
+
+}
+

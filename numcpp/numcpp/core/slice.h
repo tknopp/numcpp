@@ -18,7 +18,8 @@ struct Slice
   Slice(int index);
   Slice(unsigned int index);
   Slice(const Slice& slice);
-  Slice(std::initializer_list<long> list);
+  template<class T>
+  Slice(std::initializer_list<T> list);
 
   long start;
   long end;

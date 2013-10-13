@@ -34,16 +34,17 @@ Array<T> fromfile(std::string filename, long count=-1, std::string sep="")
       size = count;
     }
 
-    Array<T> x({size});
+    Array<T> x(size);
 
     file.seekg (0, std::ios::beg);
-    file.read (x.data(), sizebytes);
+    file.read ((char*)x.data(), sizebytes);
     file.close();
 
     return x;
   }
 }
 
+size_t filesize(std::string filename);
 
 template<class T>
 void tofile(Array<T> x, std::string filename, std::string sep="")
@@ -61,6 +62,79 @@ void tofile(Array<T> x, std::string filename, std::string sep="")
     file.close();
   }
 }
+
+template<class T>
+Array<T> loadMatrix(std::string filename, size_t nrCols, std::vector<size_t> rowIndices={}, ptrdiff_t rowIncrement=-1)
+{
+  size_t sizeBytes = filesize(filename);
+  size_t size = sizeBytes / sizeof(T);
+  //fd = open(filename,'rb')
+
+  if(rowIndices.size() == 0 && rowIncrement <= 0)
+  {
+    size_t nrRows = size / nrCols;
+    return reshape(fromfile<T>(filename, size), nrRows,nrCols);
+  } else {
+
+  /*  if(rowIndices.size() == 0)
+      rowIndices = range(0, size / rowIncrement)
+    if rowIncrement <= 0:
+      rowIncrement = nrCols
+
+    nrRows = len(rowIndices)
+
+    matrix = np.zeros((nrRows, nrCols), dtype=dtype)
+    for l in xrange(nrRows):
+      fd.seek(rowIndices[l]*itemsize*rowIncrement)
+      matrix[l,:] = np.fromfile(fd, dtype=dtype, count=nrCols)
+
+  fd.close()
+  return matrix*/
+
+  }
+}
+
+/*
+
+import numpy as np
+import scipy as sp
+import logging
+from fileSize import *
+
+
+def loadMatrix(filename, dtype=np.double, nrCols=1, rowIndices=(), rowIncrement=-1 ):
+  fd = open(filename,'rb')
+  sizeBytes = fileSize(fd)
+  itemsize = np.dtype(dtype).itemsize
+  size = sizeBytes / itemsize
+
+  if len(rowIndices) == 0 and rowIncrement <= 0:
+    nrRows = size / nrCols
+    matrix = np.fromfile(fd, dtype=dtype, count=size).reshape((nrRows,nrCols))
+  else:
+
+    if len(rowIndices) == 0:
+      rowIndices = range(0, size / rowIncrement)
+    if rowIncrement <= 0:
+      rowIncrement = nrCols
+
+    nrRows = len(rowIndices)
+
+    matrix = np.zeros((nrRows, nrCols), dtype=dtype)
+    for l in xrange(nrRows):
+      fd.seek(rowIndices[l]*itemsize*rowIncrement)
+      matrix[l,:] = np.fromfile(fd, dtype=dtype, count=nrCols)
+
+  fd.close()
+  return matrix
+
+if __name__ == "__main__":
+  import doctest
+  doctest.testmod()
+
+
+
+*/
 
 /*! @} */
 

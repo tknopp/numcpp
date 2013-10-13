@@ -119,7 +119,7 @@ Array<T> rot180(const Array<T>& A)
 Reverse a vector inplace.
 */
 template<class T>
-Array<T> reverse_(Array<T>& x)
+Array<T>& reverse_(Array<T>& x)
 {
     size_t N = shape(x,0);
     size_t j = N-1;
@@ -146,7 +146,7 @@ Array<T> reverse(const Array<T>& x)
 Reverse the elements of an array x along axis \a d (inplace).
 */
 template<class T>
-Array<T> flipdim_(Array<T>& x, size_t axis)
+Array<T>& flipdim_(Array<T>& x, size_t axis)
 {
   T tmp;
   std::vector<size_t> shape_;

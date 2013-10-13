@@ -21,3 +21,6 @@ target_link_libraries (example07 ${NUMCPP_LIBS})
 
 add_executable (example08 example08.cpp)
 target_link_libraries (example08 ${NUMCPP_LIBS})
+
+add_executable (mpiReco mpiReco.cpp)
+target_link_libraries (mpiReco ${NUMCPP_LIBS})

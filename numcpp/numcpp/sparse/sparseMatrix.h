@@ -107,7 +107,7 @@ public:
   SparseVector<T> operator()(size_t m, Slice col) const
   {
     if((col.end != full.end) || (col.start != full.start) || (col.step != full.step))
-      throw std::exception();
+      throw std::invalid_argument("SparseMatrix allows only full slicing!");
     Array<T> rowData = data_( S{ptr_(m), ptr_(m+1)} );
     Array<size_t> rowIdx = index_( S{ptr_(m), ptr_(m+1)} );
     return SparseVector<T>(rowData, rowIdx, shape_[1]);

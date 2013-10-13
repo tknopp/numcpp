@@ -3,7 +3,8 @@ add_custom_target(NumCppFFT SOURCES
                   fft.h
                   fftpack.c
                   fftpack.h
-                  fftw.cpp
+                  fftpack_wrapper.cpp
+                  fftw_wrapper.cpp
                   nfft.h
                   nfft.cpp
                   extern.h)

@@ -15,6 +15,8 @@ add_custom_target(NumCppBase SOURCES
                   minMax.h
                   base.cpp
                   random.cpp
-                  initializers.cpp)
+                  initializers.cpp
+                  sort.h
+                  sort.cpp)
 
 

@@ -2,7 +2,7 @@ project (NUMCPP CXX)
 
 cmake_minimum_required(VERSION 2.8)
 
-SET(CMAKE_BUILD_TYPE DEBUG)
+SET(CMAKE_BUILD_TYPE RELEASE)
 
 SET(NUMCPP_LIBS fftw3 fftw3f m blas lapack clapack hdf5 cairo numcpp)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++0x -O3 -msse2  -ffast-math -fomit-frame-pointer -fPIC -fstrict-aliasing -march=core2 -mtune=core2" ) # -fopenmp -ftree-vectorizer-verbose=5

@@ -58,27 +58,32 @@ Slice::Slice(const Slice& slice)
 
 }
 
-Slice::Slice(std::initializer_list<long> list)
+template<class T>
+Slice::Slice(std::initializer_list<T> list)
 {
     auto it = list.begin();
 
     if(list.size() == 1)
     {
-        start = *it;
+        start = (long)*it;
         end = start+1;
         step = 1;
     } else if(list.size() == 2)
     {
-        start = *it++;
-        end = *it;
+        start = (long)*it++;
+        end = (long)*it;
         step = 1;
     } else
     {
-        start = *it++;
-        end = *it++;
-        step = *it;
+        start = (long)*it++;
+        end = (long)*it++;
+        step = (long)*it;
     }
 }
+template Slice::Slice(std::initializer_list<int> list);
+template Slice::Slice(std::initializer_list<long> list);
+template Slice::Slice(std::initializer_list<unsigned int> list);
+template Slice::Slice(std::initializer_list<unsigned long> list);
 
 std::vector<Slice> convertToSliceArray(std::initializer_list<Slice> slices)
 {

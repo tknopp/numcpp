@@ -201,6 +201,13 @@ using std::ptrdiff_t;
   CONDITIONAL_TEMPLATE_FUNC(float,func,array) \
   CONDITIONAL_TEMPLATE_FUNC(double,func,array)
 
+#define CALL_TEMPLATE_FUNC_INT_TYPES(func,array)\
+  CONDITIONAL_TEMPLATE_FUNC(bool,func,array) \
+  CONDITIONAL_TEMPLATE_FUNC(int,func,array) \
+  CONDITIONAL_TEMPLATE_FUNC(unsigned int,func,array) \
+  CONDITIONAL_TEMPLATE_FUNC(long,func,array) \
+  CONDITIONAL_TEMPLATE_FUNC(unsigned long,func,array)
+
 /*! @} */
 
 }

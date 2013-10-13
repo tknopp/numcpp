@@ -13,7 +13,6 @@ internal_fft_ (Array< std::complex<double> >& x, int dir)
 
   for(int d=0; d<x.ndims(); d++)
     shape_[d] = shape(x,d);
-  //std::copy(std::begin(x.shape()), std::end(x.shape()), std::begin(shape));
 
   fftw_complex *out = (fftw_complex*) x.data();
   fftw_complex *in = out;
@@ -37,7 +36,6 @@ internal_fft_ (Array< std::complex<float> >& x, int dir)
 
   for(int d=0; d<x.ndims(); d++)
     shape_[d] = shape(x,d);
-  //std::copy(std::begin(x.shape()), std::end(x.shape()), std::begin(shape));
 
   fftwf_complex *out = (fftwf_complex*) x.data();
   fftwf_complex *in = out;

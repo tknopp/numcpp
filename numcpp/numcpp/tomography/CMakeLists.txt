@@ -1,3 +1,5 @@
 add_custom_target(NumCppTomography SOURCES
                   radon.h
-                  mri.h)
+                  radon.cpp
+                  mri.h
+                  tomography.cpp)
