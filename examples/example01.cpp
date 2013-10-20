@@ -1,10 +1,15 @@
-#include <numcpp.h>
+#include <numcpp/core.h>
+#include <numcpp/base.h>
+#include <numcpp/fft.h>
+#include <numcpp/expressions.h>
 using namespace numcpp;
 
 int main()
 {
-  Array<double> x = ones(16);
-  auto y = fft(x);
+  Array<double> y = 2*ones(16);
+
+  y += pow(y, 2);
+  //auto y = fft(x);
   auto z = reshape(y,4,4);
 
   print(z);

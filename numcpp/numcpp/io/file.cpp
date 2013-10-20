@@ -1,4 +1,5 @@
 #include "file.h"
+#include "../core.h"
 
 namespace numcpp
 {

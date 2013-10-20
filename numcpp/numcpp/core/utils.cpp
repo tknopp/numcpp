@@ -8,7 +8,7 @@ std::vector<size_t> multiIndex(const size_t& index, const std::vector<size_t>& s
   std::vector<size_t> multIdx(shape.size());
   std::ptrdiff_t remaining = index;
 
-  for(int i=shape.size()-1; i>=0; i--)
+  for(ptrdiff_t i=shape.size()-1; i>=0; i--)
   {
     multIdx[i] = remaining % shape[i];
     remaining -= multIdx[i];

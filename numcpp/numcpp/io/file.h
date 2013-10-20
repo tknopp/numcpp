@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include "../core.h"
 
 namespace numcpp
 {

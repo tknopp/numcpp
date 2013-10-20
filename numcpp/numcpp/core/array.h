@@ -305,7 +305,7 @@ public:
 
   T& operator[](size_t index)
   {
-    if(__builtin_expect(!!(isContiguous_), 1))
+    if(isContiguous_)
       return data()[index];
     else
       return operator[](multiIndex(index,shape_));
@@ -313,7 +313,7 @@ public:
 
   T operator[](size_t index) const
   {
-    if(__builtin_expect(!!(isContiguous_), 1))
+    if(isContiguous_)
       return data()[index];
     else
       return operator[](multiIndex(index,shape_));

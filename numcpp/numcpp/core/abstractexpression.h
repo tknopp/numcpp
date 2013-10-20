@@ -1,6 +1,8 @@
 #ifndef NUMCPP_ABSTRACT_EXPRESSION_H
 #define NUMCPP_ABSTRACT_EXPRESSION_H
 
+#include <vector>
+
 /// NumCpp Namspace
 namespace numcpp
 {

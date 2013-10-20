@@ -1,6 +1,7 @@
 #include "memoryblock.h"
 #include <cstdlib>
 #include <unordered_map>
+#include <iostream>
 
 namespace numcpp
 {

@@ -94,7 +94,8 @@ inline ConstantArray<int> zeros(const std::vector<size_t>& shape)
 template<class...A>
 ConstantArray<int> zeros(A...args)
 {
-  return ConstantArray<int> (0, {((size_t)args)...});
+	std::vector<size_t> shape = { ((size_t)args)... };
+	return ConstantArray<int>(0, shape);
 }
 
 /// Return an constant array containing only ones as values.
@@ -109,7 +110,8 @@ ConstantArray<int> ones(std::vector<Int> shape)
 template<class...A>
 ConstantArray<int> ones(A...args)
 {
-  return ConstantArray<int> (1, {((size_t)args)...});
+	std::vector<size_t> shape = { ((size_t)args)... };
+	return ConstantArray<int>(1, shape);
 }
 
 /// Return a vector containing linear spaced values.

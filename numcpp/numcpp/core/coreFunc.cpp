@@ -16,7 +16,7 @@ size_t shape(const DynTypeArray& x, int d)
   return x.shape(d);
 }
 
-int size(const DynTypeArray& x)
+size_t size(const DynTypeArray& x)
 {
   return x.size();
 }

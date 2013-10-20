@@ -26,11 +26,13 @@ struct Slice
   long step;
 };
 
+//const long end = -1;
+const Slice full = { 0, -1, 1 };
 
 using slice = Slice;
 using S = Slice;
-const long end = -1;
-const Slice full = {0,end,1};
+
+
 
 std::vector<Slice> convertToSliceArray(std::initializer_list<Slice> slices);
 
@@ -106,10 +108,10 @@ struct isSlicedArray
   static const bool value = countSlices<Args...>::value != 0 && countArrays<Args...>::value == 0;
 };
 
-template<typename... Args>
+/*template<typename... Args>
 struct isNonRegArray
 { static const bool value = countArrays<Args...>::value != 0;};
-
+*/
 template<typename... Args>
 struct isElementAccess
 { static const bool value = countInts<Args...>::value == sizeof...(Args);};

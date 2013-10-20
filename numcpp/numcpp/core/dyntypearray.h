@@ -41,7 +41,7 @@ public:
 
   Type elemType() const { return elemType_; }
   int elemSize() const { return elemSize_; }
-  int ndims() const { return shape_.size(); }
+  int ndims() const { return (int) shape_.size(); }
   size_t shape(int d) const { return shape_[d]; }
   const std::vector<size_t>& shape() const { return shape_; }
   size_t strides(int d) const { return strides_[d]; }

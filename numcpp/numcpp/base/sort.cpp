@@ -1,6 +1,7 @@
+#include <algorithm>
 #include "sort.h"
 #include "../core.h"
-#include <algorithm>
+#include "initializers.h"
 
 namespace numcpp
 {
@@ -9,6 +10,7 @@ template<class T>
 Array<T>& sort_(Array<T>& x)
 {
   std::sort(x.data(), x.data()+x.size());
+  return x;
 }
 
 DynTypeArray& sort_(DynTypeArray& x)

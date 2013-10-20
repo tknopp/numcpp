@@ -2,6 +2,8 @@
 #define NUMCPP_CONSTANTS_H
 
 #include <complex>
+#define _USE_MATH_DEFINES
+#include <math.h> 
 
 namespace numcpp
 {

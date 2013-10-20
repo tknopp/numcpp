@@ -3,6 +3,7 @@
 
 #include "defines.h"
 #include "abstractexpression.h"
+#include "dyntypearray.h"
 
 namespace numcpp
 {
@@ -27,7 +28,7 @@ size_t shape(const DynTypeArray& x, int d);
 /*!
 Total number of elements of the array \a x.
 */
-int size(const DynTypeArray& x);
+size_t size(const DynTypeArray& x);
 
 /*!
 Create a similar array to \a x that has the same type, dimension and shape.

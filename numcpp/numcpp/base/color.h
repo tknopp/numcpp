@@ -2,7 +2,7 @@
 #define NUMCPP_COLOR_H
 
 #include "../core.h"
-#include <unistd.h>
+#include <cstdint>
 #include <initializer_list>
 
 namespace numcpp
