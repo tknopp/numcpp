@@ -2,30 +2,81 @@
 #include <numcpp/base.h>
 #include <numcpp/expressions.h>
 #include <numcpp/io.h>
+#include <numcpp/solvers.h>
+#include <numcpp/fft.h>
+#include <numcpp/graphics.h>
 
 using namespace numcpp;
 
 int main(int argc, char* argv[])
 {
-  std::string filenameSF = argv[1];
+  std::string filenameMatrix = argv[1];
   std::string filenameSNR = argv[2];
   std::string filenameMeasurements = argv[3];
   std::string filenameReco = argv[4];
+  double lambda = 5e-3;
+  std::vector<size_t> shape = {68, 40};
+
+  auto N = 68*40;//prod(shape);
+  int nrUsedRows = 1400;
+  int nrRecChan = 2;
+
 
 
   auto SNR = fromfile<double>(filenameSNR);
 
-  std::vector<size_t> shape = {64, 40};
-
   auto K = SNR.size();
-  auto N = prod(shape);
-  int nrUsedRows = 100;
 
   auto tmp = argsort(SNR);
-  flipud_(tmp);
+  reverse_(tmp);
   auto rowIndices = tmp(S{0,nrUsedRows});
   sort_(rowIndices);
+  auto A = loadMatrix<cdouble>(filenameMatrix, N, rowIndices);
 
+  if(lambda > 0)
+  {
+    auto energy = rowEnergy(A);
+    double trace = pow(norm(energy),2);
+    lambda *= trace / N;
+  }
+
+
+
+  auto sizeBytes = filesize(filenameMeasurements);
+  int itemsize = sizeof(int16_t);
+  auto size = sizeBytes / itemsize;
+  auto M = ((K / nrRecChan)-1)*2;
+  auto nrFrames = size / M / nrRecChan;
+
+  std::ifstream fdIn(filenameMeasurements, std::ios::in|std::ios::binary);
+  std::ofstream fdOut(filenameReco, std::ios::out|std::ios::binary|std::ios::trunc);
+
+  for(int l=0; l<nrFrames; l++)
+  {
+    std::cout << "denseRecoMPI: frame=" << l << std::endl;
+
+    Array<cdouble> bHatFull(K);
+    for(int r=0; r<nrRecChan; r++)
+    {
+      Array<double> inducedSignal = fromfile<int16_t>(fdIn, M);
+      bHatFull(S{r*K/nrRecChan,(r+1)*K/nrRecChan}) = rfft(inducedSignal);
+    }
+
+    Array<cdouble> bHat(nrUsedRows);
+    for(int k=0; k<nrUsedRows; k++)
+      bHat(k) = bHat(rowIndices(k));
+
+    auto x = kaczmarz(A, bHat, 10, lambda);
+
+    Array<double> xR = abs(reshape(x,40,68));
+    export_image(xR , "reco.png");
+
+    tofile(x,fdOut);
+
+  }
+
+  fdIn.close();
+  fdOut.close();
 
   return 0;
 }

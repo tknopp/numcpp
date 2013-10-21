@@ -21,7 +21,7 @@ typedef std::complex<float> cfloat;
 /// Enum describing the type that is used in numcpp
 enum class Type
 {
-    Bool, Int, UInt, Long, ULong, Float, Double, CFloat, CDouble, Unknown
+    Bool, Short, Int, UInt, Long, ULong, Float, Double, CFloat, CDouble, Unknown
 };
 
 /// Convert a c++ type to the numcpp Type enum

@@ -56,6 +56,31 @@ TEST_CASE( "numcpp/fft/fft", "FFT test" )
 
 }
 
+TEST_CASE( "numcpp/fft/rfft", "RFFT test" )
+{
+
+  {
+    size_t N = 8;
+    Array<double> x = range(0,N);
+
+    auto y = rfft(x);
+    auto z = irfft(y);
+
+    REQUIRE( norm(x - z) < 1e-6 );
+  }
+
+  {
+    size_t N = 8;
+    Array<float> x = range(0,N);
+
+    auto y = rfft(x);
+    auto z = irfft(y);
+
+    REQUIRE( norm(x - z) < 1e-6 );
+  }
+
+}
+
 TEST_CASE( "numcpp/fft/nfft", "NFFT test" )
 {
   size_t m = 4;

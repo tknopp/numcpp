@@ -45,6 +45,22 @@ Array<T> fromfile(std::string filename, long count=-1, std::string sep="")
   }
 }
 
+template<class T=double>
+Array<T> fromfile(std::ifstream& file, long count)
+{
+  std::ifstream::pos_type sizebytes;
+  size_t size;
+
+  sizebytes = count*sizeof(T);
+  size = count;
+
+  Array<T> x(size);
+
+  file.read ((char*)x.data(), sizebytes);
+
+  return x;
+}
+
 size_t filesize(std::string filename);
 
 template<class T>
@@ -64,12 +80,17 @@ void tofile(Array<T> x, std::string filename, std::string sep="")
   }
 }
 
+inline void tofile(DynTypeArray& x, std::ofstream& file)
+{
+   file.write((char*) x.data(), x.size()*x.elemSize());
+}
+
 template<class T>
-Array<T> loadMatrix(std::string filename, size_t nrCols, std::vector<size_t> rowIndices={}, ptrdiff_t rowIncrement=-1)
+Array<T> loadMatrix(std::string filename, size_t nrCols, Array<size_t> rowIndices=Array<size_t>(),
+                    ptrdiff_t rowIncrement=-1)
 {
   size_t sizeBytes = filesize(filename);
   size_t size = sizeBytes / sizeof(T);
-  //fd = open(filename,'rb')
 
   if(rowIndices.size() == 0 && rowIncrement <= 0)
   {
@@ -77,21 +98,25 @@ Array<T> loadMatrix(std::string filename, size_t nrCols, std::vector<size_t> row
     return reshape(fromfile<T>(filename, size), nrRows,nrCols);
   } else {
 
-  /*  if(rowIndices.size() == 0)
-      rowIndices = range(0, size / rowIncrement)
-    if rowIncrement <= 0:
-      rowIncrement = nrCols
+    if(rowIndices.size() == 0)
+      rowIndices = range(0, size / rowIncrement);
+    if(rowIncrement <= 0)
+      rowIncrement = nrCols;
 
-    nrRows = len(rowIndices)
+    auto nrRows = rowIndices.size();
 
-    matrix = np.zeros((nrRows, nrCols), dtype=dtype)
-    for l in xrange(nrRows):
-      fd.seek(rowIndices[l]*itemsize*rowIncrement)
-      matrix[l,:] = np.fromfile(fd, dtype=dtype, count=nrCols)
+    Array<T> matrix = zeros(nrRows, nrCols);
 
-  fd.close()
-  return matrix*/
+    std::ifstream file(filename, std::ios::in|std::ios::binary|std::ios::ate);
 
+    for(size_t l=0; l< nrRows;l++)
+    {
+      file.seekg(rowIndices(l)*rowIncrement*sizeof(T), std::ios::beg);
+      file.read( (char*)(matrix.data()+nrCols*l), nrCols*sizeof(T));
+    }
+    file.close();
+
+    return matrix;
   }
 }
 

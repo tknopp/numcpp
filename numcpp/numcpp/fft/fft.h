@@ -67,7 +67,11 @@ ifft(const Array<T>& x)
   return y;
 }
 
+template<class T>
+Array< std::complex<T> > rfft(const Array<T>& x);
 
+template<class T>
+Array<T> irfft(const Array< std::complex<T> >& x);
 
 /*!
 Calculates the DCT of the array \a x (inplace).

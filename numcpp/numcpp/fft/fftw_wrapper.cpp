@@ -72,6 +72,109 @@ ifft_(Array< std::complex<T> >& x, int dir)
 template Array<cfloat>& ifft_<float>(Array<cfloat>& x, int dir);
 template Array<cdouble>& ifft_<double>(Array<cdouble>& x, int dir);
 
+/////////////// R2C FFTs //////////////////
+
+template<>
+Array< std::complex<double> > rfft(const Array<double>& x)
+{
+  int shape_[x.ndims()];
+  std::vector<size_t> shapeOut_(x.ndims());
+
+  for(int d=0; d<x.ndims(); d++)
+  {
+    shape_[d] = shapeOut_[d] = shape(x, d);
+  }
+
+  shapeOut_[x.ndims()-1] = shapeOut_[x.ndims()-1] / 2 +1;
+
+  Array<cdouble> y(shapeOut_);
+
+  fftw_plan p = fftw_plan_dft_r2c(x.ndims(), shape_, x.data(), (fftw_complex*) y.data(), FFTW_ESTIMATE);
+
+  fftw_execute(p);
+
+  fftw_destroy_plan(p);
+
+  return y;
+}
+
+template<>
+Array< std::complex<float> > rfft(const Array<float>& x)
+{
+  int shape_[x.ndims()];
+  std::vector<size_t> shapeOut_(x.ndims());
+
+  for(int d=0; d<x.ndims(); d++)
+  {
+    shape_[d] = shapeOut_[d] = shape(x, d);
+  }
+
+  shapeOut_[x.ndims()-1] = shapeOut_[x.ndims()-1] / 2 +1;
+
+  Array<cfloat> y(shapeOut_);
+
+  fftwf_plan p = fftwf_plan_dft_r2c(x.ndims(), shape_, x.data(), (fftwf_complex*) y.data(), FFTW_ESTIMATE);
+
+  fftwf_execute(p);
+
+  fftwf_destroy_plan(p);
+
+  return y;
+}
+
+template<>
+Array<double> irfft(const Array< std::complex<double> >& x)
+{
+  int shape_[x.ndims()];
+  std::vector<size_t> shapeOut_(x.ndims());
+
+  for(int d=0; d<x.ndims(); d++)
+  {
+    shape_[d] = shapeOut_[d] = shape(x, d);
+  }
+
+  shapeOut_[x.ndims()-1] = (shapeOut_[x.ndims()-1] - 1) *2;
+  shape_[x.ndims()-1] = shapeOut_[x.ndims()-1];
+
+  Array<double> y(shapeOut_);
+
+  fftw_plan p = fftw_plan_dft_c2r(x.ndims(), shape_, (fftw_complex*) x.data(), y.data(), FFTW_ESTIMATE);
+
+  fftw_execute(p);
+
+  fftw_destroy_plan(p);
+
+  y /= y.size();
+
+  return y;
+}
+
+template<>
+Array<float> irfft(const Array< std::complex<float> >& x)
+{
+  int shape_[x.ndims()];
+  std::vector<size_t> shapeOut_(x.ndims());
+
+  for(int d=0; d<x.ndims(); d++)
+  {
+    shape_[d] = shapeOut_[d] = shape(x, d);
+  }
+
+  shapeOut_[x.ndims()-1] = (shapeOut_[x.ndims()-1] - 1) *2;
+  shape_[x.ndims()-1] = shapeOut_[x.ndims()-1];
+
+  Array<float> y(shapeOut_);
+
+  fftwf_plan p = fftwf_plan_dft_c2r(x.ndims(), shape_, (fftwf_complex*) x.data(), y.data(), FFTW_ESTIMATE);
+
+  fftwf_execute(p);
+
+  fftwf_destroy_plan(p);
+
+  y /= y.size();
+
+  return y;
+}
 
 /////////////// R2R FFTs //////////////////
 

@@ -7,6 +7,7 @@ template<class T>
 Type dtype() { return Type::Unknown; }
 
 template<> Type dtype<bool>() { return Type::Bool; }
+template<> Type dtype<short>() { return Type::Short; }
 template<> Type dtype<int>() { return Type::Int; }
 template<> Type dtype<unsigned int>() { return Type::UInt; }
 template<> Type dtype<long>() { return Type::Long; }
@@ -21,6 +22,7 @@ std::string typeStr(Type t)
   switch(t)
   {
     case Type::Bool: return "bool";
+    case Type::Short: return "short";
     case Type::Int: return "int";
     case Type::UInt: return "uint";
     case Type::Long: return "long";
@@ -38,6 +40,7 @@ int nbytes(Type t)
   switch(t)
   {
     case Type::Bool: return sizeof(bool);
+    case Type::Short: return sizeof(short);
     case Type::Int: return sizeof(int);
     case Type::UInt: return sizeof(unsigned int);
     case Type::Long: return sizeof(long);

@@ -62,8 +62,8 @@ auto kaczmarz(Matrix A, Array<U> b, int iterations, double lambda = 0,
     if(enforceReal)
       x = real(x);
 
-    if(enforcePositive)
-        x = x * sign(x);
+  //  if(enforcePositive)
+  //      x = x * sign(x);
   }
 
   return x;
