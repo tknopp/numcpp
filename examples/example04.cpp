@@ -17,13 +17,13 @@ int main()
   auto x2 = x( S{0,2}, S{0,2} );          // select block within x
   print(x2);                              // x2 = [1 2; 4 5]
 
-  auto x3 = x( S{0,end,2}, S{0,end,2} );  // select strided block within x
+  auto x3 = x( S{0,-1,2}, S{0,-1,2} );  // select strided block within x
   print(x3);                              // x3 = [1 3; 7 9]
 
   auto x4 = x( full, 0 );                 // select first column of x
   print(x4);                              // x4 = [1 4 7]
 
-  x(S{0,end,2}, full) = 1;                // set first and last row to one
+  x(S{0,-1,2}, full) = 1;                // set first and last row to one
   print(x);                               // [1 1 1; 4 5 6; 1 1 1]
 
   x(1, full) = z(0, full);                // copy first row of z into the second row of x

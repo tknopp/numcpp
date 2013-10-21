@@ -92,7 +92,7 @@ The order can be specified by the parameter \a order.
 template<class T>
 Array<T> diff(const Array<T>& x, int order=1)
 {
-  Array<T> y = x(slice(1,end)) - x(slice(0,end-1));
+  Array<T> y = x(slice(1,-1)) - x(slice(0,x.size()-1));
   if(order == 1)
     return y;
   else
@@ -109,14 +109,14 @@ Array<T> diff(const Array<T>& x, int order=1, int axis=1)
 {
   if(axis == 1)
   {
-    Array<T> y = x(full, slice(1,end)) - x(full, slice(0,end-1));
+    Array<T> y = x(full, slice(1,-1)) - x(full, slice(0,x.shape(1)-1));
     if(order == 1)
       return y;
     else
       return diff(y, order -1, axis);
   } else
   {
-    Array<T> y = x(slice(1,end), full) - x(slice(0,end-1), full);
+    Array<T> y = x(slice(1,-1), full) - x(slice(0,x.shape(0)-1), full);
     if(order == 1)
       return y;
     else
