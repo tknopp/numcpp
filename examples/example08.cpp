@@ -35,21 +35,21 @@ int main()
 
   {
     auto z = solve(F, y);
-    export_image( abs(reshape(z,n,n)), "CSNaiv.png");
+    export_image( eval( abs(reshape(z,n,n) ) ), "CSNaiv.png");
     std::cout << "error naiv: " << nrmsd(p, z) << " max " <<  max(abs(z)) << std::endl;
     std::cout << z.getMem() <<std::endl;
   }
 
   {
     auto z = SL0(F, y, 30, 3, 2);
-    export_image( abs(reshape(z,n,n)), "CSSL0.png");
+    export_image( eval( abs(reshape(z,n,n) )), "CSSL0.png");
     std::cout << "error SL0: " << nrmsd(p, z) << " max " <<  max(abs(z)) << std::endl;
     std::cout << z.getMem() <<std::endl;
   }
 
   {
     auto z = fista(F, y, 30, 3, 1e-8);
-    export_image( abs(reshape(z,n,n)), "CSFista.png");
+    export_image( eval ( abs(reshape(z,n,n) )), "CSFista.png");
     std::cout << "error Fista: " << nrmsd(p, z) << " max " <<  max(abs(z)) << std::endl;
     std::cout << z.getMem() <<std::endl;
   }

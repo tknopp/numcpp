@@ -26,13 +26,13 @@ Slice::Slice(ptrdiff_t index)
 
 }
 
-Slice::Slice(size_t index)
+/*Slice::Slice(size_t index)
     : start(index)
     , end(index+1)
     , step(0)
 {
 
-}
+}*/
 
 
 Slice::Slice(const Slice& slice)

@@ -8,3 +8,4 @@
 #include "linalg/linalg.cpp"
 #include "interpolation/interpolation.cpp"
 #include "tomography/tomography.cpp"
+#include "graphics/image.cpp"

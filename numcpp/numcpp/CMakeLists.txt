@@ -21,5 +21,5 @@ config.h core.h solvers.h io.h fft.h base.h graphics.h linalg.h sparse.h tomogra
 #SET_TARGET_PROPERTIES(numcpp PROPERTIES LINKER_LANGUAGE CXX)
 
 add_library(numcpp SHARED numcpp.cpp)
-target_link_libraries (numcpp fftw3 fftw3f hdf5 lapack clapack)
+target_link_libraries (numcpp fftw3 fftw3f hdf5 lapack clapack cairo)
 
