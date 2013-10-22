@@ -9,7 +9,7 @@ internal_fft_ (Array< std::complex<double> >& x, int dir)
 {
   auto N = x.size();
 
-  int shape_[x.ndims()];
+  std::vector<int> shape_(x.ndims());
 
   for(int d=0; d<x.ndims(); d++)
     shape_[d] = shape(x,d);
@@ -18,7 +18,7 @@ internal_fft_ (Array< std::complex<double> >& x, int dir)
   fftw_complex *in = out;
   fftw_plan p;
 
-  p = fftw_plan_dft(x.ndims(), shape_, in, out, dir, FFTW_ESTIMATE);
+  p = fftw_plan_dft(x.ndims(), shape_.data(), in, out, dir, FFTW_ESTIMATE);
 
   fftw_execute(p);
 
@@ -32,7 +32,7 @@ internal_fft_ (Array< std::complex<float> >& x, int dir)
 {
   auto N = x.size();
 
-  int shape_[x.ndims()];
+  std::vector<int> shape_(x.ndims());
 
   for(int d=0; d<x.ndims(); d++)
     shape_[d] = shape(x,d);
@@ -41,7 +41,7 @@ internal_fft_ (Array< std::complex<float> >& x, int dir)
   fftwf_complex *in = out;
   fftwf_plan p;
 
-  p = fftwf_plan_dft(x.ndims(), shape_, in, out, dir, FFTW_ESTIMATE);
+  p = fftwf_plan_dft(x.ndims(), shape_.data(), in, out, dir, FFTW_ESTIMATE);
 
   fftwf_execute(p);
 
@@ -77,7 +77,7 @@ template Array<cdouble>& ifft_<double>(Array<cdouble>& x, int dir);
 template<>
 Array< std::complex<double> > rfft(const Array<double>& x)
 {
-  int shape_[x.ndims()];
+  std::vector<int> shape_(x.ndims());
   std::vector<size_t> shapeOut_(x.ndims());
 
   for(int d=0; d<x.ndims(); d++)
@@ -89,7 +89,7 @@ Array< std::complex<double> > rfft(const Array<double>& x)
 
   Array<cdouble> y(shapeOut_);
 
-  fftw_plan p = fftw_plan_dft_r2c(x.ndims(), shape_, x.data(), (fftw_complex*) y.data(), FFTW_ESTIMATE);
+  fftw_plan p = fftw_plan_dft_r2c(x.ndims(), shape_.data(), x.data(), (fftw_complex*) y.data(), FFTW_ESTIMATE);
 
   fftw_execute(p);
 
@@ -101,7 +101,7 @@ Array< std::complex<double> > rfft(const Array<double>& x)
 template<>
 Array< std::complex<float> > rfft(const Array<float>& x)
 {
-  int shape_[x.ndims()];
+  std::vector<int> shape_(x.ndims());
   std::vector<size_t> shapeOut_(x.ndims());
 
   for(int d=0; d<x.ndims(); d++)
@@ -113,7 +113,7 @@ Array< std::complex<float> > rfft(const Array<float>& x)
 
   Array<cfloat> y(shapeOut_);
 
-  fftwf_plan p = fftwf_plan_dft_r2c(x.ndims(), shape_, x.data(), (fftwf_complex*) y.data(), FFTW_ESTIMATE);
+  fftwf_plan p = fftwf_plan_dft_r2c(x.ndims(), shape_.data(), x.data(), (fftwf_complex*) y.data(), FFTW_ESTIMATE);
 
   fftwf_execute(p);
 
@@ -125,7 +125,7 @@ Array< std::complex<float> > rfft(const Array<float>& x)
 template<>
 Array<double> irfft(const Array< std::complex<double> >& x)
 {
-  int shape_[x.ndims()];
+  std::vector<int> shape_(x.ndims());
   std::vector<size_t> shapeOut_(x.ndims());
 
   for(int d=0; d<x.ndims(); d++)
@@ -138,7 +138,7 @@ Array<double> irfft(const Array< std::complex<double> >& x)
 
   Array<double> y(shapeOut_);
 
-  fftw_plan p = fftw_plan_dft_c2r(x.ndims(), shape_, (fftw_complex*) x.data(), y.data(), FFTW_ESTIMATE);
+  fftw_plan p = fftw_plan_dft_c2r(x.ndims(), shape_.data(), (fftw_complex*) x.data(), y.data(), FFTW_ESTIMATE);
 
   fftw_execute(p);
 
@@ -152,7 +152,7 @@ Array<double> irfft(const Array< std::complex<double> >& x)
 template<>
 Array<float> irfft(const Array< std::complex<float> >& x)
 {
-  int shape_[x.ndims()];
+  std::vector<int> shape_(x.ndims());
   std::vector<size_t> shapeOut_(x.ndims());
 
   for(int d=0; d<x.ndims(); d++)
@@ -165,7 +165,7 @@ Array<float> irfft(const Array< std::complex<float> >& x)
 
   Array<float> y(shapeOut_);
 
-  fftwf_plan p = fftwf_plan_dft_c2r(x.ndims(), shape_, (fftwf_complex*) x.data(), y.data(), FFTW_ESTIMATE);
+  fftwf_plan p = fftwf_plan_dft_c2r(x.ndims(), shape_.data(), (fftwf_complex*) x.data(), y.data(), FFTW_ESTIMATE);
 
   fftwf_execute(p);
 
@@ -183,8 +183,8 @@ internal_fft_r2r_ (Array<double>& x, const int kind)
 {
   auto N = x.size();
 
-  int shape_[x.ndims()];
-  int kinds[x.ndims()];
+  std::vector<int> shape_(x.ndims());
+  std::vector<int> kinds(x.ndims());
 
   for(int d=0; d<x.ndims(); d++)
   {
@@ -195,7 +195,7 @@ internal_fft_r2r_ (Array<double>& x, const int kind)
 
   fftw_plan p;
 
-  p = fftw_plan_r2r(x.ndims(), shape_, x.data(), x.data(), (fftwf_r2r_kind*) kinds, FFTW_ESTIMATE);
+  p = fftw_plan_r2r(x.ndims(), shape_.data(), x.data(), x.data(), (fftwf_r2r_kind*) kinds.data(), FFTW_ESTIMATE);
 
   fftw_execute(p);
 
@@ -210,8 +210,8 @@ internal_fft_r2r_ (Array<float>& x, const int kind)
 {
   auto N = x.size();
 
-  int shape_[x.ndims()];
-  int kinds[x.ndims()];
+  std::vector<int> shape_(x.ndims());
+  std::vector<int> kinds(x.ndims());
 
   for(int d=0; d<x.ndims(); d++)
   {
@@ -222,7 +222,7 @@ internal_fft_r2r_ (Array<float>& x, const int kind)
 
   fftwf_plan p;
 
-  p = fftwf_plan_r2r(x.ndims(), shape_, x.data(), x.data(), (fftwf_r2r_kind*) kinds, FFTW_ESTIMATE);
+  p = fftwf_plan_r2r(x.ndims(), shape_.data(), x.data(), x.data(), (fftwf_r2r_kind*) kinds.data(), FFTW_ESTIMATE);
 
   fftwf_execute(p);
 

@@ -1,4 +1,7 @@
 #include "radon.h"
+#include "../base/initializers.h"
+#include "../expressions/arithmetic.h"
+#include "../expressions/functions.h"
 
 namespace numcpp
 {

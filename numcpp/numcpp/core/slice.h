@@ -12,18 +12,16 @@ namespace numcpp
 struct Slice
 {
   Slice();
-  Slice(long start, long end, long step=1);
-  Slice(long index);
-  Slice(unsigned long index);
-  Slice(int index);
-  Slice(unsigned int index);
+  Slice(ptrdiff_t start, ptrdiff_t end, ptrdiff_t step = 1);
+  Slice(ptrdiff_t index);
+  Slice(size_t index);
   Slice(const Slice& slice);
   template<class T>
   Slice(std::initializer_list<T> list);
 
-  long start;
-  long end;
-  long step;
+  ptrdiff_t start;
+  ptrdiff_t end;
+  ptrdiff_t step;
 };
 
 //const long end = -1;

@@ -38,18 +38,18 @@ template uint32_t colorize(const float& x, const float& winMin, const float& win
 template uint32_t colorize(const double& x, const double& winMin, const double& winMax, const colormap& cm);
 
 template<class T>
-Array<uint32_t> colorize(const Array<T>& x, const T& winMin, const T& winMax, const colormap& cm)
+Array<uint32_t> colorize(const Array<T>& x, double winMin, double winMax, colormap cm)
 {
   Array<uint32_t> coloredData(x.shape());
   for(size_t i=0; i<x.size(); i++)
   {
-    coloredData[i] = colorize(x[i], winMin, winMax, cm);
+    coloredData[i] = colorize<T>(x[i], winMin, winMax, cm);
   }
   return coloredData;
 }
 
-template Array<uint32_t> colorize(const Array<float>& x, const float& winMin, const float& winMax, const colormap& cm);
-template Array<uint32_t> colorize(const Array<double>& x, const double& winMin, const double& winMax, const colormap& cm);
+template Array<uint32_t> colorize(const Array<float>& x, double winMin, double winMax, colormap cm);
+template Array<uint32_t> colorize(const Array<double>& x, double winMin, double winMax, colormap cm);
 
 
 }

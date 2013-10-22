@@ -11,14 +11,14 @@ Slice::Slice()
 }
 
 
-Slice::Slice(long start, long end, long step)
+Slice::Slice(ptrdiff_t start, ptrdiff_t end, ptrdiff_t step)
     : start(start)
     , end(end)
     , step(step)
 {
 }
 
-Slice::Slice(long index)
+Slice::Slice(ptrdiff_t index)
     : start(index)
     , end(index+1)
     , step(0)
@@ -26,7 +26,7 @@ Slice::Slice(long index)
 
 }
 
-Slice::Slice(unsigned long index)
+Slice::Slice(size_t index)
     : start(index)
     , end(index+1)
     , step(0)
@@ -34,21 +34,6 @@ Slice::Slice(unsigned long index)
 
 }
 
-Slice::Slice(int index)
-    : start(index)
-    , end(index+1)
-    , step(0)
-{
-
-}
-
-Slice::Slice(unsigned int index)
-    : start(index)
-    , end(index+1)
-    , step(0)
-{
-
-}
 
 Slice::Slice(const Slice& slice)
     : start(slice.start)

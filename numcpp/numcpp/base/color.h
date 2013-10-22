@@ -119,7 +119,7 @@ Colorize the floating point array \a x.
 The parameters \a winMin and \a winMax specify the range that is mapped on the colormap \a cm.
 */
 template<class T>
-Array<uint32_t> colorize(const Array<T>& x, const T& winMin, const T& winMax, const colormap& cm);
+Array<uint32_t> colorize(const Array<T>& x, double winMin, double winMax, colormap cm);
 
 uint32_t rgbaToInt(const color_t& v);
 
