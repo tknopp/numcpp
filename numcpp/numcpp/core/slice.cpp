@@ -50,19 +50,19 @@ Slice::Slice(std::initializer_list<T> list)
 
     if(list.size() == 1)
     {
-        start = (long)*it;
+        start = (ptrdiff_t)*it;
         end = start+1;
         step = 1;
     } else if(list.size() == 2)
     {
-        start = (long)*it++;
-        end = (long)*it;
+        start = (ptrdiff_t)*it++;
+        end = (ptrdiff_t)*it;
         step = 1;
     } else
     {
-        start = (long)*it++;
-        end = (long)*it++;
-        step = (long)*it;
+        start = (ptrdiff_t)*it++;
+        end = (ptrdiff_t)*it++;
+        step = (ptrdiff_t)*it;
     }
 }
 template Slice::Slice(std::initializer_list<int> list);
