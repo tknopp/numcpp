@@ -16,7 +16,7 @@ struct Slice
   Slice();
   Slice(ptrdiff_t start, ptrdiff_t end, ptrdiff_t step = 1);
   Slice(ptrdiff_t index);
-  //Slice(size_t index);
+  Slice(size_t index);
   Slice(const Slice& slice);
   template<class T>
   Slice(std::initializer_list<T> list);
